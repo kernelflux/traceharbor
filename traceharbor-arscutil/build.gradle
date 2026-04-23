@@ -11,13 +11,6 @@ dependencies {
     implementation project(':traceharbor-commons')
 }
 
-if("External" == rootProject.ext.PUBLISH_CHANNEL) {
-    apply from: rootProject.file('gradle/java-publish.gradle')
-}
-else {
-    //uploading to WeChat maven repo
-    apply from: rootProject.file('gradle/WeChatPublish.gradle')
-    wechatPublish {
-        artifactId = POM_ARTIFACT_ID
-    }
-}
+ext.publishArtifactId = POM_ARTIFACT_ID
+ext.publishVersion = version.toString()
+apply from: rootProject.file('gradle/maven-publish.gradle')

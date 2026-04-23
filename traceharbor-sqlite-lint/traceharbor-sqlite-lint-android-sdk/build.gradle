@@ -56,6 +56,11 @@ android {
         }
     }
 
+    publishing {
+        singleVariant("fullRelease") {}
+        singleVariant("stubRelease") {}
+    }
+
     lint {
         abortOnError false
     }
@@ -74,21 +79,10 @@ dependencies {
 version = rootProject.ext.VERSION_NAME
 group = rootProject.ext.GROUP
 
-if("External" == rootProject.ext.PUBLISH_CHANNEL) {
-    apply from: rootProject.file('gradle/android-publish.gradle')
-}
-else {
-    apply from: rootProject.file('gradle/WeChatPublish.gradle')
-    wechatPublish {
-        artifactId = POM_ARTIFACT_ID
-    }
-}
-
-// TODO: disable externalNativeBuild for stub flavor
-afterEvaluate {
-    tasks.all { task ->
-        if (task.name.startsWith('externalNativeBuildStub')) {
-            task.enabled = false
-        }
-    }
-}
+ext.publishArtifactId = POM_ARTIFACT_ID
+ext.publishVersion = version.toString()
+ext.publishAdditionalPublications = [
+        [name: 'release', component: 'fullRelease', artifactId: POM_ARTIFACT_ID],
+        [name: 'noOp', component: 'stubRelease', artifactId: "${POM_ARTIFACT_ID}-no-op"]
+]
+apply from: rootProject.file('gradle/maven-publish.gradle')

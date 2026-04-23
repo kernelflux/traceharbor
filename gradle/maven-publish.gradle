@@ -1,0 +1,139 @@
+import org.gradle.api.Action
+import org.gradle.api.publish.maven.MavenPom
+import org.gradle.api.publish.maven.MavenPublication
+
+if (!project.hasProperty('publishArtifactId')) {
+    throw new GradleException("publishArtifactId must be defined before applying gradle/maven-publish.gradle")
+}
+if (!project.hasProperty('publishVersion')) {
+    throw new GradleException("publishVersion must be defined before applying gradle/maven-publish.gradle")
+}
+
+def publishArtifactId = project.ext.publishArtifactId as String
+def publishVersion = project.ext.publishVersion as String
+def publishBundleName = project.hasProperty('publishBundleName')
+        ? project.ext.publishBundleName as String
+        : "${publishArtifactId.replace('-', '_')}_bundle_v${publishVersion}"
+def extraPublications = project.hasProperty('publishAdditionalPublications')
+        ? project.ext.publishAdditionalPublications as List<Map<String, String>>
+        : []
+
+def configureSharedPom = { MavenPom mavenPom, String pomName ->
+    mavenPom.name.set(pomName)
+    mavenPom.description.set(project.rootProject.ext.POM_DESCRIPTION)
+    mavenPom.url.set(project.rootProject.ext.POM_URL)
+    mavenPom.licenses {
+        license {
+            name.set(project.rootProject.ext.POM_LICENCE_NAME)
+            url.set(project.rootProject.ext.POM_LICENCE_URL)
+        }
+    }
+    mavenPom.developers {
+        developer {
+            id.set(project.rootProject.ext.POM_DEVELOPER_ID)
+            name.set(project.rootProject.ext.POM_DEVELOPER_NAME)
+        }
+    }
+    mavenPom.scm {
+        url.set(project.rootProject.ext.POM_URL)
+        connection.set(project.rootProject.ext.POM_SCM_URL)
+        developerConnection.set(project.rootProject.ext.POM_SCM_URL)
+    }
+}
+
+if (!extraPublications.isEmpty()) {
+    if (!project.plugins.hasPlugin('maven-publish')) {
+        project.plugins.apply('maven-publish')
+    }
+    project.afterEvaluate {
+        def publishingExtension = project.extensions.getByType(org.gradle.api.publish.PublishingExtension)
+        publishingExtension.publications { publicationContainer ->
+            extraPublications.each { publicationConfig ->
+                def publicationName = publicationConfig.name
+                def componentName = publicationConfig.component
+                def artifactId = publicationConfig.artifactId
+                def publication = publicationContainer.findByName(publicationName)
+                if (publication == null) {
+                    publication = publicationContainer.create(publicationName, MavenPublication)
+                }
+                publication.groupId = rootProject.ext.GROUP
+                publication.version = publishVersion
+                publication.artifactId = artifactId
+                if (project.components.findByName(componentName) == null) {
+                    throw new GradleException("Component '${componentName}' not found for publication '${publicationName}' in ${project.path}")
+                }
+                publication.from(project.components.getByName(componentName))
+                configureSharedPom(publication.pom, publicationConfig.pomName ?: artifactId)
+            }
+        }
+    }
+}
+
+if (!project.plugins.hasPlugin('com.kernelflux.maven.publish')) {
+    project.plugins.apply('com.kernelflux.maven.publish')
+}
+
+def privatePropsFile = project.rootProject.file("private.properties")
+def sonatypeUsername = project.findProperty("sonatypeUsername")
+def sonatypePassword = project.findProperty("sonatypePassword")
+def signingKeyFileProp = project.findProperty("signingKeyFile")
+def signingPassProp = project.findProperty("signingPass")
+
+if (privatePropsFile.exists()) {
+    def privateProps = new Properties()
+    privateProps.load(new FileInputStream(privatePropsFile))
+    if (!sonatypeUsername) {
+        sonatypeUsername = privateProps.getProperty("sonatypeUsername")
+    }
+    if (!sonatypePassword) {
+        sonatypePassword = privateProps.getProperty("sonatypePassword")
+    }
+    if (!signingKeyFileProp) {
+        signingKeyFileProp = privateProps.getProperty("signingKeyFile")
+    }
+    if (!signingPassProp) {
+        signingPassProp = privateProps.getProperty("signingPass")
+    }
+}
+
+mavenCentralUpload {
+    uploadBundleName.set(publishBundleName)
+    groupId.set(rootProject.ext.GROUP)
+    artifactId.set(publishArtifactId)
+    version.set(publishVersion)
+
+    if (sonatypeUsername) {
+        username.set(sonatypeUsername as String)
+    }
+    if (sonatypePassword) {
+        password.set(sonatypePassword as String)
+    }
+    if (signingKeyFileProp) {
+        def keyFile = new File(signingKeyFileProp as String)
+        def finalPath = keyFile.isAbsolute()
+                ? keyFile.absolutePath
+                : new File(project.rootProject.projectDir, signingKeyFileProp as String).absolutePath
+        if (new File(finalPath).exists()) {
+            signingKeyFile.set(finalPath)
+        } else {
+            println("Maven Central Upload: signingKeyFile not found: ${finalPath}, signing will be disabled")
+        }
+    }
+    if (signingPassProp) {
+        signingPass.set(signingPassProp as String)
+    }
+
+    pom.set(new Action<MavenPom>() {
+        @Override
+        void execute(MavenPom mavenPom) {
+            configureSharedPom(
+                    mavenPom,
+                    project.hasProperty("POM_NAME") ? project.property("POM_NAME").toString() : publishArtifactId
+            )
+        }
+    })
+}
+
+if (project.rootProject.file('gradle/check.gradle').exists()) {
+    apply from: rootProject.file('gradle/check.gradle')
+}

@@ -19,14 +19,8 @@ dependencies {
     compileOnly 'org.json:json:20180813'
 }
 
-if("External" == rootProject.ext.PUBLISH_CHANNEL) {
-    apply from: rootProject.file('gradle/java-publish.gradle')
-}
-else {
-    apply from: rootProject.file('gradle/WeChatPublish.gradle')
-    wechatPublish {
-        artifactId = POM_ARTIFACT_ID
-    }
-}
+ext.publishArtifactId = POM_ARTIFACT_ID
+ext.publishVersion = version.toString()
+apply from: rootProject.file('gradle/maven-publish.gradle')
 
 //apply from: "${rootDir}/gradle/check.gradle"
