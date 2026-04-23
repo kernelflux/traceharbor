@@ -1,0 +1,26 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="io.traceharbor.sqlitelint">
+
+    <application>
+        <activity
+            android:name="io.traceharbor.sqlitelint.behaviour.alert.CheckedDatabaseListActivity"
+            android:exported="true"
+            android:icon="@drawable/sqlite_lint_icon"
+            android:label="SQLiteLint"
+            android:taskAffinity="io.traceharbor.sqlitelint">
+        </activity>
+
+        <activity
+            android:name="io.traceharbor.sqlitelint.behaviour.alert.CheckResultActivity"
+            android:launchMode="singleTop"
+            android:taskAffinity="io.traceharbor.sqlitelint">
+        </activity>
+
+        <activity
+            android:name="io.traceharbor.sqlitelint.behaviour.alert.IssueDetailActivity"
+            android:launchMode="singleTop"
+            android:taskAffinity="io.traceharbor.sqlitelint">
+        </activity>
+    </application>
+
+</manifest>

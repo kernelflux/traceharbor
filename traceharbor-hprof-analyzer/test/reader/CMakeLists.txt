@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 3.10.2)
+project(traceharbor_hprof_analyzer)
+
+set(CMAKE_CXX_STANDARD 17)
+
+add_executable(traceharbor_hprof_analyzer_reader_test reader.cpp)
+target_link_libraries(traceharbor_hprof_analyzer_reader_test traceharbor_hprof_analyzer_reader)
+target_link_libraries(traceharbor_hprof_analyzer_reader_test gtest_main)
+
+gtest_discover_tests(traceharbor_hprof_analyzer_reader_test)

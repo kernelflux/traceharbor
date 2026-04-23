@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="io.traceharbor.openglleak">
+
+    <application>
+
+        <service
+            android:name="io.traceharbor.openglleak.detector.OpenglIndexDetectorService"
+            android:process=":opengl_detector" />
+
+    </application>
+
+</manifest>

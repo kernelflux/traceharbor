@@ -1,0 +1,126 @@
+buildscript {
+
+    repositories {
+
+        mavenLocal()
+        google()
+        mavenCentral()
+
+    }
+
+    gradle.ext.KOTLIN_VERSION = "1.8.22"
+
+    dependencies {
+        // classpath
+        classpath 'com.android.tools.build:gradle:8.2.2'
+        classpath 'digital.wup:android-maven-publish:3.6.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$gradle.KOTLIN_VERSION"
+    }
+
+}
+
+Properties localProperties = new Properties()
+File localPropertiesFile = project.rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.newDataInputStream())
+}
+def SigningFromLocalProperties(properties, project, String prop) {
+    if (properties.getProperty(prop)) {
+        project.ext[prop] = properties.getProperty(prop)
+    }
+}
+allprojects {
+    repositories {
+
+        mavenLocal()
+        google()
+        mavenCentral()
+    }
+
+    tasks.withType(Javadoc).all {
+        enabled = false // TODO:
+        options.setEncoding('UTF-8')
+    }
+
+    SigningFromLocalProperties(localProperties, project, 'REPOSITORY_USERNAME' as String)
+    SigningFromLocalProperties(localProperties, project, 'REPOSITORY_PASSWORD' as String)
+    SigningFromLocalProperties(localProperties, project, 'signing.keyId' as String)
+    SigningFromLocalProperties(localProperties, project, 'signing.password' as String)
+    SigningFromLocalProperties(localProperties, project, 'signing.secretKeyRingFile' as String)
+
+}
+
+
+ext {
+    // For android sub-projects
+    minSdkVersion = 19
+    targetSdkVersion = 34
+    compileSdkVersion = 34
+    buildToolsVersion = '34.0.0'
+    androidNamespaces = [
+            ':traceharbor-android-commons'                                : 'io.traceharbor.android.commons',
+            ':traceharbor-android-lib'                                    : 'io.traceharbor',
+            ':traceharbor-trace-canary'                                   : 'io.traceharbor.trace',
+            ':traceharbor-io-canary'                                      : 'io.traceharbor.iocanary',
+            ':traceharbor-sqlite-lint:traceharbor-sqlite-lint-android-sdk'     : 'io.traceharbor.sqlitelint',
+            ':traceharbor-battery-canary'                                 : 'io.traceharbor.batterycanary',
+            ':traceharbor-opengl-leak'                                    : 'io.traceharbor.openglleak',
+            ':traceharbor-traffic'                                        : 'io.traceharbor.traffic',
+            ':traceharbor-backtrace'                                      : 'io.traceharbor.backtrace',
+            ':traceharbor-backtrace:cxx-static'                           : 'io.traceharbor.backtrace.cxxstatic',
+            ':traceharbor-hooks'                                          : 'io.traceharbor.hook',
+            ':traceharbor-hooks:cxx-static'                               : 'io.traceharbor.hook.cxxstatic',
+            ':traceharbor-memguard'                                       : 'io.traceharbor.memguard',
+            ':traceharbor-mallctl'                                        : 'io.traceharbor.mallctl',
+            ':traceharbor-fd'                                             : 'io.traceharbor.fd',
+            ':traceharbor-memory-canary'                                  : 'io.traceharbor.memory.canary',
+            ':traceharbor-opengl-leak:cxx-static'                         : 'io.traceharbor.openglleak.cxxstatic',
+            ':traceharbor-resource-canary:traceharbor-resource-canary-android' : 'io.traceharbor.resource'
+    ]
+
+    MIN_SDK_VERSION_FOR_HOOK = 21
+
+    VERSION_CODE = 1
+
+    javaVersion = JavaVersion.VERSION_1_8
+
+    GROUP = 'io.traceharbor'
+    VERSION_NAME = "${VERSION_NAME_PREFIX}${VERSION_NAME_SUFFIX}"
+    PUBLISH_CHANNEL = "${PUBLISH_CHANNEL}"
+
+    POM_PACKAGING = "pom"
+    POM_NAME = "TraceHarbor for Android"
+    POM_DESCRIPTION = "TraceHarbor is an Android performance and diagnostics framework derived from Tencent Matrix and modernized for continued community development."
+
+    POM_URL = ""
+    POM_SCM_URL = ""
+    POM_SCM_COMMIT = ""
+    POM_ISSUE_URL = ''
+
+    POM_LICENCE_NAME = "BSD License"
+    POM_LICENCE_URL = "https://opensource.org/licenses/BSD-3-Clause"
+    POM_LICENCE_DIST = "repo"
+
+    POM_DEVELOPER_ID = "TraceHarbor Contributors"
+    POM_DEVELOPER_NAME = "TraceHarbor Contributors"
+
+    BINTRAY_LICENCE = ['BSD 3-Clause']
+    BINTRAY_ORGANIZATION = "traceharbor"
+
+    ABI_FILTERS = ['armeabi-v7a', 'arm64-v8a']
+    LOGGER_VERSION = 1.1 // fixme logger
+
+    LIFECYCLE_VERSION = '2.3.1'
+}
+
+// Generate version.txt automatic
+task generateVersionTxt() {
+    doLast {
+        // Write down to version.txt
+        def file = new File("${buildDir}/outputs/version.txt")
+        file.createNewFile()
+        file.write(rootProject.ext.VERSION_NAME)
+    }
+}
+
+//apply from: file("gradle/bintray-to-maven-central.gradle")

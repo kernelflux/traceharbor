@@ -1,0 +1,15 @@
+TraceHarbor
+
+This project is a derivative work based on Tencent Matrix.
+
+Upstream origin:
+- Project: Tencent Matrix
+- Copyright: Copyright (C) 2016 THL A29 Limited, a Tencent company
+- Upstream license text and bundled third-party notices are preserved in `LICENSE`
+
+TraceHarbor branding, module names, package names, build metadata, and subsequent modifications
+have been updated independently from the upstream project. Retained upstream source headers and
+copyright notices continue to apply to the portions of code they cover.
+
+This project is not affiliated with, endorsed by, or maintained by Tencent or the original
+Matrix maintainers.

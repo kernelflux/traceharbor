@@ -1,0 +1,13 @@
+TraceHarbor Copyright Summary
+
+Original upstream code:
+- Copyright (C) 2016 THL A29 Limited, a Tencent company
+- Additional upstream notices remain in individual source files and in `LICENSE`
+
+TraceHarbor modifications and additions:
+- Copyright (C) 2026 TraceHarbor Contributors
+
+Unless otherwise noted, this repository is distributed subject to the upstream license obligations
+preserved in `LICENSE`. New files and modifications authored for TraceHarbor remain the property
+of their respective authors, while original upstream portions remain copyrighted by their original
+rightsholders.

@@ -1,0 +1,38 @@
+rootProject.name = 'TraceHarbor'
+
+apply from: "$rootDir/gradle/Arguments.gradle"
+
+// Gradle plugin
+include ':traceharbor-gradle-plugin'
+
+// Components
+include ':traceharbor-android-commons'
+include ':traceharbor-android-lib'
+include ':traceharbor-commons'
+include ':traceharbor-resource-canary:traceharbor-resource-canary-common'
+include ':traceharbor-resource-canary:traceharbor-resource-canary-analyzer'
+include ':traceharbor-resource-canary:traceharbor-resource-canary-analyzer-cli'
+include ':traceharbor-resource-canary:traceharbor-resource-canary-android'
+include ':traceharbor-trace-canary'
+include ':traceharbor-apk-canary'
+include ':traceharbor-io-canary'
+include ':traceharbor-sqlite-lint:traceharbor-sqlite-lint-android-sdk'
+include ':traceharbor-battery-canary'
+include ':traceharbor-arscutil'
+include ':traceharbor-opengl-leak'
+include ':traceharbor-traffic'
+
+// Components for memory hook
+include ':traceharbor-backtrace'
+include ':traceharbor-hooks'
+include ':traceharbor-memguard'
+include ':traceharbor-mallctl'
+include ':traceharbor-fd'
+
+include ':traceharbor-memory-canary'
+
+if (gradle.staticLinkCXX()) {
+    include ':traceharbor-hooks:cxx-static'
+    include ':traceharbor-opengl-leak:cxx-static'
+    include ':traceharbor-backtrace:cxx-static'
+}
