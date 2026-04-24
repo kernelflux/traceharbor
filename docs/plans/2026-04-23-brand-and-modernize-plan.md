@@ -252,13 +252,13 @@ dependencyResolutionManagement {
 ## 7. 当前 todo 跟踪
 
 ```
-[in_progress] 阶段 0：写本文档
-[pending]     阶段 1：tools/rename-brand.sh
-[pending]     阶段 2：tencent → kernelflux 包名/目录
-[pending]     阶段 3：类名去 MM 化
-[pending]     阶段 4：libs.versions.toml
+[completed]   阶段 0：写本文档
+[completed]   阶段 1：tools/rename-brand.sh
+[completed]   阶段 2：tencent → kernelflux 包名/目录
+[completed]   阶段 3：类名去 MM 化
+[completed]   阶段 4：libs.versions.toml （catalog 已建 + docs/version-catalog.md；各模块引用迁移随阶段 6 一起做）
 [pending]     阶段 5：基础设施层迁 KTS
-[pending]     阶段 6：模块 build.gradle 迁 KTS
+[pending]     阶段 6：模块 build.gradle 迁 KTS（同步替换 dep 字符串为 libs.xxx）
 [pending]     阶段 7：Java→Kotlin 计划文档
 [pending]     阶段 8：Java→Kotlin 多轮执行
 ```

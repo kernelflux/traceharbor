@@ -1,0 +1,128 @@
+# =============================================================================
+# TraceHarbor — Gradle Version Catalog
+# =============================================================================
+# Single source of truth for all Gradle/AGP/Kotlin/library versions and plugin
+# coordinates. Consumed automatically by Gradle 8.x via the `libs` accessor:
+#
+#   plugins  { alias(libs.plugins.android.library)  }
+#   dependencies {
+#       implementation libs.androidx.appcompat
+#       testImplementation libs.junit
+#   }
+#
+# Stage 4 of docs/plans/2026-04-23-brand-and-modernize-plan.md.
+#
+# Versions intentionally preserved as-is from the existing build files. A
+# follow-up `chore(deps): unify version catalog` PR will rationalize the
+# duplicates (gson 2.8.6 vs 2.8.9 vs 2.10.1, junit 4.+ vs 4.12, espresso
+# 3.1.0 vs 3.4.0, mockito 2.8.9 -> 4.x for JDK17, etc.).
+# =============================================================================
+
+[versions]
+# ----- toolchain -----
+agp                    = "8.2.2"
+kotlin                 = "1.8.22"
+javaTarget             = "1.8"      # source/target compatibility (kept on 1.8)
+
+# ----- TraceHarbor build infra -----
+mavenCentralUploader   = "1.0.10"
+pluginPublish          = "1.3.1"
+
+# ----- runtime / Android X -----
+androidxAppcompat      = "1.1.0"
+androidxAnnotation     = "1.0.0"
+androidxRecyclerview   = "1.3.2"     # battery-canary uses 1.3.2; sqlite-lint stays on 1.1.0 (legacy)
+androidxRecyclerviewLegacy = "1.1.0"
+androidxLifecycleCommon = "2.3.1"
+
+# ----- third-party JVM / Android libs -----
+gsonModern             = "2.10.1"    # apk-canary, resource-canary
+gsonLegacy             = "2.8.9"     # gradle-plugin (older, frozen API surface)
+gsonTest               = "2.8.6"     # one test module
+guava                  = "32.1.3-jre"
+mmkv                   = "1.3.14"
+tinkerZiputils         = "1.9.2"
+haha                   = "2.0.3"
+commonsCli             = "1.3.1"
+commonsIo              = "2.6"
+orgJson                = "20180813"
+androidToolsCommon     = "25.1.0"
+
+# ----- testing -----
+junit4                 = "4.12"
+mockito                = "2.8.9"     # TODO: bump to 5.x for JDK17 sanity
+jmockit                = "1.28"
+androidxTestExtJunit          = "1.1.1"
+androidxTestExtJunitNew       = "1.1.3"
+androidxTestEspressoCore      = "3.1.0"
+androidxTestEspressoCoreNew   = "3.4.0"
+
+
+[libraries]
+# ----- Kotlin -----
+kotlin-gradle-plugin            = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin",  version.ref = "kotlin" }
+kotlin-stdlib                   = { module = "org.jetbrains.kotlin:kotlin-stdlib",         version.ref = "kotlin" }
+kotlin-stdlib-jdk7              = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7",    version.ref = "kotlin" }
+
+# ----- AGP / build tools -----
+agp-gradle                      = { module = "com.android.tools.build:gradle",     version.ref = "agp" }
+android-tools-common            = { module = "com.android.tools:common",           version.ref = "androidToolsCommon" }
+
+# ----- TraceHarbor publishing infra -----
+mavenCentralUploader-plugin     = { module = "com.kernelflux.maven.publish:maven-central-gradle-plugin", version.ref = "mavenCentralUploader" }
+pluginPublish-plugin            = { module = "com.gradle.publish:plugin-publish-plugin",                 version.ref = "pluginPublish" }
+
+# ----- AndroidX -----
+androidx-appcompat              = { module = "androidx.appcompat:appcompat",       version.ref = "androidxAppcompat" }
+androidx-annotation             = { module = "androidx.annotation:annotation",     version.ref = "androidxAnnotation" }
+androidx-recyclerview           = { module = "androidx.recyclerview:recyclerview", version.ref = "androidxRecyclerview" }
+androidx-recyclerview-legacy    = { module = "androidx.recyclerview:recyclerview", version.ref = "androidxRecyclerviewLegacy" }
+androidx-lifecycle-common       = { module = "androidx.lifecycle:lifecycle-common", version.ref = "androidxLifecycleCommon" }
+
+# ----- third-party libs -----
+gson                            = { module = "com.google.code.gson:gson",          version.ref = "gsonModern" }
+gson-legacy                     = { module = "com.google.code.gson:gson",          version.ref = "gsonLegacy" }
+gson-test                       = { module = "com.google.code.gson:gson",          version.ref = "gsonTest" }
+guava                           = { module = "com.google.guava:guava",             version.ref = "guava" }
+mmkv                            = { module = "com.tencent:mmkv",                   version.ref = "mmkv" }
+tinker-ziputils                 = { module = "com.tencent.tinker:tinker-ziputils", version.ref = "tinkerZiputils" }
+haha                            = { module = "com.squareup.haha:haha",             version.ref = "haha" }
+commons-cli                     = { module = "commons-cli:commons-cli",            version.ref = "commonsCli" }
+commons-io                      = { module = "commons-io:commons-io",              version.ref = "commonsIo" }
+org-json                        = { module = "org.json:json",                      version.ref = "orgJson" }
+
+# ----- testing -----
+junit                           = { module = "junit:junit",                        version.ref = "junit4" }
+mockito-core                    = { module = "org.mockito:mockito-core",           version.ref = "mockito" }
+mockito-android                 = { module = "org.mockito:mockito-android",        version.ref = "mockito" }
+jmockit                         = { module = "org.jmockit:jmockit",                version.ref = "jmockit" }
+androidx-test-ext-junit         = { module = "androidx.test.ext:junit",            version.ref = "androidxTestExtJunit" }
+androidx-test-ext-junit-new     = { module = "androidx.test.ext:junit",            version.ref = "androidxTestExtJunitNew" }
+androidx-test-espresso-core     = { module = "androidx.test.espresso:espresso-core", version.ref = "androidxTestEspressoCore" }
+androidx-test-espresso-core-new = { module = "androidx.test.espresso:espresso-core", version.ref = "androidxTestEspressoCoreNew" }
+
+
+[plugins]
+android-application             = { id = "com.android.application",                version.ref = "agp" }
+android-library                 = { id = "com.android.library",                    version.ref = "agp" }
+kotlin-android                  = { id = "org.jetbrains.kotlin.android",           version.ref = "kotlin" }
+mavenCentralUpload              = { id = "com.kernelflux.maven.publish",           version.ref = "mavenCentralUploader" }
+pluginPublish                   = { id = "com.gradle.plugin-publish",              version.ref = "pluginPublish" }
+
+
+# =============================================================================
+# Bundles (optional convenience groupings)
+# =============================================================================
+[bundles]
+androidxTest = [
+    "androidx-test-ext-junit",
+    "androidx-test-espresso-core",
+]
+androidxTestNew = [
+    "androidx-test-ext-junit-new",
+    "androidx-test-espresso-core-new",
+]
+mockito = [
+    "mockito-core",
+    "mockito-android",
+]
