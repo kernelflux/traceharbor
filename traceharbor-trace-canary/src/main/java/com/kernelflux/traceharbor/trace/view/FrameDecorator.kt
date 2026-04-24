@@ -91,7 +91,7 @@ class FrameDecorator @SuppressLint("ClickableViewAccessibility") private constru
                 if (TraceHarbor.isInstalled()) {
                     val tracePlugin = TraceHarbor.with().getPluginByClass(TracePlugin::class.java)
                     if (tracePlugin != null) {
-                        val tracer = tracePlugin.frameTracer
+                        val tracer = tracePlugin.getFrameTracer()
                         tracer?.register(this@FrameDecorator)
                     }
                 }
@@ -102,7 +102,7 @@ class FrameDecorator @SuppressLint("ClickableViewAccessibility") private constru
                 if (TraceHarbor.isInstalled()) {
                     val tracePlugin = TraceHarbor.with().getPluginByClass(TracePlugin::class.java)
                     if (tracePlugin != null) {
-                        val tracer = tracePlugin.frameTracer
+                        val tracer = tracePlugin.getFrameTracer()
                         tracer?.unregister(this@FrameDecorator)
                     }
                 }
