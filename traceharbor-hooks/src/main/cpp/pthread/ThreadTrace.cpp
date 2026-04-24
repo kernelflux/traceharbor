@@ -18,6 +18,7 @@
 // Created by Yves on 2020-03-11.
 //
 
+#include <cassert>
 #include <dlfcn.h>
 #include <unordered_map>
 #include <cxxabi.h>

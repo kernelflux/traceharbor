@@ -21,7 +21,7 @@
 
 #define TLSVAR __thread __attribute__((tls_model("initial-exec")))
 
-namespace matrix {
+namespace traceharbor {
     static bool sInstalled = false;
     static std::mutex sInstalledMaskMutex;
     static std::mutex sSoLoadCallbacksMutex;

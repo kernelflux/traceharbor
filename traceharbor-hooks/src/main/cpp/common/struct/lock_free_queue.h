@@ -21,7 +21,7 @@
 
 #include <common/Macros.h>
 
-namespace matrix {
+namespace traceharbor {
 
     template <typename T>
     struct TaggedPointer {

@@ -23,7 +23,7 @@ project.afterEvaluate {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'io.traceharbor.apk.ApkChecker'
+        attributes 'Main-Class': 'com.kernelflux.traceharbor.apk.ApkChecker'
         attributes 'Manifest-Version': version
     }
     from {

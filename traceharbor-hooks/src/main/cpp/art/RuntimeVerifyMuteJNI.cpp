@@ -6,6 +6,6 @@
 #include "RuntimeVerifyMute.h"
 
 extern "C" jboolean JNIEXPORT
-Java_com_tencent_traceharbor_hook_art_RuntimeVerifyMute_nativeInstall(JNIEnv* env, jobject) {
-    return matrix::art_misc::Install(env) ? JNI_TRUE : JNI_FALSE;
+Java_com_kernelflux_traceharbor_hook_art_RuntimeVerifyMute_nativeInstall(JNIEnv* env, jobject) {
+    return traceharbor::art_misc::Install(env) ? JNI_TRUE : JNI_FALSE;
 }

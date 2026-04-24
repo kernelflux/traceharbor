@@ -1,0 +1,47 @@
+/**
+ * Loads repo-local `private.properties` (Sonatype/Maven Central creds, GPG signing info,
+ * Gradle Plugin Portal `gradle.publish.*`, and any future secrets) into a Gradle-wide map,
+ * and mirrors a few well-known keys into JVM system properties so that third-party plugins
+ * (notably `com.gradle.plugin-publish`) can pick them up without per-module boilerplate.
+ *
+ * Apply once from the root `build.gradle`:
+ *
+ *   apply from: rootProject.file('gradle/private-properties.gradle')
+ *
+ * Read from any sub-project, with -P / gradle.properties / env overrides taking precedence:
+ *
+ *   def v = project.findProperty('mySecret') ?: gradle.privateProperties.getProperty('mySecret')
+ *
+ * Notes:
+ *   - `private.properties` is .gitignored. Missing file = empty Properties (no error).
+ *   - Loaded only once per build invocation (cached on `gradle.ext`).
+ *   - System-property mirror is intentional for plugins that read via
+ *     `providers.systemProperty(...)` and ignore Gradle ext / project properties
+ *     (e.g. `com.gradle.plugin-publish` 1.x).
+ */
+if (!gradle.hasProperty('privateProperties')) {
+    def loaded = new Properties()
+    def f = project.rootProject.file('private.properties')
+    if (f.exists()) {
+        f.withInputStream { loaded.load(it) }
+    }
+    gradle.ext.privateProperties = loaded
+
+    // ---- Bridge well-known secrets into JVM system properties ----
+    // Mapping: <camelCase key in private.properties> -> <dotted system property name>.
+    // -D / pre-set system properties always win; we only set when absent.
+    def systemPropertyBridge = [
+            // Gradle Plugin Portal (com.gradle.plugin-publish):
+            // The plugin reads via providers.systemProperty('gradle.publish.key/secret').
+            gradlePublishKey   : 'gradle.publish.key',
+            gradlePublishSecret: 'gradle.publish.secret',
+    ]
+    systemPropertyBridge.each { String fromKey, String toSysProp ->
+        if (System.getProperty(toSysProp) == null) {
+            def v = loaded.getProperty(fromKey)
+            if (v != null && !v.isEmpty()) {
+                System.setProperty(toSysProp, v)
+            }
+        }
+    }
+}

@@ -3,7 +3,7 @@
 
 #include <sstream>
 
-namespace matrix::hprof::internal::reader {
+namespace traceharbor::hprof::internal::reader {
     Reader::Reader(const uint8_t *source, size_t buffer_size) :
             buffer_size_(buffer_size),
             buffer_(source),

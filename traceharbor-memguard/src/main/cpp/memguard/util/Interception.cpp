@@ -579,12 +579,12 @@ bool memguard::interception::Install() {
         return false;
     }
 
-    matrix::PauseLoadSo();
+    traceharbor::PauseLoadSo();
     xhook_block_refresh();
 
     auto resume = MakeScopeCleaner([]() {
         xhook_unblock_refresh();
-        matrix::ResumeLoadSo();
+        traceharbor::ResumeLoadSo();
     });
 
     if (!BeginHook()) {

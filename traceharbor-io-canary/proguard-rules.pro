@@ -1,3 +1,3 @@
--keep class io.traceharbor.iocanary.core.** {
+-keep class com.kernelflux.traceharbor.iocanary.core.** {
     *;
 }

@@ -16,7 +16,7 @@
 
 package com.tencent.mm.arscutil.io;
 
-import io.traceharbor.javalib.util.Log;
+import com.kernelflux.traceharbor.javalib.util.Log;
 import com.tencent.mm.arscutil.data.ResTable;
 
 import java.io.File;

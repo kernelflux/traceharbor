@@ -2,8 +2,8 @@
 // Created by YinSheng Tang on 2021/7/21.
 //
 
-#ifndef MATRIX_ANDROID_SD_LOG_H
-#define MATRIX_ANDROID_SD_LOG_H
+#ifndef TRACEHARBOR_ANDROID_SD_LOG_H
+#define TRACEHARBOR_ANDROID_SD_LOG_H
 
 
 #include <stdbool.h>
@@ -48,4 +48,4 @@ extern int g_semi_dlfcn_log_level;
     } while (false)
 
 
-#endif //MATRIX_ANDROID_SD_LOG_H
+#endif //TRACEHARBOR_ANDROID_SD_LOG_H

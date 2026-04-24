@@ -67,8 +67,8 @@ bool memguard::EndHook(int rule_group_id, const std::vector<std::string>& ignore
         LOGE(LOG_TAG, "Fail to ignore all symbols in libtraceharbor-hookcommon.so, ret: %d", ret);
         return false;
     }
-    if ((ret = xhook_grouped_ignore(rule_group_id, ".*/libwechatbacktrace\\.so$", nullptr)) != 0) {
-        LOGE(LOG_TAG, "Fail to ignore all symbols in libwechatbacktrace.so, ret: %d", ret);
+    if ((ret = xhook_grouped_ignore(rule_group_id, ".*/libtraceharbor-backtrace\\.so$", nullptr)) != 0) {
+        LOGE(LOG_TAG, "Fail to ignore all symbols in libtraceharbor-backtrace.so, ret: %d", ret);
         return false;
     }
     xhook_enable_debug(0);

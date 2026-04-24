@@ -4,13 +4,15 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.4.1)
 
+include(${CMAKE_CURRENT_LIST_DIR}/../cmake/TraceHarbor16KBPageSize.cmake)
+
 # Specifies a library name, specifies whether the library is STATIC or
 # SHARED, and provides relative paths to the source code. You can
 # define multiple libraries by adding multiple add.library() commands,
 # and CMake builds them for you. When you build your app, Gradle
 # automatically packages shared libraries with your APK.
 
-SET(TARGET wechatbacktrace)
+SET(TARGET traceharbor-backtrace)
 
 SET(SOURCE_DIR src/main/cpp)
 
@@ -32,25 +34,25 @@ SET(
         ${SOURCE_DIR}/common/fake_dlfcn.c
         ${SOURCE_DIR}/common/LogExt.cpp
 
-        ${SOURCE_DIR}/libwechatbacktrace/QutStatistics.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/ExidxDecoder.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/DwarfCfa.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/DwarfSectionDecoder.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/DwarfEhFrameWithHdrDecoder.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/DwarfOp.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/ElfWrapper.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/QuickenTable.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/QuickenMemory.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/QuickenTableManager.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/QuickenMaps.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/QuickenTableGenerator.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/QuickenInMemory.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/QuickenInterface.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/QuickenUnwinder.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/QuickenJNI.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/LocalMaps.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/FpUnwinder.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/Backtrace.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/QutStatistics.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/ExidxDecoder.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/DwarfCfa.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/DwarfSectionDecoder.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/DwarfEhFrameWithHdrDecoder.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/DwarfOp.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/ElfWrapper.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/QuickenTable.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/QuickenMemory.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/QuickenTableManager.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/QuickenMaps.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/QuickenTableGenerator.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/QuickenInMemory.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/QuickenInterface.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/QuickenUnwinder.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/QuickenJNI.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/LocalMaps.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/FpUnwinder.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/Backtrace.cpp
 
         ${SOURCE_DIR}/dexfile/dex_file_loader.cc
         ${SOURCE_DIR}/dexfile/compact_offset_table.cc
@@ -61,11 +63,11 @@ SET(
         ${SOURCE_DIR}/dexfile/compact_dex_file.cc
         ${SOURCE_DIR}/dexfile/dex_file_ext.cc
 
-        ${SOURCE_DIR}/libwechatbacktrace/DebugGlobal.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/DebugDexFiles.cpp
-        ${SOURCE_DIR}/libwechatbacktrace/DebugJit.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/DebugGlobal.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/DebugDexFiles.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/DebugJit.cpp
 
-        ${SOURCE_DIR}/libwechatbacktrace/QuickenProperties.cpp
+        ${SOURCE_DIR}/libtraceharbor-backtrace/QuickenProperties.cpp
 )
 
 ADD_LIBRARY(
@@ -90,7 +92,7 @@ INCLUDE_DIRECTORIES(
 TARGET_INCLUDE_DIRECTORIES(
         ${TARGET}
         PUBLIC ${SOURCE_DIR}/common
-        PUBLIC ${SOURCE_DIR}/libwechatbacktrace/include
+        PUBLIC ${SOURCE_DIR}/libtraceharbor-backtrace/include
         PUBLIC ${SOURCE_DIR}/external/libunwindstack/include
         PUBLIC ${SOURCE_DIR}/dexfile/include
 )

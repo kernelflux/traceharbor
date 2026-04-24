@@ -1,0 +1,83 @@
+<resources>
+    <string name="app_name">TraceHarbor Demo</string>
+
+    <!-- Overflow menu -->
+    <string name="menu_inspect_issue">Inspect issues…</string>
+    <string name="menu_clear_issues">Clear issues</string>
+    <string name="menu_clear_issues_toast">Issues cleared</string>
+
+    <!-- Main hub buttons (mirror upstream Matrix sample order) -->
+    <string name="nav_trace_canary">Trace Canary</string>
+    <string name="nav_resource_canary">Resource Canary</string>
+    <string name="nav_matrix_hooks">Matrix Hooks</string>
+    <string name="nav_battery_canary">Battery Canary</string>
+    <string name="nav_io_canary">IO Canary</string>
+    <string name="nav_sqlite_lint">SQLite Lint</string>
+    <string name="nav_network_traffic">Network Traffic</string>
+    <string name="nav_start_supervisor">Start Supervisor</string>
+    <string name="nav_test_fg_service">test FgService</string>
+    <string name="nav_test_overlay_window">test Overlay Window</string>
+
+    <!-- Activity labels -->
+    <string name="trace_tests_title">Trace Plugin Tests</string>
+    <string name="anr_activity_title">ANR Tests</string>
+    <string name="evil_activity_title">EvilMethod Tests</string>
+    <string name="fps_activity_title">FPS Tests</string>
+    <string name="io_activity_title">IO Canary Tests</string>
+    <string name="leak_activity_title">Resource Leak Tests</string>
+    <string name="hooks_activity_title">Matrix Hooks</string>
+    <string name="battery_activity_title">Battery Canary</string>
+    <string name="sqlite_activity_title">SQLite Lint</string>
+    <string name="traffic_activity_title">Network Traffic</string>
+
+    <!-- Trace sub-hub -->
+    <string name="nav_anr">ANR Tests</string>
+    <string name="nav_evil">Slow Method Tests</string>
+    <string name="nav_fps">FPS Tests</string>
+    <string name="trace_toggle_beat">Toggle AppMethodBeat</string>
+    <string name="trace_print_trace">Print main-thread trace</string>
+
+    <!-- ANR -->
+    <string name="anr_5s">Block main 5 s</string>
+    <string name="anr_8s">Block main 8 s</string>
+    <string name="anr_20s">Block main 20 s</string>
+    <string name="anr_loop_3s">Looper backlog 3 × 3 s</string>
+
+    <!-- EvilMethod -->
+    <string name="evil_call_chain">Nested call chain</string>
+    <string name="evil_300">Sleep 300 ms</string>
+    <string name="evil_800">Sleep 800 ms</string>
+    <string name="evil_2000">Sleep 2000 ms</string>
+    <string name="evil_compute">Heavy CPU compute</string>
+
+    <!-- FPS -->
+    <string name="fps_refresh">Refresh status</string>
+
+    <!-- IO -->
+    <string name="io_main">Main-thread large IO</string>
+    <string name="io_small_buffer">Small-buffer read</string>
+    <string name="io_repeated">Repeated read</string>
+
+    <!-- Leak -->
+    <string name="finish_with_leak">Finish AND leak</string>
+    <string name="finish_without_leak">Finish without leaking</string>
+
+    <!-- Hooks -->
+    <string name="hooks_install_memory">Commit MemoryHook</string>
+    <string name="hooks_install_pthread">Commit PthreadHook</string>
+
+    <!-- Battery -->
+    <string name="battery_start">Start BatteryMonitorPlugin</string>
+    <string name="battery_stop">Stop BatteryMonitorPlugin</string>
+
+    <!-- SQLite Lint -->
+    <string name="sqlite_run">Run inefficient SELECT</string>
+
+    <!-- Traffic -->
+    <string name="traffic_dump">Dump RX / TX counters</string>
+
+    <!-- Toasts -->
+    <string name="toast_supervisor_started">SupervisorStubService started</string>
+    <string name="toast_fg_service_omitted">FgService demo omitted in this sample; see the upstream Matrix sample for the full implementation.</string>
+    <string name="toast_overlay_permission_required">Grant the Overlay permission, then tap the button again.</string>
+</resources>

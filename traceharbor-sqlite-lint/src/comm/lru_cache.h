@@ -18,8 +18,8 @@
 // Created by yanguoyue on 2018/1/17.
 //
 
-#ifndef MATRIX_ANDROID_LRU_CACHE_H
-#define MATRIX_ANDROID_LRU_CACHE_H
+#ifndef TRACEHARBOR_ANDROID_LRU_CACHE_H
+#define TRACEHARBOR_ANDROID_LRU_CACHE_H
 
 #include <stddef.h>
 #include <list>
@@ -95,4 +95,4 @@ namespace sqlitelint {
 
 }
 
-#endif //MATRIX_ANDROID_LRU_CACHE_H
+#endif //TRACEHARBOR_ANDROID_LRU_CACHE_H

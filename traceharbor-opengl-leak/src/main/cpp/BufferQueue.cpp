@@ -35,7 +35,7 @@
 #include <Log.h>
 #include "BufferQueue.h"
 
-namespace matrix {
+namespace traceharbor {
 
     std::atomic<size_t> BufferQueueContainer::g_locker_collision_counter = 0;
 

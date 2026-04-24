@@ -19,8 +19,8 @@
 // TrafficCollector.h
 
 
-#ifndef MATRIX_ANDROID_TRAFFICCOLLECTOR_H
-#define MATRIX_ANDROID_TRAFFICCOLLECTOR_H
+#ifndef TRACEHARBOR_ANDROID_TRAFFICCOLLECTOR_H
+#define TRACEHARBOR_ANDROID_TRAFFICCOLLECTOR_H
 
 #include <jni.h>
 #include "util/Logging.h"
@@ -82,4 +82,4 @@ public :
 };
 }// namespace TraceHarborTraffic
 
-#endif //MATRIX_ANDROID_TRAFFICCOLLECTOR_H
+#endif //TRACEHARBOR_ANDROID_TRAFFICCOLLECTOR_H

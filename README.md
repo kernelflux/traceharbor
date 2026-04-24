@@ -49,9 +49,17 @@ Example commands:
 ```bash
 ./gradlew help --stacktrace
 ./gradlew :traceharbor-gradle-plugin:build --stacktrace
+./gradlew :samples:sample-android:assembleDebug --stacktrace
 ```
 
 If Gradle wrapper download fails in CLI, verify local JDK 17 and network/SSL access first.
+
+## Demo App
+
+A minimal host app for validating `TraceHarbor.init(...)` now lives in `samples/sample-android`.
+
+- build with `./gradlew :samples:sample-android:assembleDebug --stacktrace`
+- install with `./gradlew :samples:sample-android:installDebug --stacktrace`
 
 ## Related Notes
 

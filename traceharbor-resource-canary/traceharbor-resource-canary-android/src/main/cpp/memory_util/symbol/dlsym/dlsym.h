@@ -2,8 +2,8 @@
 // Created by M.D. on 2021/10/29.
 //
 
-#ifndef MATRIX_ANDROID_DLSYM_H
-#define MATRIX_ANDROID_DLSYM_H
+#ifndef TRACEHARBOR_ANDROID_DLSYM_H
+#define TRACEHARBOR_ANDROID_DLSYM_H
 
 extern "C" {
 
@@ -19,4 +19,4 @@ void *ds_find(void *handle, const char *name);
 
 }
 
-#endif //MATRIX_ANDROID_DLSYM_H
+#endif //TRACEHARBOR_ANDROID_DLSYM_H

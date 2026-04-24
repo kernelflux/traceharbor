@@ -18,11 +18,11 @@
 //
 // TraceHarborTraffic.h
 
-#ifndef MATRIX_ANDROID_MATRIXTRAFFIC_H
-#define MATRIX_ANDROID_MATRIXTRAFFIC_H
+#ifndef TRACEHARBOR_ANDROID_MATRIXTRAFFIC_H
+#define TRACEHARBOR_ANDROID_MATRIXTRAFFIC_H
 
 void setFdStackTraceCall(const char* key);
 void clearFdInfoCall(int fd);
 void printLog(const char* log);
 
-#endif //MATRIX_ANDROID_MATRIXTRAFFIC_H
+#endif //TRACEHARBOR_ANDROID_MATRIXTRAFFIC_H

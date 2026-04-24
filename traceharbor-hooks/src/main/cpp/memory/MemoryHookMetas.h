@@ -18,8 +18,8 @@
 // Created by Yves on 2020/6/22.
 //
 
-#ifndef LIBMATRIX_HOOK_MEMORYHOOKMETAS_H
-#define LIBMATRIX_HOOK_MEMORYHOOKMETAS_H
+#ifndef LIBTRACEHARBOR_HOOK_MEMORYHOOKMETAS_H
+#define LIBTRACEHARBOR_HOOK_MEMORYHOOKMETAS_H
 
 #include <map>
 #include <vector>
@@ -59,7 +59,7 @@ struct __attribute__((__packed__)) stack_meta_t {
      */
     size_t size;
     uintptr_t caller;
-    matrix::memory_backtrace_t backtrace;
+    traceharbor::memory_backtrace_t backtrace;
     void *ext;
 };
 
@@ -103,7 +103,7 @@ public:
     }
 
     inline bool
-    stacktrace_compare_common(matrix::memory_backtrace_t &a, matrix::memory_backtrace_t &b) {
+    stacktrace_compare_common(traceharbor::memory_backtrace_t &a, traceharbor::memory_backtrace_t &b) {
         if (a.frame_size != b.frame_size) {
             return false;
         }
@@ -124,7 +124,7 @@ public:
     inline void insert(
             const void *__ptr,
             uint64_t __stack_hash,
-            matrix::allocation_message_t *allocation_message,
+            traceharbor::allocation_message_t *allocation_message,
             std::function<void(ptr_meta_t *, stack_meta_t *)> __callback) {
 
         TARGET_PTR_CONTAINER_LOCKED(ptr_meta_container, __ptr);
@@ -174,9 +174,9 @@ public:
                         is_top = 0;
 
                         // Statistic
-                        matrix::BufferQueue::g_queue_extra_stack_meta_allocated.fetch_add(
+                        traceharbor::BufferQueue::g_queue_extra_stack_meta_allocated.fetch_add(
                                 1, std::memory_order_relaxed);
-                        matrix::BufferQueue::g_queue_extra_stack_meta_kept.fetch_add(
+                        traceharbor::BufferQueue::g_queue_extra_stack_meta_kept.fetch_add(
                                 1, std::memory_order_relaxed);
                     }
                 }
@@ -273,7 +273,7 @@ public:
                             free(ext);
 
                             // Statistic
-                            matrix::BufferQueue::g_queue_extra_stack_meta_kept.fetch_sub(1, std::memory_order_relaxed);
+                            traceharbor::BufferQueue::g_queue_extra_stack_meta_kept.fetch_sub(1, std::memory_order_relaxed);
                         }
                     }
                 }
@@ -342,4 +342,4 @@ private:
 
 #undef TAG
 
-#endif //LIBMATRIX_HOOK_MEMORYHOOKMETAS_H
+#endif //LIBTRACEHARBOR_HOOK_MEMORYHOOKMETAS_H

@@ -4,6 +4,8 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
+include(${CMAKE_CURRENT_LIST_DIR}/../cmake/TraceHarbor16KBPageSize.cmake)
+
 # Specifies a library name, specifies whether the library is STATIC or
 # SHARED, and provides relative paths to the source code. You can
 # define multiple libraries by adding multiple add.library() commands,
@@ -21,8 +23,8 @@ ENDIF()
 
 set(
         SOURCE_FILES
-        ${SOURCE_DIR}/com_tencent_traceharbor_openglleak_detector_FuncSeeker.cpp
-        ${SOURCE_DIR}/com_tencent_traceharbor_openglleak_hook_OpenGLHook.cpp
+        ${SOURCE_DIR}/com_kernelflux_traceharbor_openglleak_detector_FuncSeeker.cpp
+        ${SOURCE_DIR}/com_kernelflux_traceharbor_openglleak_hook_OpenGLHook.cpp
         ${SOURCE_DIR}/BufferQueue.cpp
         ${SOURCE_DIR}/StackMeta.cpp
         ${SOURCE_DIR}/type.cpp
@@ -78,7 +80,7 @@ target_link_libraries( # Specifies the target library.
         EGL
         PRIVATE ${EXT_DEP}/lib/${ANDROID_ABI}/libxhook.a
         PRIVATE ${EXT_DEP}/lib/${ANDROID_ABI}/libsemi_dlfcn.a
-        PRIVATE ${EXT_DEP}/lib/${ANDROID_ABI}/libwechatbacktrace.so
+        PRIVATE ${EXT_DEP}/lib/${ANDROID_ABI}/libtraceharbor-backtrace.so
 )
 
 TARGET_COMPILE_OPTIONS(

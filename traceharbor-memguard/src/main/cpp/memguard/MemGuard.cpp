@@ -41,7 +41,7 @@ bool memguard::Install(const Options* opts) {
         }
     }
 
-    if (!matrix::InstallSoLoadMonitor()) {
+    if (!traceharbor::InstallSoLoadMonitor()) {
         LOGE(LOG_TAG, "Fail to install SoLoadMonitor.");
         return false;
     }

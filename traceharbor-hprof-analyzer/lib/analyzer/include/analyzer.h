@@ -7,7 +7,7 @@
 #include <vector>
 #include <optional>
 
-namespace matrix::hprof::internal::analyzer {
+namespace traceharbor::hprof::internal::analyzer {
 
     /**
      * The key of returned map is the leak identifier in \a tracked, or the identifier is not in map keys if the object

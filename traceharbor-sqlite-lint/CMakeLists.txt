@@ -11,6 +11,8 @@ cmake_minimum_required(VERSION 3.4.1)
 # We called it SQLiteLint which is to find improper usages of SQLite3
 project(SQLiteLint)
 
+include(${CMAKE_CURRENT_LIST_DIR}/../cmake/TraceHarbor16KBPageSize.cmake)
+
 set(ANDROID_SDK_DIR_NAME traceharbor-sqlite-lint-android-sdk)
 
 # Collect src to SQLiteLint_Library_SRCS

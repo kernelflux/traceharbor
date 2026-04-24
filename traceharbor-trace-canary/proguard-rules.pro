@@ -1,2 +1,2 @@
 
--keep class io.traceharbor.trace.core.AppMethodBeat { *; }
+-keep class com.kernelflux.traceharbor.trace.core.AppMethodBeat { *; }

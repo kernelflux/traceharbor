@@ -5,7 +5,7 @@
 
 #include "reader.h"
 
-namespace matrix::hprof::internal::parser {
+namespace traceharbor::hprof::internal::parser {
 
     /**
      * The only production implementation of the engine interface must implements functions pure for testability.

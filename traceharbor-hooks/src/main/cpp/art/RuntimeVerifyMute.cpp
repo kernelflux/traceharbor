@@ -16,7 +16,7 @@
 static bool sInitialized = false;
 static std::mutex sInitLock;
 
-bool matrix::art_misc::Install(JNIEnv* env) {
+bool traceharbor::art_misc::Install(JNIEnv* env) {
     if (sInitialized) {
         LOGI(LOG_TAG, "[!] Already installed.");
         return true;

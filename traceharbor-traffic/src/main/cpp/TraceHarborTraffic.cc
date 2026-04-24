@@ -66,7 +66,7 @@ void makeNativeStack(wechat_backtrace::Backtrace* backtrace, char *&stack) {
     auto _callback = [&](wechat_backtrace::FrameDetail it) {
         std::string so_name = it.map_name;
 
-        if (strstr(it.map_name, "libtraceharbor-traffic.so") || strstr(it.map_name, "libwechatbacktrace.so")) {
+        if (strstr(it.map_name, "libtraceharbor-traffic.so") || strstr(it.map_name, "libtraceharbor-backtrace.so")) {
             return;
         }
 
@@ -334,7 +334,7 @@ static void hookSocket(bool rxHook, bool txHook, bool willHookAllSoReadWrite) {
     xhook_grouped_ignore(HOOK_REQUEST_GROUPID_TRAFFIC, ".*libandroidfw\\.so$", nullptr);
     xhook_grouped_ignore(HOOK_REQUEST_GROUPID_TRAFFIC, ".*libaudioclient\\.so$", nullptr);
     xhook_grouped_ignore(HOOK_REQUEST_GROUPID_TRAFFIC, ".*libjavacrypto\\.so$", nullptr);
-    xhook_grouped_ignore(HOOK_REQUEST_GROUPID_TRAFFIC, ".*libwechatbacktrace\\.so$", nullptr);
+    xhook_grouped_ignore(HOOK_REQUEST_GROUPID_TRAFFIC, ".*libtraceharbor-backtrace\\.so$", nullptr);
     xhook_grouped_ignore(HOOK_REQUEST_GROUPID_TRAFFIC, ".*libtraceharbor-memoryhook\\.so$", nullptr);
     xhook_grouped_ignore(HOOK_REQUEST_GROUPID_TRAFFIC, ".*libtraceharbor-traffic\\.so$", nullptr);
 
@@ -375,7 +375,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *) {
     if (vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_6) != JNI_OK)
         return -1;
 
-    jclass trafficCollectorCls = env->FindClass("io/traceharbor/traffic/TrafficPlugin");
+    jclass trafficCollectorCls = env->FindClass("com/kernelflux/traceharbor/traffic/TrafficPlugin");
     if (!trafficCollectorCls)
         return -1;
     gJ.TrafficPlugin = static_cast<jclass>(env->NewGlobalRef(trafficCollectorCls));

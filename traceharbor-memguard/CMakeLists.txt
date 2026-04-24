@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.4.1)
 
+include(${CMAKE_CURRENT_LIST_DIR}/../cmake/TraceHarbor16KBPageSize.cmake)
+
 option(EnableLOG "Enable Logs" ON)
 if(EnableLOG)
     add_definitions(-DEnableLOG)
@@ -53,7 +55,7 @@ target_link_libraries(
   ${TARGET}
   PUBLIC -Wl,--gc-sections
   PUBLIC ${EXT_DEP}/lib/${ANDROID_ABI}/libtraceharbor-hookcommon.so
-  PUBLIC ${EXT_DEP}/lib/${ANDROID_ABI}/libwechatbacktrace.so
+  PUBLIC ${EXT_DEP}/lib/${ANDROID_ABI}/libtraceharbor-backtrace.so
   PUBLIC ${EXT_DEP}/lib/${ANDROID_ABI}/libunwindstack.a
 )
 
@@ -62,8 +64,8 @@ set(TARGET traceharbor-memguard)
 add_library(
   ${TARGET}
   SHARED
-  ${SOURCE_DIR}/memguard/jni/com_tencent_mm_tools_memguard_MemGuard.cpp
-  ${SOURCE_DIR}/memguard/jni/com_tencent_mm_tools_memguard_MemGuard_00024Options.cpp
+  ${SOURCE_DIR}/memguard/jni/com_kernelflux_traceharbor_memguard_MemGuard.cpp
+  ${SOURCE_DIR}/memguard/jni/com_kernelflux_traceharbor_memguard_MemGuard_00024Options.cpp
   ${SOURCE_DIR}/memguard/jni/JNIAux.cpp
   ${SOURCE_DIR}/memguard/jni/C2Java.cpp
 )

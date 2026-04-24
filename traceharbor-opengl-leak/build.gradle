@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-apply from: rootProject.file('gradle/WeChatNativeDepend.gradle')
+apply from: rootProject.file('gradle/TraceHarborNativeDepend.gradle')
 
 android {
     namespace rootProject.ext.androidNamespaces[project.path]
@@ -18,7 +18,7 @@ android {
 
         externalNativeBuild {
             cmake {
-                arguments = ['-DANDROID_STL=c++_shared', "-DEnableLOG=${gradle.enableLog() ? "ON" : "OFF"}" as String]
+                arguments = ['-DANDROID_STL=c++_static', "-DEnableLOG=${gradle.enableLog() ? "ON" : "OFF"}" as String]
             }
         }
     }

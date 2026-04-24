@@ -26,7 +26,7 @@
 #include <xhook_ext.h>
 #include "sqlite_lint.h"
 #include "lemon/sqlite3.h"
-#include "com_tencent_sqlitelint_util_SLog.h"
+#include "com_kernelflux_traceharbor_sqlitelint_util_SLog.h"
 #include "jni_helper.h"
 
 namespace sqlitelint {
@@ -90,7 +90,7 @@ namespace sqlitelint {
         return original_sqlite3_profile(db, SQLiteLintSqlite3ProfileCallback, p);
     }
 
-    JNIEXPORT jboolean JNICALL Java_com_tencent_sqlitelint_util_SQLite3ProfileHooker_nativeDoHook(JNIEnv *env, jobject /* this */) {
+    JNIEXPORT jboolean JNICALL Java_com_kernelflux_traceharbor_sqlitelint_util_SQLite3ProfileHooker_nativeDoHook(JNIEnv *env, jobject /* this */) {
         LOGI("SQLiteLintHooker_nativeDoHook");
         if (!kInitSuc) {
             LOGW("SQLiteLintHooker_nativeDoHook kInitSuc failed");
@@ -123,14 +123,14 @@ namespace sqlitelint {
         return true;
     }
 
-    JNIEXPORT jboolean JNICALL Java_com_tencent_sqlitelint_util_SQLite3ProfileHooker_nativeStartProfile(JNIEnv *env, jobject /* this */) {
+    JNIEXPORT jboolean JNICALL Java_com_kernelflux_traceharbor_sqlitelint_util_SQLite3ProfileHooker_nativeStartProfile(JNIEnv *env, jobject /* this */) {
         LOGI("SQLiteLintHooker_nativeStartProfile");
         kStop = false;
         return true;
 
     }
 
-    JNIEXPORT jboolean JNICALL Java_com_tencent_sqlitelint_util_SQLite3ProfileHooker_nativeStopProfile(JNIEnv *env, jobject /* this */) {
+    JNIEXPORT jboolean JNICALL Java_com_kernelflux_traceharbor_sqlitelint_util_SQLite3ProfileHooker_nativeStopProfile(JNIEnv *env, jobject /* this */) {
         LOGI("SQLiteLintHooker_nativeStopProfile");
         kStop = true;
         return true;
@@ -142,7 +142,7 @@ namespace sqlitelint {
         kJvm = vm;
         jint result = -1;
 
-        jclass utilClass = env->FindClass("io/traceharbor/sqlitelint/util/SQLiteLintUtil");
+        jclass utilClass = env->FindClass("com/kernelflux/traceharbor/sqlitelint/util/SQLiteLintUtil");
         if (utilClass == nullptr)  {
             return result;
         }

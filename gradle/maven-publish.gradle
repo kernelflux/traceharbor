@@ -1,3 +1,19 @@
+/**
+ * 通用 Maven Central 发布配置（参考 fluxrouter/gradle/maven-publish.gradle）。
+ *
+ * 用法：
+ *   ext {
+ *       publishArtifactId = "traceharbor-xxx"        // 必需
+ *       publishVersion    = rootProject.ext.VERSION_NAME  // 必需
+ *       // publishBundleName = "..."                 // 可选，默认按 artifactId 生成
+ *   }
+ *   apply from: rootProject.file('gradle/maven-publish.gradle')
+ *
+ * 主要工作：apply `com.kernelflux.maven.publish` 并配置 `mavenCentralUpload`。
+ * 对 flavor 模块（设置了 `ext.publishAdditionalPublications`）会先 apply `maven-publish`
+ * 并在 `afterEvaluate` 内创建对应 publication，避免 kfx 默认查找 `components.release` 失败。
+ * 本地无 GPG 时改用 `gradle/maven-devlocal-publication.gradle`。
+ */
 import org.gradle.api.Action
 import org.gradle.api.publish.maven.MavenPom
 import org.gradle.api.publish.maven.MavenPublication
@@ -9,15 +25,48 @@ if (!project.hasProperty('publishVersion')) {
     throw new GradleException("publishVersion must be defined before applying gradle/maven-publish.gradle")
 }
 
+// Mirror fluxrouter/gradle/maven-publish.gradle: hard-code the publish group so we never
+// depend on rootProject.ext.GROUP for the actual coordinate. All artifacts (regular AAR/jar
+// and the gradle plugin jar) live under this group; only the artifactId differs per module.
+def sGroupId = "com.kernelflux.mobile"
 def publishArtifactId = project.ext.publishArtifactId as String
 def publishVersion = project.ext.publishVersion as String
 def publishBundleName = project.hasProperty('publishBundleName')
         ? project.ext.publishBundleName as String
         : "${publishArtifactId.replace('-', '_')}_bundle_v${publishVersion}"
+
+// 多发布支持（仅 traceharbor-sqlite-lint-android-sdk 这种带 flavor 的模块需要）：
+//   ext.publishAdditionalPublications = [[name:'release', component:'fullRelease', artifactId:'...'], ...]
+// 必须在 kfx 插件 apply 之前创建 'release' publication，否则 kfx 默认会用不存在的
+// `components.release`（flavor 模块的组件名是 `<flavor>Release`）失败。
 def extraPublications = project.hasProperty('publishAdditionalPublications')
         ? project.ext.publishAdditionalPublications as List<Map<String, String>>
         : []
 
+// ---- 凭据/签名读取顺序：-P / gradle.properties -> private.properties -> rootProject.ext ----
+// `gradle.privateProperties` 由 root build.gradle 顶部 apply 的 gradle/private-properties.gradle 提供。
+def sharedPrivateProps = gradle.hasProperty('privateProperties') ? gradle.privateProperties : new Properties()
+def sonatypeUsername = project.findProperty("sonatypeUsername") ?: sharedPrivateProps.getProperty("sonatypeUsername")
+def sonatypePassword = project.findProperty("sonatypePassword") ?: sharedPrivateProps.getProperty("sonatypePassword")
+def signingKeyFileProp = project.findProperty("signingKeyFile") ?: sharedPrivateProps.getProperty("signingKeyFile")
+def signingPassProp = project.findProperty("signingPass") ?: sharedPrivateProps.getProperty("signingPass")
+
+// rootProject.ext 兜底（fluxrouter 同款）
+if (!signingKeyFileProp) {
+    try {
+        def v = rootProject.ext.get("signingKeyFile")
+        if (v && v.toString() && !v.toString().contains("extension")) signingKeyFileProp = v
+    } catch (Exception ignore) {}
+}
+if (!signingPassProp) {
+    try {
+        def v = rootProject.ext.get("signingPass")
+        if (v && v.toString() && !v.toString().contains("extension")) signingPassProp = v
+    } catch (Exception ignore) {}
+}
+
+// 共享 POM 块：从 rootProject.ext.POM_* 读，与现有 build.gradle 保持兼容。
+// 注意：定义必须在 extraPublications afterEvaluate 之前，且需在 mavenCentralUpload 闭包之前。
 def configureSharedPom = { MavenPom mavenPom, String pomName ->
     mavenPom.name.set(pomName)
     mavenPom.description.set(project.rootProject.ext.POM_DESCRIPTION)
@@ -47,23 +96,17 @@ if (!extraPublications.isEmpty()) {
     }
     project.afterEvaluate {
         def publishingExtension = project.extensions.getByType(org.gradle.api.publish.PublishingExtension)
-        publishingExtension.publications { publicationContainer ->
-            extraPublications.each { publicationConfig ->
-                def publicationName = publicationConfig.name
-                def componentName = publicationConfig.component
-                def artifactId = publicationConfig.artifactId
-                def publication = publicationContainer.findByName(publicationName)
-                if (publication == null) {
-                    publication = publicationContainer.create(publicationName, MavenPublication)
+        publishingExtension.publications { container ->
+            extraPublications.each { cfg ->
+                def pub = container.findByName(cfg.name) ?: container.create(cfg.name, MavenPublication)
+                pub.groupId = sGroupId
+                pub.version = publishVersion
+                pub.artifactId = cfg.artifactId
+                if (project.components.findByName(cfg.component) == null) {
+                    throw new GradleException("Component '${cfg.component}' not found for publication '${cfg.name}' in ${project.path}")
                 }
-                publication.groupId = rootProject.ext.GROUP
-                publication.version = publishVersion
-                publication.artifactId = artifactId
-                if (project.components.findByName(componentName) == null) {
-                    throw new GradleException("Component '${componentName}' not found for publication '${publicationName}' in ${project.path}")
-                }
-                publication.from(project.components.getByName(componentName))
-                configureSharedPom(publication.pom, publicationConfig.pomName ?: artifactId)
+                pub.from(project.components.getByName(cfg.component))
+                configureSharedPom(pub.pom, cfg.pomName ?: cfg.artifactId)
             }
         }
     }
@@ -73,55 +116,34 @@ if (!project.plugins.hasPlugin('com.kernelflux.maven.publish')) {
     project.plugins.apply('com.kernelflux.maven.publish')
 }
 
-def privatePropsFile = project.rootProject.file("private.properties")
-def sonatypeUsername = project.findProperty("sonatypeUsername")
-def sonatypePassword = project.findProperty("sonatypePassword")
-def signingKeyFileProp = project.findProperty("signingKeyFile")
-def signingPassProp = project.findProperty("signingPass")
-
-if (privatePropsFile.exists()) {
-    def privateProps = new Properties()
-    privateProps.load(new FileInputStream(privatePropsFile))
-    if (!sonatypeUsername) {
-        sonatypeUsername = privateProps.getProperty("sonatypeUsername")
-    }
-    if (!sonatypePassword) {
-        sonatypePassword = privateProps.getProperty("sonatypePassword")
-    }
-    if (!signingKeyFileProp) {
-        signingKeyFileProp = privateProps.getProperty("signingKeyFile")
-    }
-    if (!signingPassProp) {
-        signingPassProp = privateProps.getProperty("signingPass")
-    }
-}
-
 mavenCentralUpload {
     uploadBundleName.set(publishBundleName)
-    groupId.set(rootProject.ext.GROUP)
+    groupId.set(sGroupId)
     artifactId.set(publishArtifactId)
     version.set(publishVersion)
 
-    if (sonatypeUsername) {
-        username.set(sonatypeUsername as String)
-    }
-    if (sonatypePassword) {
-        password.set(sonatypePassword as String)
-    }
+    if (sonatypeUsername) username.set(sonatypeUsername as String)
+    if (sonatypePassword) password.set(sonatypePassword as String)
+
     if (signingKeyFileProp) {
-        def keyFile = new File(signingKeyFileProp as String)
-        def finalPath = keyFile.isAbsolute()
-                ? keyFile.absolutePath
-                : new File(project.rootProject.projectDir, signingKeyFileProp as String).absolutePath
+        def keyStr = signingKeyFileProp.toString()
+        def keyFileObj = new File(keyStr)
+        def rootDirStr = project.rootProject.projectDir.toString()
+        def finalPath
+        if (keyFileObj.isAbsolute() && keyFileObj.exists()) {
+            finalPath = keyFileObj.absolutePath
+        } else {
+            // 处理 "/gpg/secret-key.asc" 这种以 / 开头但是相对路径的写法（fluxrouter 同款）
+            def normalized = (keyStr.startsWith("/") && !keyFileObj.isAbsolute()) ? keyStr.substring(1) : keyStr
+            finalPath = new File(rootDirStr, normalized).absolutePath
+        }
         if (new File(finalPath).exists()) {
             signingKeyFile.set(finalPath)
         } else {
             println("Maven Central Upload: signingKeyFile not found: ${finalPath}, signing will be disabled")
         }
     }
-    if (signingPassProp) {
-        signingPass.set(signingPassProp as String)
-    }
+    if (signingPassProp) signingPass.set(signingPassProp.toString())
 
     pom.set(new Action<MavenPom>() {
         @Override

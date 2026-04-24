@@ -37,7 +37,7 @@
 #include "MemoryHookMetas.h"
 #include "common/Macros.h"
 
-namespace matrix {
+namespace traceharbor {
 
     void _hook_check(bool assertion) {
         HOOK_CHECK(assertion)

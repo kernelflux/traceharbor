@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10.2)
 project(traceharbor_hprof_analyzer)
 
+include(${CMAKE_CURRENT_LIST_DIR}/../cmake/TraceHarbor16KBPageSize.cmake)
+
 set(CMAKE_CXX_STANDARD 17)
 
 option(TEST_MODE "Enable test mode." OFF)

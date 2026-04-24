@@ -22,7 +22,7 @@
 
 #include <common/Macros.h>
 
-namespace matrix {
+namespace traceharbor {
 
 #define CACHE_LINE_SIZE     64
 

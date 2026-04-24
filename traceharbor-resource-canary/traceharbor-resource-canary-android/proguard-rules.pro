@@ -24,6 +24,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class io.traceharbor.resource.analyzer.model.DestroyedActivityInfo { *; }
--keep class io.traceharbor.resource.MemoryUtil$TaskResult { *; }
--keep class io.traceharbor.resource.MemoryUtil$*Exception { *; }
+-keep class com.kernelflux.traceharbor.resource.analyzer.model.DestroyedActivityInfo { *; }
+-keep class com.kernelflux.traceharbor.resource.MemoryUtil$TaskResult { *; }
+-keep class com.kernelflux.traceharbor.resource.MemoryUtil$*Exception { *; }

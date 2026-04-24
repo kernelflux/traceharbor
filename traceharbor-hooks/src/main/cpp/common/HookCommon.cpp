@@ -32,25 +32,6 @@ extern "C" {
 
 #define TAG "TraceHarbor.HookCommon"
 
-void test_log_to_file(const char *ch) {
-    const char *dir = "/sdcard/Android/data/com.tencent.mm/MicroMsg/Diagnostic";
-    const char *path = "/sdcard/Android/data/com.tencent.mm/MicroMsg/Diagnostic/log";
-
-    mkdir(dir, S_IRWXU|S_IRWXG|S_IROTH);
-
-    FILE *log_file = fopen(path, "a+");
-
-    if (!log_file) {
-        return;
-    }
-
-    fprintf(log_file, "%p:%s\n", ch, ch);
-
-    fflush(log_file);
-    fclose(log_file);
-
-}
-
 bool get_java_stacktrace(char *stack_dst, size_t size) {
     JNIEnv *env = nullptr;
 

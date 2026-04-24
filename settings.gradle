@@ -1,3 +1,36 @@
+// =====================================================================
+// pluginManagement: where Gradle resolves `plugins { id "..." }` blocks.
+// Order matters — mavenLocal first so the freshly-published TraceHarbor
+// plugin marker (`com.kernelflux.traceharbor.plugin.gradle.plugin`) wins.
+//
+// Versions for our own plugin id are loaded from gradle.properties so
+// downstream modules can simply write `plugins { id "com.kernelflux.traceharbor.plugin" }`
+// without repeating the version string.
+// =====================================================================
+pluginManagement {
+    // Pull TraceHarbor's own plugin version from gradle.properties so consumers and the
+    // sample module stay in lockstep with the published artifact
+    // (group:com.kernelflux.traceharbor.plugin, artifactId:traceharbor-gradle-plugin,
+    // version: ${VERSION_NAME_PREFIX}${VERSION_NAME_SUFFIX}).
+    def thProps = new Properties()
+    file("$rootDir/gradle.properties").withInputStream { thProps.load(it) }
+    def thVersion = "${thProps.getProperty('VERSION_NAME_PREFIX')}${thProps.getProperty('VERSION_NAME_SUFFIX', '')}"
+
+    repositories {
+        mavenLocal()
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+
+    plugins {
+        id 'com.kernelflux.traceharbor.plugin' version "$thVersion"
+        id 'com.android.application'           version '8.2.2'
+        id 'com.android.library'               version '8.2.2'
+        id 'org.jetbrains.kotlin.android'      version '1.8.22'
+    }
+}
+
 rootProject.name = 'TraceHarbor'
 
 apply from: "$rootDir/gradle/Arguments.gradle"
@@ -30,6 +63,32 @@ include ':traceharbor-mallctl'
 include ':traceharbor-fd'
 
 include ':traceharbor-memory-canary'
+
+// Sample uses the plugin from mavenLocal() (and its POM deps). Publish first, e.g.:
+//   TRACEHARBOR_SKIP_SAMPLE=1 ./gradlew traceharborPublishPluginForSample
+// or exclude the sample: TRACEHARBOR_SKIP_SAMPLE=1 or -PtraceharborSkipSample=true
+//
+// Auto-skip when running publish/deploy tasks: the plugin marker isn't in mavenLocal yet
+// during a release flow, so configuring the sample would always fail with
+// "Plugin [id: 'com.kernelflux.traceharbor.plugin'] was not found".
+def publishLikeTask = { String t ->
+    def lower = t.toLowerCase()
+    return lower.contains('deploytomavencentral') ||
+            lower.contains('mavencentralupload') ||
+            lower.contains('publishtomavencentral') ||
+            lower.contains('publishplugins') ||
+            lower.contains('uploadarchives') ||
+            lower == 'publish' || lower.endsWith(':publish') ||
+            lower.startsWith('publish') ||
+            lower.contains(':publish')
+}
+def autoSkipForPublish = gradle.startParameter.taskNames.any { publishLikeTask(it.toString()) }
+def skipSample = '1' == (System.getenv('TRACEHARBOR_SKIP_SAMPLE') ?: '')
+        || 'true'.equalsIgnoreCase((gradle.startParameter.projectProperties.get('traceharborSkipSample') ?: '').toString())
+        || autoSkipForPublish
+if (!skipSample) {
+    include ':samples:sample-android'
+}
 
 if (gradle.staticLinkCXX()) {
     include ':traceharbor-hooks:cxx-static'

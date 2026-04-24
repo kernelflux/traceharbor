@@ -3,7 +3,7 @@
 
 #include "traceharbor_hprof_analyzer.h"
 
-using namespace matrix::hprof;
+using namespace traceharbor::hprof;
 
 bool exclude_default_references(HprofAnalyzer &analyzer);
 

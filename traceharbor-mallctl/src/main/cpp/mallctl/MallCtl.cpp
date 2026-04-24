@@ -18,6 +18,7 @@
 // Created by Yves on 2020/7/15.
 //
 
+#include <cassert>
 #include <jni.h>
 #include <dlfcn.h>
 #include <unistd.h>
@@ -107,14 +108,14 @@ static void flush_decay_purge() {
 }
 
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_mallctl_MallCtl_initNative(JNIEnv *env, jclass clazz) {
+Java_com_kernelflux_traceharbor_mallctl_MallCtl_initNative(JNIEnv *env, jclass clazz) {
     if (!initialized) {
         initialized = init();
     }
 }
 
 JNIEXPORT jstring JNICALL
-Java_com_tencent_traceharbor_mallctl_MallCtl_getVersionNative(JNIEnv *env, jclass clazz) {
+Java_com_kernelflux_traceharbor_mallctl_MallCtl_getVersionNative(JNIEnv *env, jclass clazz) {
 #ifdef __LP64__
     return env->NewStringUTF("64-bit");
 #else
@@ -134,7 +135,7 @@ Java_com_tencent_traceharbor_mallctl_MallCtl_getVersionNative(JNIEnv *env, jclas
 #define MALLOPT_SYM_NOT_FOUND -1
 
 JNIEXPORT jint JNICALL
-Java_com_tencent_traceharbor_mallctl_MallCtl_malloptNative(JNIEnv *env, jclass clazz) {
+Java_com_kernelflux_traceharbor_mallctl_MallCtl_malloptNative(JNIEnv *env, jclass clazz) {
     if (!libc_mallopt) {
         return MALLOPT_SYM_NOT_FOUND;
     }
@@ -148,7 +149,7 @@ Java_com_tencent_traceharbor_mallctl_MallCtl_malloptNative(JNIEnv *env, jclass c
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_tencent_traceharbor_mallctl_MallCtl_setRetainNative(JNIEnv *env, jclass clazz,
+Java_com_kernelflux_traceharbor_mallctl_MallCtl_setRetainNative(JNIEnv *env, jclass clazz,
                                                         jboolean enable) {
 #ifdef __LP64__
     return true;
@@ -164,7 +165,7 @@ Java_com_tencent_traceharbor_mallctl_MallCtl_setRetainNative(JNIEnv *env, jclass
 }
 
 JNIEXPORT jint JNICALL
-Java_com_tencent_traceharbor_mallctl_MallCtl_flushReadOnlyFilePagesNative(JNIEnv *env, jclass clazz,
+Java_com_kernelflux_traceharbor_mallctl_MallCtl_flushReadOnlyFilePagesNative(JNIEnv *env, jclass clazz,
                                                                      jlong begin, jlong size) {
 
     return madvise((void *)begin, (size_t) size, MADV_DONTNEED);

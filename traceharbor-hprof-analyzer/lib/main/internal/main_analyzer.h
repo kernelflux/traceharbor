@@ -12,7 +12,7 @@
 #include "heap.h"
 #include "parser.h"
 
-namespace matrix::hprof {
+namespace traceharbor::hprof {
 
     class HprofAnalyzerImpl {
     public:

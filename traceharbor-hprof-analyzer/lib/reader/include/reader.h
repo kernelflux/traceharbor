@@ -6,7 +6,7 @@
 
 #include "macro.h"
 
-namespace matrix::hprof::internal::reader {
+namespace traceharbor::hprof::internal::reader {
 
     class Reader {
     public:

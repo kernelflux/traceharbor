@@ -203,13 +203,13 @@ private:
     uintptr_t mSpace2Size;
 };
 
-bool matrix::gc_ss_trimmer::IsCompatible() {
+bool traceharbor::gc_ss_trimmer::IsCompatible() {
     SemiSpaceSearcher semiSpaceSearcher;
-    matrix::IterateMaps(std::ref(semiSpaceSearcher));
+    traceharbor::IterateMaps(std::ref(semiSpaceSearcher));
     return semiSpaceSearcher.foundAllSpaces();
 }
 
-bool matrix::gc_ss_trimmer::Install(JNIEnv* env) {
+bool traceharbor::gc_ss_trimmer::Install(JNIEnv* env) {
     std::lock_guard installLock(sInstallMutex);
 
     if (sInstalled.load()) {
@@ -240,7 +240,7 @@ bool matrix::gc_ss_trimmer::Install(JNIEnv* env) {
 
             SemiSpaceSearcher semiSpaceSearcher;
 
-            matrix::IterateMaps(std::ref(semiSpaceSearcher));
+            traceharbor::IterateMaps(std::ref(semiSpaceSearcher));
             if (!semiSpaceSearcher.foundAllSpaces()) {
                 // Not found,
                 LOGE(LOG_TAG, "Cannot find all semi-spaces, skip processing.");

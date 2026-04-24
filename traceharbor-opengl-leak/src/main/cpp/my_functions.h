@@ -22,7 +22,7 @@
 #define OPENGL_API_HOOK_MY_FUNCTIONS_H
 
 using namespace std;
-using namespace matrix;
+using namespace traceharbor;
 
 #define MEMHOOK_BACKTRACE_MAX_FRAMES MAX_FRAME_SHORT
 #define RENDER_THREAD_NAME "RenderThread"
@@ -78,7 +78,7 @@ static pthread_key_t g_thread_name_key;
 static bool is_stacktrace_enabled = true;
 static bool is_javastack_enabled = true;
 
-static matrix::BufferManagement *messages_containers;
+static traceharbor::BufferManagement *messages_containers;
 static char *curr_activity_info = nullptr;
 
 void enable_stacktrace(bool enable) {

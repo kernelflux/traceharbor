@@ -18,8 +18,8 @@
 // Created by YinSheng Tang on 2021/5/11.
 //
 
-#ifndef LIBMATRIX_JNI_MACROS_H
-#define LIBMATRIX_JNI_MACROS_H
+#ifndef LIBTRACEHARBOR_JNI_MACROS_H
+#define LIBTRACEHARBOR_JNI_MACROS_H
 
 #include <android/log.h>
 #define HOOK_LOG_ERROR(fmt, ...) //__android_log_print(ANDROID_LOG_ERROR,  "TestHook", fmt, ##__VA_ARGS__)
@@ -32,7 +32,7 @@
 #define ENABLE_CHECK_MESSAGE_OVERFLOW false
 
 #if USE_CRITICAL_CHECK == true
-#define CRITICAL_CHECK(assertion) matrix::_hook_check(assertion)
+#define CRITICAL_CHECK(assertion) traceharbor::_hook_check(assertion)
 #else
 #define CRITICAL_CHECK(assertion)
 #endif
@@ -80,4 +80,4 @@
 
 #define ReservedSize(AugmentExp) ((1 << AugmentExp))
 
-#endif //LIBMATRIX_JNI_MACROS_H
+#endif //LIBTRACEHARBOR_JNI_MACROS_H

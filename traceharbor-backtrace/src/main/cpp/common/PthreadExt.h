@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef LIBMATRIX_JNI_PTHREADEXT_H
-#define LIBMATRIX_JNI_PTHREADEXT_H
+#ifndef LIBTRACEHARBOR_JNI_PTHREADEXT_H
+#define LIBTRACEHARBOR_JNI_PTHREADEXT_H
 
 #include <pthread.h>
 #include "Predefined.h"
@@ -28,4 +28,4 @@ void BACKTRACE_FUNC_WRAPPER(pthread_ext_init)();
 
 int BACKTRACE_FUNC_WRAPPER(pthread_getattr_ext)(pthread_t pthread, pthread_attr_t* attr);
 
-#endif //LIBMATRIX_JNI_PTHREADEXT_H
+#endif //LIBTRACEHARBOR_JNI_PTHREADEXT_H

@@ -1,10 +1,10 @@
 
--keep class io.traceharbor.sqlitelint.** {
+-keep class com.kernelflux.traceharbor.sqlitelint.** {
     *;
 }
 
 
--keep class io.traceharbor.sqlitelint.SQLiteLintNativeBridge {
+-keep class com.kernelflux.traceharbor.sqlitelint.SQLiteLintNativeBridge {
     *;
 }
 

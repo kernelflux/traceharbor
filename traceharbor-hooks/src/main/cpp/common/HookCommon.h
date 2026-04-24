@@ -20,8 +20,8 @@
 // must define ORIGINAL_LIB to use CALL_ORIGIN_FUNC_RET and CALL_ORIGIN_FUNC_VOID
 //
 
-#ifndef LIBMATRIX_JNI_HOOKCOMMON_H
-#define LIBMATRIX_JNI_HOOKCOMMON_H
+#ifndef LIBTRACEHARBOR_JNI_HOOKCOMMON_H
+#define LIBTRACEHARBOR_JNI_HOOKCOMMON_H
 
 #include <dlfcn.h>
 #include <xhook_ext.h>
@@ -79,7 +79,7 @@
 
 #define NOTIFY_COMMON_IGNORE_LIBS(group_id) \
     do { \
-      xhook_grouped_ignore(group_id, ".*libwechatbacktrace\\.so$", NULL); \
+      xhook_grouped_ignore(group_id, ".*libtraceharbor-backtrace\\.so$", NULL); \
       xhook_grouped_ignore(group_id, ".*libtrace-canary\\.so$", NULL); \
       xhook_grouped_ignore(group_id, ".*libwechatcrash\\.so$", NULL); \
       xhook_grouped_ignore(group_id, ".*libmemguard\\.so$", NULL); \
@@ -111,4 +111,4 @@ EXPORT bool get_java_stacktrace(char *stack_dst, size_t size);
 }
 #endif
 
-#endif //LIBMATRIX_JNI_HOOKCOMMON_H
+#endif //LIBTRACEHARBOR_JNI_HOOKCOMMON_H

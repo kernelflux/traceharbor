@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingTop="8dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp">
+
+    <Button
+        android:id="@+id/hooks_install_memory"
+        style="@style/SubEntryButton"
+        android:text="@string/hooks_install_memory" />
+
+    <Button
+        android:id="@+id/hooks_install_pthread"
+        style="@style/SubEntryButton"
+        android:text="@string/hooks_install_pthread" />
+
+    <TextView
+        android:id="@+id/hooks_status"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:layout_weight="1"
+        android:fontFamily="monospace"
+        android:textIsSelectable="true" />
+</LinearLayout>

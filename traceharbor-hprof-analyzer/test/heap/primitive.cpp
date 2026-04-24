@@ -1,8 +1,8 @@
 #include "heap.h"
 #include "gtest/gtest.h"
 
-using namespace matrix::hprof::internal::heap;
-using namespace matrix::hprof::internal::reader;
+using namespace traceharbor::hprof::internal::heap;
+using namespace traceharbor::hprof::internal::reader;
 
 TEST(heap_primitive_data, construct) {
     const uint8_t buffer[] = {

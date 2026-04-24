@@ -2,8 +2,8 @@
 // Created by M.D. on 2021/10/26.
 //
 
-#ifndef MATRIX_ANDROID_LOG_H
-#define MATRIX_ANDROID_LOG_H
+#ifndef TRACEHARBOR_ANDROID_LOG_H
+#define TRACEHARBOR_ANDROID_LOG_H
 
 #include <android/log.h>
 

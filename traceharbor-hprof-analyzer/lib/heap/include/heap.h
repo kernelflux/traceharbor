@@ -12,7 +12,7 @@
 #include "macro.h"
 #include "reader.h"
 
-namespace matrix::hprof::internal::heap {
+namespace traceharbor::hprof::internal::heap {
 
     typedef uint64_t object_id_t;
     typedef uint64_t string_id_t;

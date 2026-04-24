@@ -13,7 +13,7 @@ project.afterEvaluate {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'io.traceharbor.resource.analyzer.CLIMain'
+        attributes 'Main-Class': 'com.kernelflux.traceharbor.resource.analyzer.CLIMain'
         attributes 'Manifest-Version': archiveVersion
     }
     from {

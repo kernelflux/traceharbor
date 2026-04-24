@@ -1,0 +1,20 @@
+// Unsigned `devLocal` publication for install to ~/.m2 (see com.kernelflux.maven.publish signing).
+// Apply only after `gradle/maven-publish.gradle` (requires publishArtifactId, components.java).
+//
+// Coordinate stays in sync with the central publication (`com.kernelflux.mobile`).
+publishing {
+    publications {
+        devLocal(MavenPublication) {
+            groupId = "com.kernelflux.mobile"
+            artifactId = project.ext.publishArtifactId
+            version = project.version
+            from components.java
+        }
+    }
+}
+afterEvaluate {
+    def t = tasks.findByName('signDevLocalPublication')
+    if (t != null) {
+        t.enabled = false
+    }
+}

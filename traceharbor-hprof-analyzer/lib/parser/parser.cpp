@@ -1,7 +1,7 @@
 #include "include/parser.h"
 #include "internal/engine.h"
 
-namespace matrix::hprof::internal::parser {
+namespace traceharbor::hprof::internal::parser {
 
     HeapParser::HeapParser() :
             engine_(new HeapParserEngineImpl()) {}

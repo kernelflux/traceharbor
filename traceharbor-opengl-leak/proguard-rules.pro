@@ -20,4 +20,4 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class io.traceharbor.openglleak.hook.OpenGLHook { *; }
+-keep class com.kernelflux.traceharbor.openglleak.hook.OpenGLHook { *; }

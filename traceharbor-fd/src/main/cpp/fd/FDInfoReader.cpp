@@ -22,7 +22,7 @@ extern "C" {
 #endif
 
 JNIEXPORT jstring JNICALL
-Java_com_tencent_traceharbor_fd_FDDumpBridge_getFdPathNameNative(JNIEnv *__env, jclass __clazz,
+Java_com_kernelflux_traceharbor_fd_FDDumpBridge_getFdPathNameNative(JNIEnv *__env, jclass __clazz,
                                                             jstring __path) {
     const char *path = __env->GetStringUTFChars(__path, 0);
 
@@ -37,7 +37,7 @@ Java_com_tencent_traceharbor_fd_FDDumpBridge_getFdPathNameNative(JNIEnv *__env, 
 #define DEFAULT_FD_LIMIT 1024
 
 JNIEXPORT jint JNICALL
-Java_com_tencent_traceharbor_fd_FDDumpBridge_getFDLimit(JNIEnv *env, jclass clazz) {
+Java_com_kernelflux_traceharbor_fd_FDDumpBridge_getFDLimit(JNIEnv *env, jclass clazz) {
 
     struct rlimit limit{};
 

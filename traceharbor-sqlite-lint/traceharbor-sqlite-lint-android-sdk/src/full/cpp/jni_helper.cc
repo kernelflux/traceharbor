@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "jni_helper.h"
-#include "com_tencent_sqlitelint_util_SLog.h"
+#include "com_kernelflux_traceharbor_sqlitelint_util_SLog.h"
 
 namespace sqlitelint {
     //jstring to char* (unicode to utf-8)

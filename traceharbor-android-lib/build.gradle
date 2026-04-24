@@ -4,8 +4,12 @@ apply plugin: 'kotlin-android'
 android {
     namespace rootProject.ext.androidNamespaces[project.path]
     compileSdk rootProject.ext.compileSdkVersion
-    
+
     useLibrary 'android.test.base'
+
+    buildFeatures {
+        aidl true
+    }
 
     defaultConfig {
         minSdk rootProject.ext.minSdkVersion
@@ -19,6 +23,15 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    compileOptions {
+        sourceCompatibility rootProject.ext.javaVersion
+        targetCompatibility rootProject.ext.javaVersion
+    }
+
+    kotlinOptions {
+        jvmTarget = rootProject.ext.javaVersion.toString()
     }
 }
 

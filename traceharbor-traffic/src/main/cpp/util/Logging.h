@@ -77,4 +77,4 @@ using ::TraceHarborTraffic::Logging::ALOGV;
 using ::TraceHarborTraffic::Logging::ALOGI;
 using ::TraceHarborTraffic::Logging::ALOGE;
 
-#endif  // MATRIX_TRAFFIC_MAIN_CPP_LOGGING_H_
+#endif  // TRACEHARBOR_TRAFFIC_MAIN_CPP_LOGGING_H_

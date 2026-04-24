@@ -18,7 +18,7 @@
 #define __LIB_SQLITELINT_LOADER_H__
 
 #include <jni.h>
-#include "com_tencent_sqlitelint_util_SLog.h"
+#include "com_kernelflux_traceharbor_sqlitelint_util_SLog.h"
 #include <vector>
 
 //

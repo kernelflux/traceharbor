@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-apply from: rootProject.file('gradle/WeChatNativeDepend.gradle')
+apply from: rootProject.file('gradle/TraceHarborNativeDepend.gradle')
 
 android {
     namespace rootProject.ext.androidNamespaces[project.path]
@@ -20,7 +20,7 @@ android {
 
         externalNativeBuild {
             cmake {
-                targets = ['wechatbacktrace', 'unwindstack']
+                targets = ['traceharbor-backtrace', 'unwindstack']
                 arguments = ['-DANDROID_STL=c++_static',
                              "-DEnableLOG=${gradle.enableLog() ? "ON" : "OFF"}" as String,
                              "-DQUT_STATISTIC_ENABLE=${gradle.enableLog() ? "ON" : "OFF"}" as String]
@@ -31,7 +31,7 @@ android {
                     include 'common/*.h'
                     moveToDir 'backtrace'
                 }
-                from('../src/main/cpp/libwechatbacktrace/include') {
+                from('../src/main/cpp/libtraceharbor-backtrace/include') {
                     include '**/*.h'
                     moveToDir 'backtrace'
                 }

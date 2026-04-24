@@ -5,7 +5,7 @@
 #include <locale>
 #include <sstream>
 
-namespace matrix::hprof::internal::heap {
+namespace traceharbor::hprof::internal::heap {
 
     size_t get_value_type_size(value_type_t type) {
         switch (type) {

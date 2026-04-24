@@ -11,7 +11,7 @@
 
 #include "heap.h"
 
-namespace matrix::hprof {
+namespace traceharbor::hprof {
 
     class HprofHeapImpl {
     public:

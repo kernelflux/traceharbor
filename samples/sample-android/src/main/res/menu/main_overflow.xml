@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_inspect_issue"
+        android:title="@string/menu_inspect_issue"
+        android:showAsAction="never" />
+    <item
+        android:id="@+id/menu_clear_issues"
+        android:title="@string/menu_clear_issues"
+        android:showAsAction="never" />
+</menu>

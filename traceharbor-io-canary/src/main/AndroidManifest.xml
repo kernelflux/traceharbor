@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.traceharbor.iocanary">
+    package="com.kernelflux.traceharbor.iocanary">
 
     <application>
     </application>

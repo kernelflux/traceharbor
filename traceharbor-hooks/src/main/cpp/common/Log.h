@@ -18,8 +18,8 @@
 // Created by Yves on 2021/4/27.
 //
 
-#ifndef MATRIX_HOOK_LOG_H
-#define MATRIX_HOOK_LOG_H
+#ifndef TRACEHARBOR_HOOK_LOG_H
+#define TRACEHARBOR_HOOK_LOG_H
 
 #include <stdio.h>
 #include <android/log.h>
@@ -67,4 +67,4 @@ internal_hook_vlogger(int log_level, const char *tag, const char *format, va_lis
 
 EXPORT_C int flogger0(FILE *fp, const char *fmt, ...);
 
-#endif //MATRIX_HOOK_LOG_H
+#endif //TRACEHARBOR_HOOK_LOG_H

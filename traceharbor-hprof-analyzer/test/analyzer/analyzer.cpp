@@ -1,8 +1,8 @@
 #include "analyzer.h"
 #include "gtest/gtest.h"
 
-using namespace matrix::hprof::internal::analyzer;
-using namespace matrix::hprof::internal::heap;
+using namespace traceharbor::hprof::internal::analyzer;
+using namespace traceharbor::hprof::internal::heap;
 
 TEST(analyzer, find_leak_chain) {
     Heap heap;

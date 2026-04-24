@@ -19,8 +19,8 @@
 // Created by liyongjie
 //
 
-#ifndef MATRIX_IO_CANARY_IO_CANARY_UTILS_H
-#define MATRIX_IO_CANARY_IO_CANARY_UTILS_H
+#ifndef TRACEHARBOR_IO_CANARY_IO_CANARY_UTILS_H
+#define TRACEHARBOR_IO_CANARY_IO_CANARY_UTILS_H
 
 #include <stdlib.h>
 
@@ -45,4 +45,4 @@ namespace iocanary {
 }
 
 
-#endif //MATRIX_IO_CANARY_IO_CANARY_UTILS_H
+#endif //TRACEHARBOR_IO_CANARY_IO_CANARY_UTILS_H

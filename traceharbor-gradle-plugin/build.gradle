@@ -1,31 +1,43 @@
-apply plugin: 'java'
 apply plugin: 'kotlin'
+apply plugin: 'java-gradle-plugin'
+apply plugin: 'com.gradle.plugin-publish'
+
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation gradleApi()
     implementation project(':traceharbor-commons')
-    implementation group: 'org.ow2.asm', name: 'asm', version: '9.6'
-    implementation group: 'org.ow2.asm', name: 'asm-commons', version: '9.6'
-    implementation 'com.android.tools.build:gradle:8.2.2'
     implementation project(':traceharbor-arscutil')
+    //noinspection NewerVersionAvailable
+    implementation group: 'org.ow2.asm', name: 'asm',         version: '9.6'
+    //noinspection NewerVersionAvailable
+    implementation group: 'org.ow2.asm', name: 'asm-commons', version: '9.6'
+    //noinspection NewerVersionAvailable
+    implementation group: 'org.ow2.asm', name: 'asm-util',    version: '9.6'
+    //noinspection NewerVersionAvailable
+    implementation 'com.google.guava:guava:32.1.3-jre'
+    //noinspection AndroidGradlePluginVersion,NewerVersionAvailable
+    implementation 'com.android.tools.build:gradle:8.2.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${gradle.KOTLIN_VERSION}"
+    //noinspection NewerVersionAvailable
+    implementation 'com.google.code.gson:gson:2.10.1'
 }
-sourceSets {
-    main {
-        java {
-            srcDir "../traceharbor-gradle-plugin/src/main/java"
-        }
 
-        resources {
-            srcDir '../traceharbor-gradle-plugin/src/main/resources'
+
+group   = 'com.kernelflux.traceharbor.plugin'
+version = rootProject.ext.VERSION_NAME
+
+gradlePlugin {
+    website = "https://github.com/kernelflux/traceharbor"
+    vcsUrl = "https://github.com/kernelflux/traceharbor"
+    plugins {
+        traceharborPlugin {
+            id                  = 'com.kernelflux.traceharbor.plugin'
+            implementationClass = 'com.kernelflux.traceharbor.plugin.TraceHarborPlugin'
+            displayName         = 'TraceHarbor Gradle Plugin'
+            description         = 'Bytecode trace instrumentation + perf canary build wiring for Android (AGP 8+).'
+            // tags is a SetProperty in plugin-publish 1.x; use .set(...) instead of `=`.
+            tags.set(['android', 'agp', 'instrumentation', 'asm', 'tracing', 'performance', 'monitoring', 'apm'])
         }
     }
 }
-
-version rootProject.ext.VERSION_NAME
-group rootProject.ext.GROUP
-
-ext.publishArtifactId = POM_ARTIFACT_ID
-ext.publishVersion = version.toString()
-apply from: rootProject.file('gradle/maven-publish.gradle')

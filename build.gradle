@@ -1,5 +1,9 @@
 import com.android.build.gradle.LibraryExtension
 
+// Load repo-local secrets (Sonatype, GPG, Plugin Portal, …) once per build.
+// All projects can read via `gradle.privateProperties.getProperty(...)`.
+apply from: rootProject.file('gradle/private-properties.gradle')
+
 buildscript {
 
     repositories {
@@ -13,6 +17,7 @@ buildscript {
 
     gradle.ext.KOTLIN_VERSION = "1.8.22"
     gradle.ext.MAVEN_CENTRAL_UPLOADER_VERSION = "1.0.10"
+    gradle.ext.PLUGIN_PUBLISH_VERSION = "1.3.1"
 
     dependencies {
         // classpath
@@ -20,6 +25,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:8.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$gradle.KOTLIN_VERSION"
         classpath "com.kernelflux.maven.publish:maven-central-gradle-plugin:$gradle.MAVEN_CENTRAL_UPLOADER_VERSION"
+        classpath "com.gradle.publish:plugin-publish-plugin:$gradle.PLUGIN_PUBLISH_VERSION"
     }
 
 }
@@ -47,6 +53,7 @@ allprojects {
 }
 
 
+
 ext {
     // For android sub-projects
     minSdkVersion = 19
@@ -54,24 +61,24 @@ ext {
     compileSdkVersion = 34
     buildToolsVersion = '34.0.0'
     androidNamespaces = [
-            ':traceharbor-android-commons'                                : 'io.traceharbor.android.commons',
-            ':traceharbor-android-lib'                                    : 'io.traceharbor',
-            ':traceharbor-trace-canary'                                   : 'io.traceharbor.trace',
-            ':traceharbor-io-canary'                                      : 'io.traceharbor.iocanary',
-            ':traceharbor-sqlite-lint:traceharbor-sqlite-lint-android-sdk'     : 'io.traceharbor.sqlitelint',
-            ':traceharbor-battery-canary'                                 : 'io.traceharbor.batterycanary',
-            ':traceharbor-opengl-leak'                                    : 'io.traceharbor.openglleak',
-            ':traceharbor-traffic'                                        : 'io.traceharbor.traffic',
-            ':traceharbor-backtrace'                                      : 'io.traceharbor.backtrace',
-            ':traceharbor-backtrace:cxx-static'                           : 'io.traceharbor.backtrace.cxxstatic',
-            ':traceharbor-hooks'                                          : 'io.traceharbor.hook',
-            ':traceharbor-hooks:cxx-static'                               : 'io.traceharbor.hook.cxxstatic',
-            ':traceharbor-memguard'                                       : 'io.traceharbor.memguard',
-            ':traceharbor-mallctl'                                        : 'io.traceharbor.mallctl',
-            ':traceharbor-fd'                                             : 'io.traceharbor.fd',
-            ':traceharbor-memory-canary'                                  : 'io.traceharbor.memory.canary',
-            ':traceharbor-opengl-leak:cxx-static'                         : 'io.traceharbor.openglleak.cxxstatic',
-            ':traceharbor-resource-canary:traceharbor-resource-canary-android' : 'io.traceharbor.resource'
+            ':traceharbor-android-commons'                                : 'com.kernelflux.traceharbor.android.commons',
+            ':traceharbor-android-lib'                                    : 'com.kernelflux.traceharbor',
+            ':traceharbor-trace-canary'                                   : 'com.kernelflux.traceharbor.trace',
+            ':traceharbor-io-canary'                                      : 'com.kernelflux.traceharbor.iocanary',
+            ':traceharbor-sqlite-lint:traceharbor-sqlite-lint-android-sdk'     : 'com.kernelflux.traceharbor.sqlitelint',
+            ':traceharbor-battery-canary'                                 : 'com.kernelflux.traceharbor.batterycanary',
+            ':traceharbor-opengl-leak'                                    : 'com.kernelflux.traceharbor.openglleak',
+            ':traceharbor-traffic'                                        : 'com.kernelflux.traceharbor.traffic',
+            ':traceharbor-backtrace'                                      : 'com.kernelflux.traceharbor.backtrace',
+            ':traceharbor-backtrace:cxx-static'                           : 'com.kernelflux.traceharbor.backtrace.cxxstatic',
+            ':traceharbor-hooks'                                          : 'com.kernelflux.traceharbor.hook',
+            ':traceharbor-hooks:cxx-static'                               : 'com.kernelflux.traceharbor.hook.cxxstatic',
+            ':traceharbor-memguard'                                       : 'com.kernelflux.traceharbor.memguard',
+            ':traceharbor-mallctl'                                        : 'com.kernelflux.traceharbor.mallctl',
+            ':traceharbor-fd'                                             : 'com.kernelflux.traceharbor.fd',
+            ':traceharbor-memory-canary'                                  : 'com.kernelflux.traceharbor.memory.canary',
+            ':traceharbor-opengl-leak:cxx-static'                         : 'com.kernelflux.traceharbor.openglleak.cxxstatic',
+            ':traceharbor-resource-canary:traceharbor-resource-canary-android' : 'com.kernelflux.traceharbor.resource'
     ]
 
     MIN_SDK_VERSION_FOR_HOOK = 21
@@ -80,7 +87,7 @@ ext {
 
     javaVersion = JavaVersion.VERSION_1_8
 
-    GROUP = 'io.traceharbor'
+    GROUP = 'com.kernelflux.mobile'
     VERSION_NAME = "${VERSION_NAME_PREFIX}${VERSION_NAME_SUFFIX}"
 
     POM_PACKAGING = "pom"
@@ -105,6 +112,16 @@ ext {
     LIFECYCLE_VERSION = '2.3.1'
 }
 
+tasks.register('traceharborPublishPluginForSample') {
+    group = 'traceharbor'
+    description = 'Publishes traceharbor-commons, traceharbor-arscutil, and traceharbor-gradle-plugin to Maven Local. The plugin module uses java-gradle-plugin, so publishToMavenLocal emits both the jar (pluginMaven) and the Plugin Marker POM in one shot — exactly what `plugins { id "com.kernelflux.traceharbor.plugin" }` resolution needs.'
+    dependsOn(
+            ':traceharbor-commons:publishDevLocalPublicationToMavenLocal',
+            ':traceharbor-arscutil:publishDevLocalPublicationToMavenLocal',
+            ':traceharbor-gradle-plugin:publishToMavenLocal'
+    )
+}
+
 // Generate version.txt automatic
 task generateVersionTxt() {
     doLast {
@@ -114,4 +131,5 @@ task generateVersionTxt() {
         file.write(rootProject.ext.VERSION_NAME)
     }
 }
+
 

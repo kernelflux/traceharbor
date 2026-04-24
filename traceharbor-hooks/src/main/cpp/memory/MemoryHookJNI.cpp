@@ -17,6 +17,7 @@
 //
 // Created by Yves on 2019-08-08.
 //
+#include <cassert>
 #include <jni.h>
 #include <xhook.h>
 #include <xhook_ext.h>
@@ -119,7 +120,7 @@ static void ignore(const char *regex) {
 }
 
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_hook_memory_MemoryHook_enableStacktraceNative(JNIEnv *env,
+Java_com_kernelflux_traceharbor_hook_memory_MemoryHook_enableStacktraceNative(JNIEnv *env,
                                                                      jobject instance,
                                                                      jboolean enable) {
 
@@ -127,7 +128,7 @@ Java_com_tencent_traceharbor_hook_memory_MemoryHook_enableStacktraceNative(JNIEn
 }
 
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_hook_memory_MemoryHook_setTracingAllocSizeRangeNative(JNIEnv *env,
+Java_com_kernelflux_traceharbor_hook_memory_MemoryHook_setTracingAllocSizeRangeNative(JNIEnv *env,
                                                                               jobject instance,
                                                                               jint minSize,
                                                                               jint maxSize) {
@@ -136,7 +137,7 @@ Java_com_tencent_traceharbor_hook_memory_MemoryHook_setTracingAllocSizeRangeNati
 
 }
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_hook_memory_MemoryHook_dumpNative(JNIEnv *env, jobject instance,
+Java_com_kernelflux_traceharbor_hook_memory_MemoryHook_dumpNative(JNIEnv *env, jobject instance,
                                                          jstring j_log_path, jstring j_json_path) {
 
     const char *log_path  = j_log_path ? env->GetStringUTFChars(j_log_path, nullptr) : nullptr;
@@ -153,7 +154,7 @@ Java_com_tencent_traceharbor_hook_memory_MemoryHook_dumpNative(JNIEnv *env, jobj
 }
 
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_hook_memory_MemoryHook_enableMmapHookNative(JNIEnv *env,
+Java_com_kernelflux_traceharbor_hook_memory_MemoryHook_enableMmapHookNative(JNIEnv *env,
                                                                    jobject instance,
                                                                    jboolean enable) {
 
@@ -163,7 +164,7 @@ Java_com_tencent_traceharbor_hook_memory_MemoryHook_enableMmapHookNative(JNIEnv 
 }
 
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_hook_memory_MemoryHook_setStacktraceLogThresholdNative(JNIEnv *env,
+Java_com_kernelflux_traceharbor_hook_memory_MemoryHook_setStacktraceLogThresholdNative(JNIEnv *env,
                                                                               jobject thiz,
                                                                               jint threshold) {
     assert(threshold >= 0);
@@ -171,7 +172,7 @@ Java_com_tencent_traceharbor_hook_memory_MemoryHook_setStacktraceLogThresholdNat
 }
 
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_hook_memory_MemoryHook_installHooksNative(JNIEnv* env, jobject thiz,
+Java_com_kernelflux_traceharbor_hook_memory_MemoryHook_installHooksNative(JNIEnv* env, jobject thiz,
                                                                   jobjectArray hook_so_patterns,
                                                                   jobjectArray ignore_so_patterns,
                                                                   jboolean enable_debug) {
