@@ -23,10 +23,10 @@ import com.kernelflux.traceharbor.resource.hproflib.model.Type;
 import com.kernelflux.traceharbor.resource.hproflib.utils.IOUtil;
 import com.kernelflux.traceharbor.util.TraceHarborLog;
 import com.kernelflux.traceharbor.util.TraceHarborUtil;
-import com.kernelflux.tinker.ziputils.ziputil.TinkerZipEntry;
-import com.kernelflux.tinker.ziputils.ziputil.TinkerZipFile;
-import com.kernelflux.tinker.ziputils.ziputil.TinkerZipOutputStream;
-import com.kernelflux.tinker.ziputils.ziputil.TinkerZipUtil;
+import com.tencent.tinker.ziputils.ziputil.TinkerZipEntry;
+import com.tencent.tinker.ziputils.ziputil.TinkerZipFile;
+import com.tencent.tinker.ziputils.ziputil.TinkerZipOutputStream;
+import com.tencent.tinker.ziputils.ziputil.TinkerZipUtil;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
