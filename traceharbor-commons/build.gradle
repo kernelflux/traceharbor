@@ -17,5 +17,5 @@ dependencies {
 
 ext.publishArtifactId = POM_ARTIFACT_ID
 ext.publishVersion = version.toString()
-apply from: rootProject.file('gradle/maven-publish.gradle')
+apply from: rootProject.file('gradle/maven-publish.gradle.kts')
 apply from: rootProject.file('gradle/maven-devlocal-publication.gradle.kts')

@@ -64,4 +64,4 @@ version = "${rootProject.VERSION_NAME}-STATIC"
 
 ext.publishArtifactId = "${project.parent.name}-cxx-static"
 ext.publishVersion = version.toString()
-apply from: rootProject.file('gradle/maven-publish.gradle')
+apply from: rootProject.file('gradle/maven-publish.gradle.kts')

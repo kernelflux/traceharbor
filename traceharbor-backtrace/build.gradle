@@ -70,4 +70,4 @@ version = rootProject.VERSION_NAME
 
 ext.publishArtifactId = POM_ARTIFACT_ID
 ext.publishVersion = version.toString()
-apply from: rootProject.file('gradle/maven-publish.gradle')
+apply from: rootProject.file('gradle/maven-publish.gradle.kts')

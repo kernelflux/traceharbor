@@ -85,4 +85,4 @@ ext.publishAdditionalPublications = [
         [name: 'release', component: 'fullRelease', artifactId: POM_ARTIFACT_ID],
         [name: 'noOp', component: 'stubRelease', artifactId: "${POM_ARTIFACT_ID}-no-op"]
 ]
-apply from: rootProject.file('gradle/maven-publish.gradle')
+apply from: rootProject.file('gradle/maven-publish.gradle.kts')
