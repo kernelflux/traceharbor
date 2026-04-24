@@ -1,5 +1,8 @@
 plugins {
     id("com.android.library")
+    // kotlin-android applied so this module can host Kotlin sources
+    // (kept the JNI bridge as Java; only test stubs are Kotlin so far).
+    id("kotlin-android")
 }
 
 @Suppress("UNCHECKED_CAST")

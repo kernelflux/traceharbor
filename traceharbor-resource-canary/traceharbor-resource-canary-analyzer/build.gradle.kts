@@ -2,9 +2,11 @@ plugins {
     `java-library`
 }
 
+// Bumped from 1.7 → 1.8 to consume traceharbor-resource-canary-common, which moved
+// to Java 8 when its utils were ported to Kotlin (kotlin 1.8.x requires jvmTarget ≥ 1.8).
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_7
-    targetCompatibility = JavaVersion.VERSION_1_7
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 version = rootProject.extra["VERSION_NAME"].toString()

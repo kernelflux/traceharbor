@@ -59,6 +59,28 @@ allprojects {
             }
         }
     }
+
+    // ---------------------------------------------------------------------------
+    // Kotlin 1.8.x dropped jvmTarget=1.7 — the compiler now defaults to 17 if you
+    // don't set it, but Java compile in this repo defaults to 1.8 (root javaVersion
+    // = JavaVersion.VERSION_1_8). Without alignment, every kotlin-android /
+    // kotlin-jvm module trips "compileXxxJavaWithJavac (current target is 1.8) and
+    // compileXxxKotlin (current target is 17) jvm target compatibility should be
+    // set to the same Java version".
+    //
+    // Apply to all kotlin compile tasks once, instead of repeating per-module.
+    // ---------------------------------------------------------------------------
+    val alignKotlinJvmTarget = Action<Project> {
+        tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+            kotlinOptions {
+                jvmTarget = "1.8"
+            }
+        }
+    }
+    plugins.withId("kotlin-android") { alignKotlinJvmTarget.execute(this@allprojects) }
+    plugins.withId("org.jetbrains.kotlin.android") { alignKotlinJvmTarget.execute(this@allprojects) }
+    plugins.withId("org.jetbrains.kotlin.jvm")     { alignKotlinJvmTarget.execute(this@allprojects) }
+    plugins.withId("kotlin")                       { alignKotlinJvmTarget.execute(this@allprojects) }
 }
 
 // ---------------------------------------------------------------------------
