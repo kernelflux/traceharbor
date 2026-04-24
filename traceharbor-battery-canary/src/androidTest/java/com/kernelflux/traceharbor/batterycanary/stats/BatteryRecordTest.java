@@ -22,7 +22,7 @@ import android.os.Parcelable;
 import android.os.SystemClock;
 import android.util.ArrayMap;
 
-import com.tencent.mmkv.MMKV;
+import com.kernelflux.mmkv.MMKV;
 
 import org.junit.After;
 import org.junit.Assert;

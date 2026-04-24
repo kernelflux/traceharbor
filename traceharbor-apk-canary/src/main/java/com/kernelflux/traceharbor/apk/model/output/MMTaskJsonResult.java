@@ -226,13 +226,13 @@ public class MMTaskJsonResult extends TaskJsonResult {
                             String name = obj.get("android:name").getAsString();
                             String value = obj.get("android:value").getAsString();
 
-                            if ("com.tencent.mm.BuildInfo.CLIENT_VERSION".equals(name)) {
+                            if ("com.kernelflux.mm.BuildInfo.CLIENT_VERSION".equals(name)) {
                                 attribute.put("CLIENT_VERSION", value);
-                            } else if ("com.tencent.mm.BuildInfo.BUILD_TAG".equals(name)) {
+                            } else if ("com.kernelflux.mm.BuildInfo.BUILD_TAG".equals(name)) {
                                 attribute.put("BUILD_TAG", value);
-                            } else if ("com.tencent.mm.BuildInfo.BUILD_SVNPATH".equals(name)) {
+                            } else if ("com.kernelflux.mm.BuildInfo.BUILD_SVNPATH".equals(name)) {
                                 attribute.put("BUILD_SVNPATH", value);
-                            } else if ("com.tencent.mm.BuildInfo.BUILD_REV".equals(name)) {
+                            } else if ("com.kernelflux.mm.BuildInfo.BUILD_REV".equals(name)) {
                                 attribute.put("BUILD_REV", value);
                             }
                         }

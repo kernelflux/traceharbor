@@ -240,7 +240,7 @@ public class UnusedResourcesTask extends ApkTask {
     }
 
     private void readMappingTxtFile() throws IOException {
-        // com.tencent.mm.R$string -> com.tencent.mm.R$l:
+        // com.kernelflux.mm.R$string -> com.kernelflux.mm.R$l:
         //      int fade_in_property_anim -> aRW
 
         if (mappingTxt != null) {
@@ -317,12 +317,12 @@ public class UnusedResourcesTask extends ApkTask {
 
         2. sget
 
-        sget v6, Lcom/tencent/mm/R$string;->chatting_long_click_menu_revoke_msg:I
-        sget v1, Lcom/tencent/mm/libmmui/R$id;->property_anim:I
+        sget v6, Lcom/kernelflux/mm/R$string;->chatting_long_click_menu_revoke_msg:I
+        sget v1, Lcom/kernelflux/mm/libmmui/R$id;->property_anim:I
 
         3. sput
 
-        sput-object v0, Lcom/tencent/mm/plugin_welab_api/R$styleable;->ActionBar:[I   //define resource in R.java
+        sput-object v0, Lcom/kernelflux/mm/plugin_welab_api/R$styleable;->ActionBar:[I   //define resource in R.java
 
         4. array-data
 

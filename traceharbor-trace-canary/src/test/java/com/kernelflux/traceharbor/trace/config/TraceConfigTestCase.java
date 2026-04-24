@@ -1,6 +1,6 @@
 package com.kernelflux.traceharbor.trace.config;
 
-import com.tencent.mrs.plugin.IDynamicConfig;
+import com.kernelflux.mrs.plugin.IDynamicConfig;
 
 import junit.framework.TestCase;
 

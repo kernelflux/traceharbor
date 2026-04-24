@@ -1,4 +1,4 @@
-package com.tencent.backtrace;
+package com.kernelflux.backtrace;
 
 import org.junit.Test;
 

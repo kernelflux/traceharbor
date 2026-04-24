@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import com.kernelflux.traceharbor.batterycanary.utils.BatteryCanaryUtil;
 import com.kernelflux.traceharbor.batterycanary.utils.ThreadSafeReference;
 import com.kernelflux.traceharbor.util.TraceHarborLog;
-import com.tencent.mmkv.MMKV;
+import com.kernelflux.mmkv.MMKV;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

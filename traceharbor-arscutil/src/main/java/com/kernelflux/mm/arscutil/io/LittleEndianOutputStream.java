@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tencent.mm.arscutil.io;
+package com.kernelflux.mm.arscutil.io;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

@@ -18,7 +18,7 @@ package com.kernelflux.traceharbor.trace.config;
 
 import com.kernelflux.traceharbor.trace.constants.Constants;
 import com.kernelflux.traceharbor.trace.listeners.IDefaultConfig;
-import com.tencent.mrs.plugin.IDynamicConfig;
+import com.kernelflux.mrs.plugin.IDynamicConfig;
 
 import java.util.Arrays;
 import java.util.HashSet;

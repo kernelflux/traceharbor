@@ -30,7 +30,7 @@ import static android.os.Environment.DIRECTORY_DOWNLOADS;
  * As simple As possible. No waste time coding here.
  * <p>
  * dbs path in like:
- * /sdcard/downloads/SQLiteLint-com.tencent.mp/database/
+ * /sdcard/downloads/SQLiteLint-com.kernelflux.mp/database/
  *
  * @author liyongjie
  *         Created by liyongjie on 17/1/19.

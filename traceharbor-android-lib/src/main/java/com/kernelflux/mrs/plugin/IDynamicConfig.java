@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tencent.mrs.plugin;
+package com.kernelflux.mrs.plugin;
 
 /**
  * Created by zhoushaotao on 17/10/15.

@@ -371,14 +371,23 @@ rewrite_namespace() {
         fi
     done <<< "$gfiles"
 
-    # androidNamespaces map keys/values in root build.gradle (best-effort literal)
+    # androidNamespaces map keys/values in root build.gradle (best-effort literal).
+    # We rewrite quoted literals that start with the prefix; this catches the
+    # `':module': 'com.kernelflux.x.y'` map entries without touching maven
+    # coordinates (which look like 'com.kernelflux:lib:1.0').
     if grep -RqE "androidNamespaces" --include='build.gradle*' . 2>/dev/null; then
         if [[ "$MODE" == "apply" ]]; then
-            find . -type f \( -name 'build.gradle' -o -name 'build.gradle.kts' \) \
-                ! -path '*/build/*' ! -path '*/.gradle/*' -print0 | \
-                xargs -0 sed_i \
-                    -e "s|'${FROM_DOT_ESC}|'${TO_DOT}|g" \
-                    -e "s|\"${FROM_DOT_ESC}|\"${TO_DOT}|g"
+            local gf
+            while IFS= read -r gf; do
+                [[ -z "$gf" ]] && continue
+                # Only quoted dotted package literals (closing quote = same kind)
+                # to avoid eating maven coords like 'com.kernelflux:foo:1.0'.
+                sed_i \
+                    -E "s|'(${FROM_DOT_ESC})([.a-zA-Z0-9_]*)'|'${TO_DOT}\\2'|g" \
+                    -E "s|\"(${FROM_DOT_ESC})([.a-zA-Z0-9_]*)\"|\"${TO_DOT}\\2\"|g" \
+                    "$gf"
+            done < <(find . -type f \( -name 'build.gradle' -o -name 'build.gradle.kts' \) \
+                ! -path '*/build/*' ! -path '*/.gradle/*')
         else
             info "  androidNamespaces map will also be touched (root build.gradle*)"
         fi

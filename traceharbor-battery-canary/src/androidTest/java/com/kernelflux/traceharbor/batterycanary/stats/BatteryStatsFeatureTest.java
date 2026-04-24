@@ -32,7 +32,7 @@ import com.kernelflux.traceharbor.batterycanary.monitor.feature.AppStatMonitorFe
 import com.kernelflux.traceharbor.batterycanary.monitor.feature.DeviceStatMonitorFeature;
 import com.kernelflux.traceharbor.batterycanary.monitor.feature.JiffiesMonitorFeature;
 import com.kernelflux.traceharbor.batterycanary.utils.Consumer;
-import com.tencent.mmkv.MMKV;
+import com.kernelflux.mmkv.MMKV;
 
 import org.junit.After;
 import org.junit.Assert;
