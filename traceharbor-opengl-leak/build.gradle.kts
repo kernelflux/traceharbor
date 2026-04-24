@@ -13,6 +13,11 @@ android {
     namespace = (rootProject.extra["androidNamespaces"] as Map<*, *>)[project.path] as String
     compileSdk = rootProject.extra["compileSdkVersion"] as Int
 
+    // AGP 8 disabled AIDL by default; this module ships IOpenglIndexDetector.aidl.
+    buildFeatures {
+        aidl = true
+    }
+
     defaultConfig {
         minSdk = rootProject.extra["MIN_SDK_VERSION_FOR_HOOK"] as Int
         @Suppress("DEPRECATION")

@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-package com.kernelflux.traceharbor.dynamicconfig;
+package com.kernelflux.traceharbor.dynamicconfig
 
-/**
- * Created by zhoushaotao on 17/10/15.
- */
+interface IDynamicConfig {
 
-public interface IDynamicConfig {
-
-    enum ExptEnum {
+    enum class ExptEnum {
         // trace
         clicfg_traceharbor_trace_fps_enable,
         clicfg_traceharbor_trace_care_scene_set,
@@ -41,7 +37,7 @@ public interface IDynamicConfig {
         clicfg_traceharbor_trace_warm_app_start_up_threshold,
 
 
-        //io
+        // io
         clicfg_traceharbor_io_file_io_main_thread_enable,
         clicfg_traceharbor_io_main_thread_enable_threshold,
         clicfg_traceharbor_io_small_buffer_enable,
@@ -51,7 +47,7 @@ public interface IDynamicConfig {
         clicfg_traceharbor_io_repeated_read_threshold,
         clicfg_traceharbor_io_closeable_leak_enable,
 
-        //battery
+        // battery
         clicfg_traceharbor_battery_detect_wake_lock_enable,
         clicfg_traceharbor_battery_record_wake_lock_enable,
         clicfg_traceharbor_battery_wake_lock_hold_time_threshold,
@@ -63,35 +59,34 @@ public interface IDynamicConfig {
         clicfg_traceharbor_battery_wake_up_alarm_1h_trigger_cnt_threshold,
 
 
-        //memory
+        // memory
         clicfg_traceharbor_memory_middle_min_span,
         clicfg_traceharbor_memory_high_min_span,
         clicfg_traceharbor_memory_threshold,
         clicfg_traceharbor_memory_special_activities,
 
-        //resource
+        // resource
         clicfg_traceharbor_resource_detect_interval_millis,
         clicfg_traceharbor_resource_detect_interval_millis_bg,
         clicfg_traceharbor_resource_max_detect_times,
         clicfg_traceharbor_resource_dump_hprof_enable,
 
-        //thread
+        // thread
         clicfg_traceharbor_thread_check_time,
         clicfg_traceharbor_thread_check_bg_time,
         clicfg_traceharbor_thread_limit_count,
         clicfg_traceharbor_thread_report_time,
         clicfg_traceharbor_thread_contain_sys,
         clicfg_traceharbor_thread_filter_thread_set,
-
     }
 
-    String get(String key, String defStr);
+    fun get(key: String, defStr: String): String
 
-    int get(String key, int defInt);
+    fun get(key: String, defInt: Int): Int
 
-    long get(String key, long defLong);
+    fun get(key: String, defLong: Long): Long
 
-    boolean get(String key, boolean defBool);
+    fun get(key: String, defBool: Boolean): Boolean
 
-    float get(String key, float defFloat);
+    fun get(key: String, defFloat: Float): Float
 }

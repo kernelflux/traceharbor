@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.withGroovyBuilder
+
 plugins {
     id("com.android.application")
     id("com.kernelflux.traceharbor.plugin")
@@ -48,10 +50,9 @@ android {
 // Gradle plugin (com.kernelflux.traceharbor.plugin). Configured via the
 // dynamic `extensions` API + Groovy MOP so KTS doesn't need a generated
 // accessor — keeping the plugin loose-typed avoids a circular build-time
-// dep on the plugin's own jar.
+// dep on the plugin's own jar. (`withGroovyBuilder` import sits at the top
+// of this file, since KTS rejects mid-file imports.)
 // ---------------------------------------------------------------------------
-import org.gradle.kotlin.dsl.withGroovyBuilder
-
 extensions.findByName("traceHarbor")?.withGroovyBuilder {
     "trace" {
         "enable"(true)

@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-package com.kernelflux.traceharbor.plugin;
+package com.kernelflux.traceharbor.plugin
 
-import com.kernelflux.traceharbor.report.Issue;
+import com.kernelflux.traceharbor.report.Issue
 
-/**
- * Created by zhangshaowen on 17/5/17.
- */
+interface PluginListener {
+    fun onInit(plugin: Plugin)
 
-public interface PluginListener {
-    void onInit(Plugin plugin);
+    fun onStart(plugin: Plugin)
 
-    void onStart(Plugin plugin);
+    fun onStop(plugin: Plugin)
 
-    void onStop(Plugin plugin);
+    fun onDestroy(plugin: Plugin)
 
-    void onDestroy(Plugin plugin);
-
-    void onReportIssue(Issue issue);
+    fun onReportIssue(issue: Issue)
 }

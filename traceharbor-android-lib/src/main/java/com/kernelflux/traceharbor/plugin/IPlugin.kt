@@ -14,27 +14,22 @@
  * limitations under the License.
  */
 
-package com.kernelflux.traceharbor.plugin;
+package com.kernelflux.traceharbor.plugin
 
-import android.app.Application;
+import android.app.Application
 
-/**
- * Created by zhangshaowen on 17/5/17.
- */
+interface IPlugin {
+    fun getApplication(): Application?
 
-public interface IPlugin {
+    fun init(application: Application, pluginListener: PluginListener)
 
-    Application getApplication();
+    fun start()
 
-    void init(Application application, PluginListener pluginListener);
+    fun stop()
 
-    void start();
+    fun destroy()
 
-    void stop();
+    fun getTag(): String
 
-    void destroy();
-
-    String getTag();
-
-    void onForeground(boolean isForeground);
+    fun onForeground(isForeground: Boolean)
 }
