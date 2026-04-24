@@ -56,7 +56,6 @@ class MemoryCanaryPlugin(
         }
     }
 
-    override fun getTag(): String {
-        return "TraceHarbor.MemoryCanaryPlugin"
-    }
+    override val tag: String
+        get() = "TraceHarbor.MemoryCanaryPlugin"
 }

@@ -3,6 +3,7 @@ import org.gradle.kotlin.dsl.withGroovyBuilder
 
 plugins {
     id("com.android.library")
+    id("kotlin-android")
 }
 
 apply(from = rootProject.file("gradle/TraceHarborNativeDepend.gradle"))
