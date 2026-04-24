@@ -27,19 +27,19 @@ import java.util.Map;
  * Created by jinqiuchen on 17/9/1.
  */
 
-public class MMTaskResultRegistry extends TaskResultRegistry {
+public class DefaultTaskResultRegistry extends TaskResultRegistry {
 
     @Override
     public Map<String, Class<? extends TaskHtmlResult>> getHtmlResult() {
         Map<String, Class<? extends TaskHtmlResult>> map = new HashMap<>();
-        map.put("mm.html", MMTaskHtmlResult.class);
+        map.put("mm.html", DefaultTaskHtmlResult.class);
         return map;
     }
 
     @Override
     public Map<String, Class<? extends TaskJsonResult>> getJsonResult() {
         Map<String, Class<? extends TaskJsonResult>> map = new HashMap<>();
-        map.put("mm.json", MMTaskJsonResult.class);
+        map.put("mm.json", DefaultTaskJsonResult.class);
         return map;
     }
 }

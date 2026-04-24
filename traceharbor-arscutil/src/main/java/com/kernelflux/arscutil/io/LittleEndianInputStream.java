@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.kernelflux.mm.arscutil.io;
+package com.kernelflux.arscutil.io;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -27,53 +27,63 @@ import java.nio.ByteOrder;
  * Created by jinqiuchen on 18/7/29.
  */
 
-public class LittleEndianOutputStream extends OutputStream {
+public class LittleEndianInputStream extends InputStream {
 
     private RandomAccessFile original;
 
 
-    public LittleEndianOutputStream(String file) throws FileNotFoundException {
-        this(new RandomAccessFile(file, "rw"));
+    public LittleEndianInputStream(String file) throws FileNotFoundException {
+        this(new RandomAccessFile(file, "r"));
     }
 
 
-    public LittleEndianOutputStream(RandomAccessFile original) {
+    public LittleEndianInputStream(RandomAccessFile original) {
         this.original = original;
     }
 
     @Override
-    public void write(int b) throws IOException {
-        original.write(b);
+    public int read() throws IOException {
+        // TODO Auto-generated method stub
+        return original.read();
     }
 
-    public void writeShort(short data) throws IOException {
+    public short readShort() throws IOException {
         ByteBuffer byteBuffer = ByteBuffer.allocate(2);
         byteBuffer.clear();
         byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        byteBuffer.putShort(data);
+        byteBuffer.put(original.readByte());
+        byteBuffer.put(original.readByte());
         byteBuffer.flip();
-        original.write(byteBuffer.array());
+        return byteBuffer.getShort();
     }
 
-    public void writeInt(int data) throws IOException {
+    public int readInt() throws IOException {
         ByteBuffer byteBuffer = ByteBuffer.allocate(4);
-        byteBuffer.clear();
         byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        byteBuffer.putInt(data);
+        byteBuffer.clear();
+        for (int i = 1; i <= 4; i++) {
+            byteBuffer.put(original.readByte());
+        }
         byteBuffer.flip();
-        original.write(byteBuffer.array());
+        return byteBuffer.getInt();
     }
 
-    public void writeByte(byte data) throws IOException {
-        original.write(data);
+    public byte readByte() throws IOException {
+        return original.readByte();
     }
 
-    public void writeByte(byte[] buffer) throws IOException {
-        original.write(buffer);
+    public void readByte(byte[] buffer) throws IOException {
+        readByte(buffer, 0, buffer.length);
     }
 
-    public void writeByte(byte[] buffer, int offset, int length) throws IOException {
-        original.write(buffer, offset, length);
+    public void readByte(byte[] buffer, int offset, int length) throws IOException {
+        ByteBuffer byteBuffer = ByteBuffer.allocate(length);
+        byteBuffer.clear();
+        for (int i = 1; i <= length; i++) {
+            byteBuffer.put(original.readByte());
+        }
+        byteBuffer.flip();
+        byteBuffer.get(buffer, offset, length);
     }
 
     public void seek(long pos) throws IOException {
@@ -90,6 +100,7 @@ public class LittleEndianOutputStream extends OutputStream {
 
     @Override
     public void close() throws IOException {
+        // TODO Auto-generated method stub
         super.close();
         original.close();
     }

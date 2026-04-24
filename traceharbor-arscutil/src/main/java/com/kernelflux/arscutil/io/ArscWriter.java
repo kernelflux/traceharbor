@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.kernelflux.mm.arscutil.io;
+package com.kernelflux.arscutil.io;
 
 import com.kernelflux.traceharbor.javalib.util.Log;
-import com.kernelflux.mm.arscutil.data.ResTable;
+import com.kernelflux.arscutil.data.ResTable;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.kernelflux.traceharbor_memory_canary
+package com.kernelflux.traceharbor.memory.canary
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package com.kernelflux.traceharbor_memory_canary
+package com.kernelflux.traceharbor.memory.canary
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.kernelflux.traceharbor_memory_canary.test", appContext.packageName)
+        assertEquals("com.kernelflux.traceharbor.memory.canary.test", appContext.packageName)
     }
 }

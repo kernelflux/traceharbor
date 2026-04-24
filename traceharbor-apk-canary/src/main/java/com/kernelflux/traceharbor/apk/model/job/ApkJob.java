@@ -21,7 +21,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.kernelflux.traceharbor.apk.ApkChecker;
-import com.kernelflux.traceharbor.apk.model.output.MMTaskResultRegistry;
+import com.kernelflux.traceharbor.apk.model.output.DefaultTaskResultRegistry;
 import com.kernelflux.traceharbor.apk.model.result.JobResult;
 import com.kernelflux.traceharbor.apk.model.result.JobResultFactory;
 import com.kernelflux.traceharbor.apk.model.result.TaskResult;
@@ -446,7 +446,7 @@ public final class ApkJob {
             }
 
             //register MMTaskResult
-            MMTaskResultRegistry mmTaskResultRegistry = new MMTaskResultRegistry();
+            DefaultTaskResultRegistry mmTaskResultRegistry = new DefaultTaskResultRegistry();
             TaskResultFactory.addCustomTaskHtmlResult(mmTaskResultRegistry.getHtmlResult());
             TaskResultFactory.addCustomTaskJsonResult(mmTaskResultRegistry.getJsonResult());
         } catch (Exception e) {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kernelflux.mm.arscutil.data;
+package com.kernelflux.arscutil.data;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

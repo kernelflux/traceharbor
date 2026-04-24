@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package com.kernelflux.mm.arscutil;
+package com.kernelflux.arscutil;
 
 import com.kernelflux.traceharbor.javalib.util.Log;
-import com.kernelflux.mm.arscutil.data.ArscConstants;
-import com.kernelflux.mm.arscutil.data.ResChunk;
-import com.kernelflux.mm.arscutil.data.ResEntry;
-import com.kernelflux.mm.arscutil.data.ResPackage;
-import com.kernelflux.mm.arscutil.data.ResStringBlock;
-import com.kernelflux.mm.arscutil.data.ResTable;
-import com.kernelflux.mm.arscutil.data.ResType;
+import com.kernelflux.arscutil.data.ArscConstants;
+import com.kernelflux.arscutil.data.ResChunk;
+import com.kernelflux.arscutil.data.ResEntry;
+import com.kernelflux.arscutil.data.ResPackage;
+import com.kernelflux.arscutil.data.ResStringBlock;
+import com.kernelflux.arscutil.data.ResTable;
+import com.kernelflux.arscutil.data.ResType;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

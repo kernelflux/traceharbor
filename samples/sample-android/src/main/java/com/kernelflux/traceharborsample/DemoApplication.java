@@ -3,7 +3,7 @@ package com.kernelflux.traceharborsample;
 import android.app.Application;
 import android.text.TextUtils;
 
-import com.kernelflux.mrs.plugin.IDynamicConfig;
+import com.kernelflux.traceharbor.dynamicconfig.IDynamicConfig;
 
 import com.kernelflux.traceharbor.TraceHarbor;
 import com.kernelflux.traceharbor.batterycanary.BatteryEventDelegate;

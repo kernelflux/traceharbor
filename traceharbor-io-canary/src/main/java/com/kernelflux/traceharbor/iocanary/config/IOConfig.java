@@ -16,7 +16,7 @@
 
 package com.kernelflux.traceharbor.iocanary.config;
 
-import com.kernelflux.mrs.plugin.IDynamicConfig;
+import com.kernelflux.traceharbor.dynamicconfig.IDynamicConfig;
 //import com.kernelflux.traceharbor.iocanary.detect.CloseGuardHooker;
 
 

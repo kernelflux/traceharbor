@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package com.kernelflux.mm.arscutil.io;
+package com.kernelflux.arscutil.io;
 
 import com.kernelflux.traceharbor.javalib.util.Log;
-import com.kernelflux.mm.arscutil.ArscUtil;
-import com.kernelflux.mm.arscutil.data.ArscConstants;
-import com.kernelflux.mm.arscutil.data.ResChunk;
-import com.kernelflux.mm.arscutil.data.ResConfig;
-import com.kernelflux.mm.arscutil.data.ResEntry;
-import com.kernelflux.mm.arscutil.data.ResMapValue;
-import com.kernelflux.mm.arscutil.data.ResPackage;
-import com.kernelflux.mm.arscutil.data.ResStringBlock;
-import com.kernelflux.mm.arscutil.data.ResTable;
-import com.kernelflux.mm.arscutil.data.ResType;
-import com.kernelflux.mm.arscutil.data.ResTypeSpec;
-import com.kernelflux.mm.arscutil.data.ResValue;
+import com.kernelflux.arscutil.ArscUtil;
+import com.kernelflux.arscutil.data.ArscConstants;
+import com.kernelflux.arscutil.data.ResChunk;
+import com.kernelflux.arscutil.data.ResConfig;
+import com.kernelflux.arscutil.data.ResEntry;
+import com.kernelflux.arscutil.data.ResMapValue;
+import com.kernelflux.arscutil.data.ResPackage;
+import com.kernelflux.arscutil.data.ResStringBlock;
+import com.kernelflux.arscutil.data.ResTable;
+import com.kernelflux.arscutil.data.ResType;
+import com.kernelflux.arscutil.data.ResTypeSpec;
+import com.kernelflux.arscutil.data.ResValue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

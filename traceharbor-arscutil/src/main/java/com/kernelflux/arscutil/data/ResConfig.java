@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kernelflux.mm.arscutil.data;
+package com.kernelflux.arscutil.data;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -23,35 +23,37 @@ import java.nio.ByteOrder;
  * Created by jinqiuchen on 18/7/29.
  */
 
-public class ResMapValue {
+public class ResConfig {
 
-    private int name;
-    private ResValue resValue;
+    private int size; // 总大小（包括size字段）， 4 bytes
+    private byte[] content;
 
-
-    public int getName() {
-        return name;
+    public int getSize() {
+        return size;
     }
 
-    public void setName(int name) {
-        this.name = name;
+    public void setSize(int size) {
+        this.size = size;
     }
 
-    public ResValue getResValue() {
-        return resValue;
+    public byte[] getContent() {
+        return content;
     }
 
-    public void setResValue(ResValue resValue) {
-        this.resValue = resValue;
+    public void setContent(byte[] content) {
+        this.content = content;
     }
 
     public byte[] toBytes() {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(4 + resValue.getSize());
+        ByteBuffer byteBuffer = ByteBuffer.allocate(size);
         byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
         byteBuffer.clear();
-        byteBuffer.putInt(name);
-        byteBuffer.put(resValue.toBytes());
+        byteBuffer.putInt(size);
+        if (content != null && content.length > 0) {
+            byteBuffer.put(content);
+        }
         byteBuffer.flip();
         return byteBuffer.array();
     }
+
 }

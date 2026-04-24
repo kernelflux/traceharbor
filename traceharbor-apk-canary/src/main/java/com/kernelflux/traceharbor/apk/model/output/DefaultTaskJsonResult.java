@@ -40,9 +40,9 @@ import javax.xml.parsers.ParserConfigurationException;
  * Created by jinqiuchen on 17/8/15.
  */
 
-public class MMTaskJsonResult extends TaskJsonResult {
+public class DefaultTaskJsonResult extends TaskJsonResult {
 
-    public MMTaskJsonResult(int type, JsonObject config) throws ParserConfigurationException {
+    public DefaultTaskJsonResult(int type, JsonObject config) throws ParserConfigurationException {
         super(type, config);
     }
 

@@ -16,7 +16,7 @@
 
 package com.kernelflux.traceharbor.resource.config;
 
-import com.kernelflux.mrs.plugin.IDynamicConfig;
+import com.kernelflux.traceharbor.dynamicconfig.IDynamicConfig;
 
 import java.util.concurrent.TimeUnit;
 

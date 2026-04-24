@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kernelflux.mm.arscutil.data;
+package com.kernelflux.arscutil.data;
 
 /**
  * Created by jinqiuchen on 18/7/29.

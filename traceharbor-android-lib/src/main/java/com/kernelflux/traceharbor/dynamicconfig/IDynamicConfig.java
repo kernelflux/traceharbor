@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kernelflux.mrs.plugin;
+package com.kernelflux.traceharbor.dynamicconfig;
 
 /**
  * Created by zhoushaotao on 17/10/15.

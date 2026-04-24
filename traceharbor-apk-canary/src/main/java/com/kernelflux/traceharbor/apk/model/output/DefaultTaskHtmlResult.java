@@ -32,7 +32,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * Created by jinqiuchen on 17/8/4.
  */
 
-public class MMTaskHtmlResult extends TaskHtmlResult {
+public class DefaultTaskHtmlResult extends TaskHtmlResult {
 
     private static final int MAX_SHOW_ITEMS = 10;
     private static final String FOLDER_STYLE = "color:white;font-size:20px;background-color:#C0C0C0";
@@ -48,13 +48,13 @@ public class MMTaskHtmlResult extends TaskHtmlResult {
                                                 + "} "
                                                 + "root.parentNode.removeChild(root)";
 
-    public MMTaskHtmlResult(int type, JsonObject config) throws ParserConfigurationException {
+    public DefaultTaskHtmlResult(int type, JsonObject config) throws ParserConfigurationException {
         super(type, config);
     }
 
     @Override
     public void format(JsonObject jsonObject) throws ParserConfigurationException {
-        MMTaskJsonResult.formatJson(jsonObject, null, config);
+        DefaultTaskJsonResult.formatJson(jsonObject, null, config);
 
         int taskType = jsonObject.get("taskType").getAsInt();
 
