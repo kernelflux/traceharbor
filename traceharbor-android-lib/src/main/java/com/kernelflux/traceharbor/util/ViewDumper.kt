@@ -11,9 +11,12 @@ import java.lang.StringBuilder
 object ViewDumper {
 
     @JvmStatic
-    fun dump(): Array<String> = OverlayWindowLifecycleOwner.getAllViews().map {
-        dumpInternal(it)
-    }.toTypedArray()
+    fun dump(): Array<String> = OverlayWindowLifecycleOwner.getAllViews()
+        // ReflectUtils now returns nullable T?; mView slots can legitimately be null
+        // for transient ViewRootImpl entries — drop those rather than NPE.
+        .filterNotNull()
+        .map { dumpInternal(it) }
+        .toTypedArray()
 
     private fun dumpInternal(view: View, level: Int = 0): String {
 

@@ -19,7 +19,14 @@ package com.kernelflux.traceharbor.plugin
 import android.app.Application
 
 interface IPlugin {
-    fun getApplication(): Application?
+    /**
+     * Exposed as a Kotlin property (not `fun getApplication()`) so existing
+     * Kotlin call sites can keep using `plugin.application` syntax. JVM
+     * bytecode still emits a `Application getApplication()` getter, which
+     * is exactly the signature `Plugin.java` and other Java implementors
+     * already provide via `@Override`.
+     */
+    val application: Application?
 
     fun init(application: Application, pluginListener: PluginListener)
 
@@ -29,7 +36,11 @@ interface IPlugin {
 
     fun destroy()
 
-    fun getTag(): String
+    /**
+     * Same property trick as [application] — Java overrides keep their
+     * `String getTag()` signature; Kotlin callers reach it as `.tag`.
+     */
+    val tag: String
 
     fun onForeground(isForeground: Boolean)
 }

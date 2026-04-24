@@ -186,7 +186,10 @@ class NativeForkAnalyzeProcessor(watcher: ActivityRefWatcher) : BaseLeakProcesso
                 }.let {
                     screenStateReceiver.also { receiver ->
                         TraceHarborLog.i(TAG, "Screen state receiver $receiver registered.")
-                        watcher.resourcePlugin.application.registerReceiver(receiver, it)
+                        // IPlugin.application is now declared nullable in Kotlin (it always
+                        // could be null at runtime — Plugin#init hasn't fired yet). Skip
+                        // registration if so, mirroring the original try/catch behaviour.
+                        watcher.resourcePlugin.application?.registerReceiver(receiver, it)
                     }
                 }
             } catch (throwable: Throwable) {

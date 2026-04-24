@@ -85,8 +85,11 @@ object OverlayWindowLifecycleOwner : StatefulOwner() {
         val WindowManagerGlobal_instance =
             ReflectUtils.invoke<Any>(Clazz_WindowManagerGlobal, "getInstance", null)
 
+        // ReflectUtils.get returns T? now; bail safely if `mLock` isn't present
+        // on this OS rather than NPEing inside `synchronized`.
         val WindowManagerGlobal_mLock =
             ReflectUtils.get<Any>(Clazz_WindowManagerGlobal, "mLock", WindowManagerGlobal_instance)
+                ?: return@safeApply
 
         synchronized(WindowManagerGlobal_mLock) {
             val origin = ReflectUtils.get<ArrayList<*>>(

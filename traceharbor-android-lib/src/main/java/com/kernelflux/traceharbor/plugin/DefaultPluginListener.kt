@@ -23,19 +23,19 @@ import com.kernelflux.traceharbor.util.TraceHarborLog
 open class DefaultPluginListener(@Suppress("unused") private val context: Context) : PluginListener {
 
     override fun onInit(plugin: Plugin) {
-        TraceHarborLog.i(TAG, "%s plugin is inited", plugin.getTag())
+        TraceHarborLog.i(TAG, "%s plugin is inited", plugin.tag)
     }
 
     override fun onStart(plugin: Plugin) {
-        TraceHarborLog.i(TAG, "%s plugin is started", plugin.getTag())
+        TraceHarborLog.i(TAG, "%s plugin is started", plugin.tag)
     }
 
     override fun onStop(plugin: Plugin) {
-        TraceHarborLog.i(TAG, "%s plugin is stopped", plugin.getTag())
+        TraceHarborLog.i(TAG, "%s plugin is stopped", plugin.tag)
     }
 
     override fun onDestroy(plugin: Plugin) {
-        TraceHarborLog.i(TAG, "%s plugin is destroyed", plugin.getTag())
+        TraceHarborLog.i(TAG, "%s plugin is destroyed", plugin.tag)
     }
 
     override fun onReportIssue(issue: Issue) {
