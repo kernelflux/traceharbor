@@ -61,23 +61,47 @@ allprojects {
     }
 
     // ---------------------------------------------------------------------------
-    // Kotlin 1.8.x dropped jvmTarget=1.7 — the compiler now defaults to 17 if you
-    // don't set it, but Java compile in this repo defaults to 1.8 (root javaVersion
-    // = JavaVersion.VERSION_1_8). Without alignment, every kotlin-android /
-    // kotlin-jvm module trips "compileXxxJavaWithJavac (current target is 1.8) and
-    // compileXxxKotlin (current target is 17) jvm target compatibility should be
-    // set to the same Java version".
+    // Kotlin 1.8.x dropped jvmTarget=1.7 and now defaults to JVM 17 if you don't
+    // set it, but most modules in this repo keep Java targetCompatibility = 1.8.
+    // The mismatch trips:
+    //   "'compileXxxJavaWithJavac' task (current target is 1.8) and
+    //    'compileXxxKotlin' task (current target is 17) jvm target compatibility
+    //    should be set to the same Java version."
     //
-    // Apply to all kotlin compile tasks once, instead of repeating per-module.
+    // We can't pin a single jvmTarget at the root: traceharbor-gradle-plugin must
+    // run on Java 11+ (transitively pulls AGP 8.x which is built for Java 11),
+    // while traceharbor-commons / -resource-canary-common / -android libraries
+    // stay on Java 1.8 for max device coverage.
+    //
+    // So instead of hard-coding a value, derive Kotlin's jvmTarget from whatever
+    // Java target the module actually uses:
+    //   • Pure JVM modules → JavaPluginExtension.targetCompatibility
+    //   • Android library  → android.compileOptions.targetCompatibility
+    //                        (these don't go through JavaPluginExtension at all,
+    //                        so the JVM-only branch returns the JDK default 17,
+    //                        which is wrong for an Android lib pinned to 1.8).
+    // Done lazily via afterEvaluate so the per-module configuration runs first.
     // ---------------------------------------------------------------------------
     val alignKotlinJvmTarget = Action<Project> {
-        tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-            kotlinOptions {
-                jvmTarget = "1.8"
+        afterEvaluate {
+            val androidExt = extensions.findByType(LibraryExtension::class.java)
+            val javaTarget: String = when {
+                androidExt != null ->
+                    androidExt.compileOptions.targetCompatibility.toString()
+                else ->
+                    extensions.findByType(JavaPluginExtension::class.java)
+                        ?.targetCompatibility
+                        ?.toString()
+                        ?: "1.8"
+            }
+            tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+                kotlinOptions {
+                    jvmTarget = javaTarget
+                }
             }
         }
     }
-    plugins.withId("kotlin-android") { alignKotlinJvmTarget.execute(this@allprojects) }
+    plugins.withId("kotlin-android")               { alignKotlinJvmTarget.execute(this@allprojects) }
     plugins.withId("org.jetbrains.kotlin.android") { alignKotlinJvmTarget.execute(this@allprojects) }
     plugins.withId("org.jetbrains.kotlin.jvm")     { alignKotlinJvmTarget.execute(this@allprojects) }
     plugins.withId("kotlin")                       { alignKotlinJvmTarget.execute(this@allprojects) }
