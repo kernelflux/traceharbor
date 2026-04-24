@@ -2,7 +2,7 @@ import com.android.build.gradle.LibraryExtension
 
 // Load repo-local secrets (Sonatype, GPG, Plugin Portal, …) once per build.
 // All projects can read via `gradle.privateProperties.getProperty(...)`.
-apply from: rootProject.file('gradle/private-properties.gradle')
+apply from: rootProject.file('gradle/private-properties.gradle.kts')
 
 buildscript {
 
