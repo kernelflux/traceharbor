@@ -257,8 +257,17 @@ dependencyResolutionManagement {
 [completed]   阶段 2：tencent → kernelflux 包名/目录
 [completed]   阶段 3：类名去 MM 化
 [completed]   阶段 4：libs.versions.toml （catalog 已建 + docs/version-catalog.md；各模块引用迁移随阶段 6 一起做）
-[pending]     阶段 5：基础设施层迁 KTS
-[pending]     阶段 6：模块 build.gradle 迁 KTS（同步替换 dep 字符串为 libs.xxx）
+[completed]   阶段 5：基础设施层迁 KTS（settings + root build + gradle/*.gradle）
+[completed]   阶段 6：26 个模块 + sample build.gradle 迁 KTS
+              ├ Batch A (4): pure-java libs
+              ├ Batch B (3): android-library 无 cmake
+              ├ Batch C1 (7): android-library + cmake (无 exportHeaders)
+              ├ Batch C2 (6): android-library + cmake + exportHeaders 动态 DSL
+              ├ Batch C3 (2): kotlin-android + cmake / 带 flavors
+              └ Batch D  (4): apk-canary、analyzer-cli、gradle-plugin、sample-android
+              ※ gradle/TraceHarborNativeDepend.gradle 仍是 Groovy
+                （470 行 + 自定义 DSL + 已废弃 variants API；KTS 模块 apply from 后正常工作；
+                 deferred 到阶段 8 之后单独处理）
 [pending]     阶段 7：Java→Kotlin 计划文档
 [pending]     阶段 8：Java→Kotlin 多轮执行
 ```
