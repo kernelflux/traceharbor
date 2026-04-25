@@ -11,11 +11,10 @@ plugins {
 val gradleExtra = (gradle as org.gradle.api.plugins.ExtensionAware).extensions.extraProperties
 val kotlinVersion: String = gradleExtra.get("KOTLIN_VERSION").toString()
 
-// Java sourceCompatibility / targetCompatibility intentionally NOT pinned —
-// AGP 8.x (consumed via `implementation("com.android.tools.build:gradle:8.2.2")`)
-// requires Java 11+, so we let JavaPluginExtension default to whichever JDK runs
-// Gradle (17 in this repo). The root build's `alignKotlinJvmTarget` action picks
-// up that target via afterEvaluate and configures Kotlin's jvmTarget to match.
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 dependencies {
     implementation(fileTree("libs") { include("*.jar") })
