@@ -285,7 +285,7 @@ class FrameTracer(private val config: TraceConfig) :
     fun forceEnable() {
         TraceHarborLog.i(TAG, "forceEnable")
         if (sdkInt >= Build.VERSION_CODES.N) {
-            TraceHarbor.with().getApplication()?.registerActivityLifecycleCallbacks(this)
+            TraceHarbor.with().application.registerActivityLifecycleCallbacks(this)
             val collector = SceneFrameCollector()
             sceneFrameCollector = collector
             addListener(collector)
@@ -299,7 +299,7 @@ class FrameTracer(private val config: TraceConfig) :
         TraceHarborLog.i(TAG, "forceDisable")
         removeDropFrameListener()
         if (sdkInt >= Build.VERSION_CODES.N) {
-            TraceHarbor.with().getApplication()?.unregisterActivityLifecycleCallbacks(this)
+            TraceHarbor.with().application.unregisterActivityLifecycleCallbacks(this)
             listeners.clear()
             frameListenerMap.clear()
         } else {

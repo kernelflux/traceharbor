@@ -537,7 +537,7 @@ class SignalAnrTracer : Tracer {
                 val scene = AppActiveTraceHarborDelegate.INSTANCE.getVisibleScene()
 
                 var jsonObject = JSONObject()
-                jsonObject = DeviceUtil.getDeviceInfo(jsonObject, TraceHarbor.with().getApplication())
+                jsonObject = DeviceUtil.getDeviceInfo(jsonObject, TraceHarbor.with().application)
                 if (isSigQuit) {
                     jsonObject.put(SharePluginInfo.ISSUE_STACK_TYPE, Constants.Type.SIGNAL_ANR)
                     jsonObject.put(SharePluginInfo.ISSUE_THREAD_STACK, stackTrace)
@@ -621,7 +621,7 @@ class SignalAnrTracer : Tracer {
         private fun checkErrorState(): Boolean {
             try {
                 TraceHarborLog.i(TAG, "[checkErrorState] start")
-                val application: Application? = sApplication ?: TraceHarbor.with().getApplication()
+                val application: Application? = sApplication ?: TraceHarbor.with().application
                 if (application == null) {
                     TraceHarborLog.i(TAG, "[checkErrorState] application == null")
                     return false

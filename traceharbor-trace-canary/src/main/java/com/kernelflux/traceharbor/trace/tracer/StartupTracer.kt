@@ -70,7 +70,7 @@ class StartupTracer(private val config: TraceConfig) :
         TraceHarborLog.i(TAG, "[onAlive] isStartupEnable:%s", isStartupEnable)
         if (isStartupEnable) {
             AppMethodBeat.getInstance().addListener(this)
-            TraceHarbor.with().getApplication()?.registerActivityLifecycleCallbacks(this)
+            TraceHarbor.with().application.registerActivityLifecycleCallbacks(this)
         }
     }
 
@@ -78,7 +78,7 @@ class StartupTracer(private val config: TraceConfig) :
         super.onDead()
         if (isStartupEnable) {
             AppMethodBeat.getInstance().removeListener(this)
-            TraceHarbor.with().getApplication()?.unregisterActivityLifecycleCallbacks(this)
+            TraceHarbor.with().application.unregisterActivityLifecycleCallbacks(this)
         }
     }
 
@@ -301,7 +301,7 @@ class StartupTracer(private val config: TraceConfig) :
             val plugin = TraceHarbor.with().getPluginByClass(TracePlugin::class.java) ?: return
             try {
                 var costObject = JSONObject()
-                costObject = DeviceUtil.getDeviceInfo(costObject, TraceHarbor.with().getApplication())
+                costObject = DeviceUtil.getDeviceInfo(costObject, TraceHarbor.with().application)
                 costObject.put(SharePluginInfo.STAGE_APPLICATION_CREATE, applicationCost)
                 costObject.put(SharePluginInfo.STAGE_APPLICATION_CREATE_SCENE, scene)
                 costObject.put(SharePluginInfo.STAGE_FIRST_ACTIVITY_CREATE, firstScreenCost)
@@ -320,7 +320,7 @@ class StartupTracer(private val config: TraceConfig) :
             ) {
                 try {
                     var jsonObject = JSONObject()
-                    jsonObject = DeviceUtil.getDeviceInfo(jsonObject, TraceHarbor.with().getApplication())
+                    jsonObject = DeviceUtil.getDeviceInfo(jsonObject, TraceHarbor.with().application)
                     jsonObject.put(SharePluginInfo.ISSUE_STACK_TYPE, Constants.Type.STARTUP)
                     jsonObject.put(SharePluginInfo.ISSUE_COST, allCost)
                     jsonObject.put(SharePluginInfo.ISSUE_TRACE_STACK, reportBuilder.toString())

@@ -104,7 +104,7 @@ class TouchEventLagTracer(config: TraceConfig) : Tracer() {
                     var jsonObject = JSONObject()
                     jsonObject = DeviceUtil.getDeviceInfo(
                         jsonObject,
-                        TraceHarbor.with().getApplication(),
+                        TraceHarbor.with().application,
                     )
                     jsonObject.put(SharePluginInfo.ISSUE_STACK_TYPE, Constants.Type.LAG_TOUCH)
                     jsonObject.put(SharePluginInfo.ISSUE_SCENE, scene)

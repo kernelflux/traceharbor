@@ -151,7 +151,7 @@ class EvilMethodTracer(private val config: TraceConfig) : Tracer(), ILooperListe
                 val plugin = TraceHarbor.with()
                     .getPluginByClass(TracePlugin::class.java) ?: return
                 val jsonObject = JSONObject()
-                DeviceUtil.getDeviceInfo(jsonObject, TraceHarbor.with().getApplication())
+                DeviceUtil.getDeviceInfo(jsonObject, TraceHarbor.with().application)
 
                 jsonObject.put(SharePluginInfo.ISSUE_STACK_TYPE, Constants.Type.NORMAL)
                 jsonObject.put(SharePluginInfo.ISSUE_COST, stackCost)

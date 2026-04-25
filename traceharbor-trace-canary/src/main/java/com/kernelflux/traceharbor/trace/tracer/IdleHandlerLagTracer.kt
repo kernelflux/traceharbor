@@ -74,7 +74,7 @@ class IdleHandlerLagTracer(config: TraceConfig) : Tracer() {
                 val scene = AppActiveTraceHarborDelegate.INSTANCE.getVisibleScene()
 
                 val jsonObject = JSONObject()
-                DeviceUtil.getDeviceInfo(jsonObject, TraceHarbor.with().getApplication())
+                DeviceUtil.getDeviceInfo(jsonObject, TraceHarbor.with().application)
                 jsonObject.put(SharePluginInfo.ISSUE_STACK_TYPE, Constants.Type.LAG_IDLE_HANDLER)
                 jsonObject.put(SharePluginInfo.ISSUE_SCENE, scene)
                 jsonObject.put(SharePluginInfo.ISSUE_THREAD_STACK, stackTrace)

@@ -114,7 +114,7 @@ class ThreadTracer : Tracer() {
                 var jsonObject = JSONObject()
                 jsonObject = DeviceUtil.getDeviceInfo(
                     jsonObject,
-                    TraceHarbor.with().getApplication(),
+                    TraceHarbor.with().application,
                 )
                 jsonObject.put(SharePluginInfo.ISSUE_STACK_TYPE, Constants.Type.PRIORITY_MODIFIED)
                 jsonObject.put(SharePluginInfo.ISSUE_THREAD_STACK, stackTrace)
@@ -155,7 +155,7 @@ class ThreadTracer : Tracer() {
                 var jsonObject = JSONObject()
                 jsonObject = DeviceUtil.getDeviceInfo(
                     jsonObject,
-                    TraceHarbor.with().getApplication(),
+                    TraceHarbor.with().application,
                 )
                 jsonObject.put(SharePluginInfo.ISSUE_STACK_TYPE, Constants.Type.TIMERSLACK_MODIFIED)
                 jsonObject.put(SharePluginInfo.ISSUE_THREAD_STACK, stackTrace)

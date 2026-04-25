@@ -103,7 +103,7 @@ class LooperAnrTracer(private val traceConfig: TraceConfig) : Tracer(), ILooperL
                 val dumpStack = Utils.getWholeStack(stackTrace)
 
                 val jsonObject = JSONObject()
-                DeviceUtil.getDeviceInfo(jsonObject, TraceHarbor.with().getApplication())
+                DeviceUtil.getDeviceInfo(jsonObject, TraceHarbor.with().application)
                 jsonObject.put(SharePluginInfo.ISSUE_STACK_TYPE, Constants.Type.LAG)
                 jsonObject.put(SharePluginInfo.ISSUE_SCENE, scene)
                 jsonObject.put(SharePluginInfo.ISSUE_THREAD_STACK, dumpStack)
@@ -229,7 +229,7 @@ class LooperAnrTracer(private val traceConfig: TraceConfig) : Tracer(), ILooperL
                 val plugin = TraceHarbor.with()
                     .getPluginByClass(TracePlugin::class.java) ?: return
                 val jsonObject = JSONObject()
-                DeviceUtil.getDeviceInfo(jsonObject, TraceHarbor.with().getApplication())
+                DeviceUtil.getDeviceInfo(jsonObject, TraceHarbor.with().application)
                 jsonObject.put(SharePluginInfo.ISSUE_STACK_TYPE, Constants.Type.ANR)
                 jsonObject.put(SharePluginInfo.ISSUE_COST, stackCost)
                 jsonObject.put(SharePluginInfo.ISSUE_STACK_KEY, stackKey)

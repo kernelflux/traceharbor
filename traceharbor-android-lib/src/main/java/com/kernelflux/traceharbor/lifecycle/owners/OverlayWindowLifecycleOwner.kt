@@ -96,7 +96,7 @@ object OverlayWindowLifecycleOwner : StatefulOwner() {
                 Clazz_WindowManagerGlobal,
                 "mRoots",
                 WindowManagerGlobal_instance
-            )
+            ) ?: return@safeApply
             val proxy = ArrayListProxy(origin, onViewRootChangedListener)
             ReflectUtils.set(
                 Clazz_WindowManagerGlobal,
