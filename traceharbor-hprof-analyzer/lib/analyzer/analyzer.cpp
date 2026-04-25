@@ -2,7 +2,7 @@
 
 #include <queue>
 
-namespace matrix::hprof::internal::analyzer {
+namespace traceharbor::hprof::internal::analyzer {
 
     struct ref_super_t {
         heap::object_id_t referrer_id;

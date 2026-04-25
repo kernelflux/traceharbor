@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingTop="8dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp">
+
+    <Button
+        android:id="@+id/trace_nav_anr"
+        style="@style/SubEntryButton"
+        android:text="@string/nav_anr" />
+
+    <Button
+        android:id="@+id/trace_nav_evil"
+        style="@style/SubEntryButton"
+        android:text="@string/nav_evil" />
+
+    <Button
+        android:id="@+id/trace_nav_fps"
+        style="@style/SubEntryButton"
+        android:text="@string/nav_fps" />
+
+    <Button
+        android:id="@+id/trace_toggle_beat"
+        style="@style/SubEntryButton"
+        android:layout_marginTop="16dp"
+        android:text="@string/trace_toggle_beat" />
+
+    <Button
+        android:id="@+id/trace_print_trace"
+        style="@style/SubEntryButton"
+        android:text="@string/trace_print_trace" />
+</LinearLayout>

@@ -5,7 +5,7 @@
 
 #include <sstream>
 
-namespace matrix::hprof::internal::parser {
+namespace traceharbor::hprof::internal::parser {
 
     namespace tag {
         static constexpr uint8_t kStrings = 0x01;

@@ -19,8 +19,8 @@
 // Created by liyongjie
 //
 
-#ifndef MATRIX_IO_CANARY_IO_INFO_COLLECTOR_H
-#define MATRIX_IO_CANARY_IO_INFO_COLLECTOR_H
+#ifndef TRACEHARBOR_IO_CANARY_IO_INFO_COLLECTOR_H
+#define TRACEHARBOR_IO_CANARY_IO_INFO_COLLECTOR_H
 
 #include <jni.h>
 #include <unistd.h>
@@ -95,4 +95,4 @@ namespace iocanary {
     };
 }
 
-#endif //MATRIX_IO_CANARY_IO_INFO_COLLECTOR_H
+#endif //TRACEHARBOR_IO_CANARY_IO_INFO_COLLECTOR_H

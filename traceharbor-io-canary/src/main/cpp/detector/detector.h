@@ -18,8 +18,8 @@
 // Created by liyongjie on 2017/12/7.
 //
 
-#ifndef MATRIX_IO_CANARY_DETECTOR_H
-#define MATRIX_IO_CANARY_DETECTOR_H
+#ifndef TRACEHARBOR_IO_CANARY_DETECTOR_H
+#define TRACEHARBOR_IO_CANARY_DETECTOR_H
 
 #include <vector>
 #include <set>
@@ -70,4 +70,4 @@ namespace iocanary {
         std::set<std::string> published_issue_set_;
     };
 }
-#endif //MATRIX_IO_CANARY_DETECTOR_H
+#endif //TRACEHARBOR_IO_CANARY_DETECTOR_H

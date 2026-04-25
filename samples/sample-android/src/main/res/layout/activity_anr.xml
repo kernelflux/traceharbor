@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingTop="8dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp">
+
+    <Button
+        android:id="@+id/anr_5s_button"
+        style="@style/SubEntryButton"
+        android:text="@string/anr_5s" />
+
+    <Button
+        android:id="@+id/anr_8s_button"
+        style="@style/SubEntryButton"
+        android:text="@string/anr_8s" />
+
+    <Button
+        android:id="@+id/anr_20s_button"
+        style="@style/SubEntryButton"
+        android:text="@string/anr_20s" />
+
+    <Button
+        android:id="@+id/anr_loop_3s_button"
+        style="@style/SubEntryButton"
+        android:text="@string/anr_loop_3s" />
+</LinearLayout>

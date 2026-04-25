@@ -60,7 +60,7 @@ typedef struct {
 static const constexpr int LIBLOAD_SUCCESS = 0;
 static const constexpr int LIBLOAD_FAILURE = 1;
 
-namespace matrix {
+namespace traceharbor {
     using namespace wv_prealloc_trimmer;
 
     static void* (*sOriginalAndroidDlOpenExt)(const char*, int, void*);
@@ -135,7 +135,7 @@ namespace matrix {
 
     static bool LocateReservedSpaceByParsingMaps(void** start_out, size_t* size_out) {
         bool found = false;
-        matrix::IterateMaps([&](uintptr_t start, uintptr_t end, char perms[4], const char* path, void* args) -> bool {
+        traceharbor::IterateMaps([&](uintptr_t start, uintptr_t end, char perms[4], const char* path, void* args) -> bool {
             if (perms[0] != '-' || perms[1] != '-' || perms[2] != '-' || perms[3] != 'p') {
                 // Not match '---p'
                 return false;
@@ -162,7 +162,7 @@ namespace matrix {
     static jmethodID GetMethodIDByMetaReflect(JNIEnv* env,
             jclass target_clazz, const char* name, const char** arg_type_names, size_t arg_count) {
         RETURN_ON_COND(env->PushLocalFrame(9 + arg_count) != JNI_OK, nullptr);
-        auto cleaner = matrix::MakeScopedCleaner([env]() {
+        auto cleaner = traceharbor::MakeScopedCleaner([env]() {
             env->PopLocalFrame(nullptr);
         });
 

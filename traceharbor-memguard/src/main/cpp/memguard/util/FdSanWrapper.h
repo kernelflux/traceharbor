@@ -2,8 +2,8 @@
 // Created by YinSheng Tang on 2021/9/22.
 //
 
-#ifndef MATRIX_ANDROID_FDSANWRAPPER_H
-#define MATRIX_ANDROID_FDSANWRAPPER_H
+#ifndef TRACEHARBOR_ANDROID_FDSANWRAPPER_H
+#define TRACEHARBOR_ANDROID_FDSANWRAPPER_H
 
 
 enum android_fdsan_error_level {
@@ -38,4 +38,4 @@ extern android_fdsan_error_level AndroidFdSanGetErrorLevel();
 extern android_fdsan_error_level AndroidFdSanSetErrorLevel(enum android_fdsan_error_level new_level);
 
 
-#endif //MATRIX_ANDROID_FDSANWRAPPER_H
+#endif //TRACEHARBOR_ANDROID_FDSANWRAPPER_H

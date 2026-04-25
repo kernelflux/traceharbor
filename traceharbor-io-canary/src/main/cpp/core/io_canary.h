@@ -18,8 +18,8 @@
 // Created by liyongjie on 2017/12/7.
 //
 
-#ifndef MATRIX_IO_CANARY_IO_CANARY_H
-#define MATRIX_IO_CANARY_IO_CANARY_H
+#ifndef TRACEHARBOR_IO_CANARY_IO_CANARY_H
+#define TRACEHARBOR_IO_CANARY_IO_CANARY_H
 
 #include <condition_variable>
 #include <memory>
@@ -72,4 +72,4 @@ namespace iocanary {
 };
 
 
-#endif //MATRIX_IO_CANARY_IO_CANARY_H
+#endif //TRACEHARBOR_IO_CANARY_IO_CANARY_H

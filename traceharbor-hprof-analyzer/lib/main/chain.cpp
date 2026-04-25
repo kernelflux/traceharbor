@@ -1,6 +1,6 @@
 #include "internal/main_chain.h"
 
-namespace matrix::hprof {
+namespace traceharbor::hprof {
 
     const std::string &LeakChain::GcRoot::GetName() const {
         return name_;

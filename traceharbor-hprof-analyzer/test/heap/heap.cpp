@@ -1,8 +1,8 @@
 #include "heap.h"
 #include "gtest/gtest.h"
 
-using namespace matrix::hprof::internal::heap;
-using namespace matrix::hprof::internal::reader;
+using namespace traceharbor::hprof::internal::heap;
+using namespace traceharbor::hprof::internal::reader;
 
 TEST(heap_value_type, get_size) {
     EXPECT_EQ(0, get_value_type_size(value_type_t::kObject));

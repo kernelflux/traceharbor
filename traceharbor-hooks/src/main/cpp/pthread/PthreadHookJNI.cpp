@@ -37,17 +37,17 @@ extern "C" {
 #endif
 
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_hook_pthread_PthreadHook_setThreadTraceEnabledNative(JNIEnv *env, jobject thiz, jboolean enabled) {
+Java_com_kernelflux_traceharbor_hook_pthread_PthreadHook_setThreadTraceEnabledNative(JNIEnv *env, jobject thiz, jboolean enabled) {
     pthread_hook::SetThreadTraceEnabled(enabled);
 }
 
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_hook_pthread_PthreadHook_setThreadStackShrinkEnabledNative(JNIEnv *env, jobject thiz, jboolean enabled) {
+Java_com_kernelflux_traceharbor_hook_pthread_PthreadHook_setThreadStackShrinkEnabledNative(JNIEnv *env, jobject thiz, jboolean enabled) {
     pthread_hook::SetThreadStackShrinkEnabled(enabled);
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_tencent_traceharbor_hook_pthread_PthreadHook_setThreadStackShrinkIgnoredCreatorSoPatternsNative(JNIEnv *env, jobject thiz, jobjectArray j_patterns) {
+Java_com_kernelflux_traceharbor_hook_pthread_PthreadHook_setThreadStackShrinkIgnoredCreatorSoPatternsNative(JNIEnv *env, jobject thiz, jobjectArray j_patterns) {
     if (j_patterns == nullptr) {
         LOGE(LOG_TAG, "nullptr was past as patterns, clear previous set patterns.");
         pthread_hook::SetThreadStackShrinkIgnoredCreatorSoPatterns(nullptr, 0);
@@ -64,12 +64,12 @@ Java_com_tencent_traceharbor_hook_pthread_PthreadHook_setThreadStackShrinkIgnore
         LOGE(LOG_TAG, "Fail to allocate buffer to transfer java pattern string.");
         return false;
     }
-    auto patternsCleaner = matrix::MakeScopedCleaner([&patterns]() {
+    auto patternsCleaner = traceharbor::MakeScopedCleaner([&patterns]() {
         free(patterns);
     });
     for (int i = 0; i < patternCount; ++i) {
         jstring jPattern = reinterpret_cast<jstring>(env->GetObjectArrayElement(j_patterns, i));
-        auto jPatternCleaner = matrix::MakeScopedCleaner([&env, &jPattern]() {
+        auto jPatternCleaner = traceharbor::MakeScopedCleaner([&env, &jPattern]() {
             env->DeleteLocalRef(jPattern);
         });
         patterns[i] = env->GetStringUTFChars(jPattern, nullptr);
@@ -77,7 +77,7 @@ Java_com_tencent_traceharbor_hook_pthread_PthreadHook_setThreadStackShrinkIgnore
     pthread_hook::SetThreadStackShrinkIgnoredCreatorSoPatterns(patterns, patternCount);
     for (int i = 0; i < patternCount; ++i) {
         jstring jPattern = reinterpret_cast<jstring>(env->GetObjectArrayElement(j_patterns, i));
-        auto jPatternCleaner = matrix::MakeScopedCleaner([&env, &jPattern]() {
+        auto jPatternCleaner = traceharbor::MakeScopedCleaner([&env, &jPattern]() {
             env->DeleteLocalRef(jPattern);
         });
         env->ReleaseStringUTFChars(jPattern, patterns[i]);
@@ -86,7 +86,7 @@ Java_com_tencent_traceharbor_hook_pthread_PthreadHook_setThreadStackShrinkIgnore
 }
 
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_hook_pthread_PthreadHook_addHookThreadNameNative(JNIEnv *env, jobject thiz, jobjectArray thread_names) {
+Java_com_kernelflux_traceharbor_hook_pthread_PthreadHook_addHookThreadNameNative(JNIEnv *env, jobject thiz, jobjectArray thread_names) {
     jsize size = env->GetArrayLength(thread_names);
 
     for (int i = 0; i < size; ++i) {
@@ -98,7 +98,7 @@ Java_com_tencent_traceharbor_hook_pthread_PthreadHook_addHookThreadNameNative(JN
 }
 
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_hook_pthread_PthreadHook_dumpNative(JNIEnv *env, jobject thiz, jstring jpath) {
+Java_com_kernelflux_traceharbor_hook_pthread_PthreadHook_dumpNative(JNIEnv *env, jobject thiz, jstring jpath) {
     if (jpath) {
         const char *path = env->GetStringUTFChars(jpath, NULL);
         pthread_dump_json(path);
@@ -107,24 +107,24 @@ Java_com_tencent_traceharbor_hook_pthread_PthreadHook_dumpNative(JNIEnv *env, jo
 }
 
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_hook_pthread_PthreadHook_enableQuickenNative(JNIEnv *env, jobject thiz, jboolean enable) {
+Java_com_kernelflux_traceharbor_hook_pthread_PthreadHook_enableQuickenNative(JNIEnv *env, jobject thiz, jboolean enable) {
     enable_quicken_unwind(enable);
 }
 
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_hook_pthread_PthreadHook_enableLoggerNative(JNIEnv *, jobject , jboolean enable) {
+Java_com_kernelflux_traceharbor_hook_pthread_PthreadHook_enableLoggerNative(JNIEnv *, jobject , jboolean enable) {
     enable_hook_logger(enable);
 }
 
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_hook_pthread_PthreadHook_installHooksNative(JNIEnv *env, jobject thiz, jboolean enable_debug) {
+Java_com_kernelflux_traceharbor_hook_pthread_PthreadHook_installHooksNative(JNIEnv *env, jobject thiz, jboolean enable_debug) {
     NOTIFY_COMMON_IGNORE_LIBS(HOOK_REQUEST_GROUPID_PTHREAD);
 
     pthread_hook::InstallHooks(enable_debug);
 }
 
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_hook_pthread_PthreadHook_enableTracePthreadReleaseNative(JNIEnv *env,
+Java_com_kernelflux_traceharbor_hook_pthread_PthreadHook_enableTracePthreadReleaseNative(JNIEnv *env,
                                                                            jobject thiz,
                                                                            jboolean enable) {
     enable_trace_pthread_release(enable);

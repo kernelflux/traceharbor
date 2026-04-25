@@ -20,8 +20,8 @@
 // must define ORIGINAL_LIB to use CALL_ORIGIN_FUNC_RET and CALL_ORIGIN_FUNC_VOID
 //
 
-#ifndef LIBMATRIX_PROFILE_RECORD_H
-#define LIBMATRIX_PROFILE_RECORD_H
+#ifndef LIBTRACEHARBOR_PROFILE_RECORD_H
+#define LIBTRACEHARBOR_PROFILE_RECORD_H
 
 #include "Macros.h"
 #include "backtrace/BacktraceDefine.h"
@@ -88,4 +88,4 @@ EXPORT void record_on_so_loaded(const char * so);
 }
 #endif
 
-#endif //LIBMATRIX_PROFILE_RECORD_H
+#endif //LIBTRACEHARBOR_PROFILE_RECORD_H

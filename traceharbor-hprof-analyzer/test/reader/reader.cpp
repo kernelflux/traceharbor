@@ -1,7 +1,7 @@
 #include "reader.h"
 #include "gtest/gtest.h"
 
-using namespace matrix::hprof::internal::reader;
+using namespace traceharbor::hprof::internal::reader;
 
 TEST(buffer_reader, read_and_skip_big_endian_u1) {
     const uint8_t buffer[] = {0x01, 0x02};

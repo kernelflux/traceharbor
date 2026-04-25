@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="io.traceharbor.resource">
+          package="com.kernelflux.traceharbor.resource">
     <permission android:name="${applicationId}.manual.dump" android:protectionLevel="signature" />
 
     <uses-permission android:name="${applicationId}.manual.dump" />

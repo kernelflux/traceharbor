@@ -257,7 +257,7 @@ void makeNativeStack(wechat_backtrace::Backtrace* backtrace, char *&stack) {
 
         demangled_name = abi::__cxa_demangle(it.function_name, nullptr, 0, &status);
 
-        if (strstr(it.map_name, "libtrace-canary.so") || strstr(it.map_name, "libwechatbacktrace.so")) {
+        if (strstr(it.map_name, "libtrace-canary.so") || strstr(it.map_name, "libtraceharbor-backtrace.so")) {
             return;
         }
 
@@ -503,7 +503,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *) {
     if (vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_6) != JNI_OK)
         return -1;
 
-    jclass anrDetectiveCls = env->FindClass("io/traceharbor/trace/tracer/SignalAnrTracer");
+    jclass anrDetectiveCls = env->FindClass("com/kernelflux/traceharbor/trace/tracer/SignalAnrTracer");
     if (!anrDetectiveCls)
         return -1;
 
@@ -527,9 +527,9 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *) {
     env->DeleteLocalRef(anrDetectiveCls);
 
 
-    jclass threadPriorityDetectiveCls = env->FindClass("io/traceharbor/trace/tracer/ThreadTracer");
+    jclass threadPriorityDetectiveCls = env->FindClass("com/kernelflux/traceharbor/trace/tracer/ThreadTracer");
 
-    jclass touchEventLagTracerCls = env->FindClass("io/traceharbor/trace/tracer/TouchEventLagTracer");
+    jclass touchEventLagTracerCls = env->FindClass("com/kernelflux/traceharbor/trace/tracer/TouchEventLagTracer");
 
     if (!threadPriorityDetectiveCls || !touchEventLagTracerCls)
         return -1;

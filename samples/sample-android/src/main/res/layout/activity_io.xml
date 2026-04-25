@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingTop="8dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp">
+
+    <Button
+        android:id="@+id/io_main_button"
+        style="@style/SubEntryButton"
+        android:text="@string/io_main" />
+
+    <Button
+        android:id="@+id/io_small_buffer_button"
+        style="@style/SubEntryButton"
+        android:text="@string/io_small_buffer" />
+
+    <Button
+        android:id="@+id/io_repeated_button"
+        style="@style/SubEntryButton"
+        android:text="@string/io_repeated" />
+</LinearLayout>

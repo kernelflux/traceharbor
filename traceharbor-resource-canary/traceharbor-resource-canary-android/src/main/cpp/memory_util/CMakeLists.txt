@@ -27,7 +27,7 @@ target_link_libraries(
 if(${ANDROID_ABI} MATCHES "armeabi-v7a" OR ${ANDROID_ABI} MATCHES "arm64-v8a")
     target_link_libraries(
             traceharbor_mem_util
-            ${EXT_DEP}/lib/${ANDROID_ABI}/libwechatbacktrace.so
+            ${EXT_DEP}/lib/${ANDROID_ABI}/libtraceharbor-backtrace.so
     )
 endif()
 

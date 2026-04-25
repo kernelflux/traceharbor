@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.4.1)
 
+include(${CMAKE_CURRENT_LIST_DIR}/../cmake/TraceHarbor16KBPageSize.cmake)
+
 option(EnableLOG "Enable QUT Logs" ON)
 if(EnableLOG)
     add_definitions(-DEnableLOG)
@@ -48,7 +50,7 @@ target_link_libraries(
       PUBLIC cJSON
       PUBLIC ${log-lib}
       PRIVATE -Wl,--whole-archive fastunwind -Wl,--no-whole-archive
-      PUBLIC ${EXT_DEP}/lib/${ANDROID_ABI}/libwechatbacktrace.so
+      PUBLIC ${EXT_DEP}/lib/${ANDROID_ABI}/libtraceharbor-backtrace.so
       PRIVATE -Wl,--whole-archive ${EXT_DEP}/lib/${ANDROID_ABI}/libsemi_dlfcn.a -Wl,--no-whole-archive
       PRIVATE -Wl,--whole-archive ${EXT_DEP}/lib/${ANDROID_ABI}/libxhook.a -Wl,--no-whole-archive
       PRIVATE -Wl,--version-script=${SOURCE_DIR}/common/common.ver

@@ -10,9 +10,9 @@
 
 #define LOG_TAG "TraceHarbor.Maps"
 
-using namespace matrix;
+using namespace traceharbor;
 
-bool matrix::IterateMaps(const MapsEntryCallback& cb, void* args) {
+bool traceharbor::IterateMaps(const MapsEntryCallback& cb, void* args) {
     if (cb == nullptr) {
         return false;
     }

@@ -18,8 +18,8 @@
 // Created by Yves on 2020-03-11.
 //
 
-#ifndef LIBMATRIX_HOOK_THREADTRACE_H
-#define LIBMATRIX_HOOK_THREADTRACE_H
+#ifndef LIBTRACEHARBOR_HOOK_THREADTRACE_H
+#define LIBTRACEHARBOR_HOOK_THREADTRACE_H
 
 
 #include <pthread.h>
@@ -54,4 +54,4 @@ namespace thread_trace {
 }
 
 
-#endif //LIBMATRIX_HOOK_THREADTRACE_H
+#endif //LIBTRACEHARBOR_HOOK_THREADTRACE_H

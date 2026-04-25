@@ -330,17 +330,17 @@ namespace iocanary {
         }
 
         JNIEXPORT void JNICALL
-        Java_com_tencent_traceharbor_iocanary_core_IOCanaryJniBridge_enableDetector(JNIEnv *env, jclass type, jint detector_type) {
+        Java_com_kernelflux_traceharbor_iocanary_core_IOCanaryJniBridge_enableDetector(JNIEnv *env, jclass type, jint detector_type) {
             iocanary::IOCanary::Get().RegisterDetector(static_cast<DetectorType>(detector_type));
         }
 
         JNIEXPORT void JNICALL
-        Java_com_tencent_traceharbor_iocanary_core_IOCanaryJniBridge_setConfig(JNIEnv *env, jclass type, jint key, jlong val) {
+        Java_com_kernelflux_traceharbor_iocanary_core_IOCanaryJniBridge_setConfig(JNIEnv *env, jclass type, jint key, jlong val) {
             iocanary::IOCanary::Get().SetConfig(static_cast<IOCanaryConfigKey>(key), val);
         }
 
         JNIEXPORT jboolean JNICALL
-        Java_com_tencent_traceharbor_iocanary_core_IOCanaryJniBridge_doHook(JNIEnv *env, jclass type) {
+        Java_com_kernelflux_traceharbor_iocanary_core_IOCanaryJniBridge_doHook(JNIEnv *env, jclass type) {
             __android_log_print(ANDROID_LOG_INFO, kTag, "doHook");
 
             for (int i = 0; i < TARGET_MODULE_COUNT; ++i) {
@@ -388,7 +388,7 @@ namespace iocanary {
         }
 
         JNIEXPORT jboolean JNICALL
-        Java_com_tencent_traceharbor_iocanary_core_IOCanaryJniBridge_doUnHook(JNIEnv *env, jclass type) {
+        Java_com_kernelflux_traceharbor_iocanary_core_IOCanaryJniBridge_doUnHook(JNIEnv *env, jclass type) {
         __android_log_print(ANDROID_LOG_INFO, kTag, "doUnHook");
             for (int i = 0; i < TARGET_MODULE_COUNT; ++i) {
                 const char* so_name = TARGET_MODULES[i];
@@ -417,14 +417,14 @@ namespace iocanary {
                 return false;
             }
 
-            jclass temp_cls = env->FindClass("io/traceharbor/iocanary/core/IOCanaryJniBridge");
+            jclass temp_cls = env->FindClass("com/kernelflux/traceharbor/iocanary/core/IOCanaryJniBridge");
             if (temp_cls == NULL)  {
                 __android_log_print(ANDROID_LOG_ERROR, kTag, "InitJniEnv kJavaBridgeClass NULL");
                 return false;
             }
             kJavaBridgeClass = reinterpret_cast<jclass>(env->NewGlobalRef(temp_cls));
 
-            jclass temp_java_context_cls = env->FindClass("io/traceharbor/iocanary/core/IOCanaryJniBridge$JavaContext");
+            jclass temp_java_context_cls = env->FindClass("com/kernelflux/traceharbor/iocanary/core/IOCanaryJniBridge$JavaContext");
             if (temp_java_context_cls == NULL)  {
                 __android_log_print(ANDROID_LOG_ERROR, kTag, "InitJniEnv kJavaBridgeClass NULL");
                 return false;
@@ -443,13 +443,13 @@ namespace iocanary {
                 return false;
             }
 
-            kMethodIDGetJavaContext = env->GetStaticMethodID(kJavaBridgeClass, "getJavaContext", "()Lio/traceharbor/iocanary/core/IOCanaryJniBridge$JavaContext;");
+            kMethodIDGetJavaContext = env->GetStaticMethodID(kJavaBridgeClass, "getJavaContext", "()Lcom/kernelflux/traceharbor/iocanary/core/IOCanaryJniBridge$JavaContext;");
             if (kMethodIDGetJavaContext == NULL) {
                 __android_log_print(ANDROID_LOG_ERROR, kTag, "InitJniEnv kMethodIDGetJavaContext NULL");
                 return false;
             }
 
-            jclass temp_issue_cls = env->FindClass("io/traceharbor/iocanary/core/IOIssue");
+            jclass temp_issue_cls = env->FindClass("com/kernelflux/traceharbor/iocanary/core/IOIssue");
             if (temp_issue_cls == NULL)  {
                 __android_log_print(ANDROID_LOG_ERROR, kTag, "InitJniEnv kIssueClass NULL");
                 return false;

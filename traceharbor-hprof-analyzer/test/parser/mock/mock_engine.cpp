@@ -1,6 +1,6 @@
 #include "mock_engine.h"
 
-using namespace matrix::hprof::internal;
+using namespace traceharbor::hprof::internal;
 
 namespace test::mock {
 

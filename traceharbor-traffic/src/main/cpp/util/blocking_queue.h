@@ -18,8 +18,8 @@
 //
 // blocking_queue.h
 
-#ifndef MATRIX_ANDROID_BLOCKING_QUEUE_H
-#define MATRIX_ANDROID_BLOCKING_QUEUE_H
+#ifndef TRACEHARBOR_ANDROID_BLOCKING_QUEUE_H
+#define TRACEHARBOR_ANDROID_BLOCKING_QUEUE_H
 #include <deque>
 #include <mutex>
 
@@ -67,4 +67,4 @@ public:
 };
 
 
-#endif //MATRIX_ANDROID_BLOCKING_QUEUE_H
+#endif //TRACEHARBOR_ANDROID_BLOCKING_QUEUE_H

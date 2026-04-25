@@ -2,8 +2,8 @@
 // Created by YinSheng Tang on 2021/7/30.
 //
 
-#ifndef MATRIX_ANDROID_XH_MAPS_H
-#define MATRIX_ANDROID_XH_MAPS_H
+#ifndef TRACEHARBOR_ANDROID_XH_MAPS_H
+#define TRACEHARBOR_ANDROID_XH_MAPS_H
 
 
 #include <stddef.h>
@@ -28,4 +28,4 @@ extern "C" {
 #endif
 
 
-#endif //MATRIX_ANDROID_XH_MAPS_H
+#endif //TRACEHARBOR_ANDROID_XH_MAPS_H

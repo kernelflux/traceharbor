@@ -1,5 +1,5 @@
-#ifndef MATRIX_ANDROID_STACKMETA_H
-#define MATRIX_ANDROID_STACKMETA_H
+#ifndef TRACEHARBOR_ANDROID_STACKMETA_H
+#define TRACEHARBOR_ANDROID_STACKMETA_H
 
 #define STACK_SPLAY_MAP_CAPACITY 1024
 
@@ -19,4 +19,4 @@ wechat_backtrace::Backtrace *deduplicate_backtrace(wechat_backtrace::Backtrace *
 
 bool delete_backtrace(wechat_backtrace::Backtrace *backtrace);
 
-#endif //MATRIX_ANDROID_STACKMETA_H
+#endif //TRACEHARBOR_ANDROID_STACKMETA_H

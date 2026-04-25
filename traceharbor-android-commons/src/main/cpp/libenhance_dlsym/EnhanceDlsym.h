@@ -18,8 +18,8 @@
 // Created by Yves on 2020/7/15.
 //
 
-#ifndef LIBMATRIX_JNI_ENHANCEDLSYM_H
-#define LIBMATRIX_JNI_ENHANCEDLSYM_H
+#ifndef LIBTRACEHARBOR_JNI_ENHANCEDLSYM_H
+#define LIBTRACEHARBOR_JNI_ENHANCEDLSYM_H
 
 #include <map>
 #include <string>
@@ -61,4 +61,4 @@ namespace enhance {
     };
 }
 
-#endif //LIBMATRIX_JNI_ENHANCEDLSYM_H
+#endif //LIBTRACEHARBOR_JNI_ENHANCEDLSYM_H

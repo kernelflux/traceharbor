@@ -9,9 +9,9 @@
 
 #include <bit>
 
-using namespace matrix::hprof::internal::heap;
-using namespace matrix::hprof::internal::parser;
-using namespace matrix::hprof::internal::reader;
+using namespace traceharbor::hprof::internal::heap;
+using namespace traceharbor::hprof::internal::parser;
+using namespace traceharbor::hprof::internal::reader;
 
 using namespace test::tools;
 using namespace test::mock;

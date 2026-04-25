@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            style="@style/Container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/test_trace"
+                style="@style/EntryButton"
+                android:text="@string/nav_trace_canary" />
+
+            <Button
+                android:id="@+id/test_leak"
+                style="@style/EntryButton"
+                android:text="@string/nav_resource_canary" />
+
+            <Button
+                android:id="@+id/test_hooks"
+                style="@style/EntryButton"
+                android:text="@string/nav_matrix_hooks" />
+
+            <Button
+                android:id="@+id/test_battery"
+                style="@style/EntryButton"
+                android:text="@string/nav_battery_canary" />
+
+            <Button
+                android:id="@+id/test_io"
+                style="@style/EntryButton"
+                android:text="@string/nav_io_canary" />
+
+            <Button
+                android:id="@+id/test_sqlite_lint"
+                style="@style/EntryButton"
+                android:text="@string/nav_sqlite_lint" />
+
+            <Button
+                android:id="@+id/test_traffic_enter"
+                style="@style/EntryButton"
+                android:text="@string/nav_network_traffic" />
+
+            <Button
+                android:id="@+id/test_supervisor"
+                style="@style/EntryButton"
+                android:onClick="testSupervisor"
+                android:text="@string/nav_start_supervisor"
+                tools:ignore="UsingOnClickInXml" />
+
+            <Button
+                android:id="@+id/test_fg_service"
+                style="@style/EntryButton"
+                android:onClick="testFgService"
+                android:text="@string/nav_test_fg_service"
+                tools:ignore="UsingOnClickInXml" />
+
+            <Button
+                android:id="@+id/test_overlay_window"
+                style="@style/EntryButton"
+                android:onClick="testOverlayWindow"
+                android:text="@string/nav_test_overlay_window"
+                tools:ignore="UsingOnClickInXml" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -18,6 +18,7 @@
 // Created by Yves on 2020/7/15.
 //
 
+#include <cassert>
 #include <cstdio>
 #include <elf.h>
 #include <inttypes.h>

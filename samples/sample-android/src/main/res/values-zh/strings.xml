@@ -1,0 +1,83 @@
+<resources>
+    <string name="app_name">TraceHarbor 示例</string>
+
+    <!-- 右上角 overflow 菜单 -->
+    <string name="menu_inspect_issue">查看 Issue…</string>
+    <string name="menu_clear_issues">清空 Issue</string>
+    <string name="menu_clear_issues_toast">已清空</string>
+
+    <!-- 主页 10 个入口（顺序与官方 Matrix sample 一致）-->
+    <string name="nav_trace_canary">Trace Canary 卡顿/ANR</string>
+    <string name="nav_resource_canary">Resource Canary 资源泄漏</string>
+    <string name="nav_matrix_hooks">Matrix Hooks 原生 Hook</string>
+    <string name="nav_battery_canary">Battery Canary 电量</string>
+    <string name="nav_io_canary">IO Canary IO 监控</string>
+    <string name="nav_sqlite_lint">SQLite Lint 查询体检</string>
+    <string name="nav_network_traffic">Network Traffic 网络流量</string>
+    <string name="nav_start_supervisor">启动 Supervisor</string>
+    <string name="nav_test_fg_service">测试前台服务</string>
+    <string name="nav_test_overlay_window">测试悬浮窗</string>
+
+    <!-- Activity 标题 -->
+    <string name="trace_tests_title">Trace 插件测试</string>
+    <string name="anr_activity_title">ANR 测试</string>
+    <string name="evil_activity_title">慢方法测试</string>
+    <string name="fps_activity_title">FPS 测试</string>
+    <string name="io_activity_title">IO Canary 测试</string>
+    <string name="leak_activity_title">资源泄漏测试</string>
+    <string name="hooks_activity_title">Matrix Hooks</string>
+    <string name="battery_activity_title">Battery Canary</string>
+    <string name="sqlite_activity_title">SQLite Lint</string>
+    <string name="traffic_activity_title">Network Traffic</string>
+
+    <!-- Trace 二级菜单 -->
+    <string name="nav_anr">ANR 测试</string>
+    <string name="nav_evil">慢方法测试</string>
+    <string name="nav_fps">FPS 测试</string>
+    <string name="trace_toggle_beat">切换 AppMethodBeat 开关</string>
+    <string name="trace_print_trace">打印主线程 trace</string>
+
+    <!-- ANR -->
+    <string name="anr_5s">阻塞主线程 5 秒</string>
+    <string name="anr_8s">阻塞主线程 8 秒</string>
+    <string name="anr_20s">阻塞主线程 20 秒</string>
+    <string name="anr_loop_3s">Looper 队列堆积 3×3 秒</string>
+
+    <!-- EvilMethod -->
+    <string name="evil_call_chain">嵌套调用链</string>
+    <string name="evil_300">主线程 sleep 300 ms</string>
+    <string name="evil_800">主线程 sleep 800 ms</string>
+    <string name="evil_2000">主线程 sleep 2000 ms</string>
+    <string name="evil_compute">主线程重 CPU 计算</string>
+
+    <!-- FPS -->
+    <string name="fps_refresh">刷新状态</string>
+
+    <!-- IO -->
+    <string name="io_main">主线程大文件 IO</string>
+    <string name="io_small_buffer">小缓冲区读</string>
+    <string name="io_repeated">重复读取同文件</string>
+
+    <!-- Leak -->
+    <string name="finish_with_leak">结束并泄漏</string>
+    <string name="finish_without_leak">结束但不泄漏</string>
+
+    <!-- Hooks -->
+    <string name="hooks_install_memory">注入 MemoryHook</string>
+    <string name="hooks_install_pthread">注入 PthreadHook</string>
+
+    <!-- Battery -->
+    <string name="battery_start">启动 BatteryMonitorPlugin</string>
+    <string name="battery_stop">停止 BatteryMonitorPlugin</string>
+
+    <!-- SQLite Lint -->
+    <string name="sqlite_run">执行低效 SELECT</string>
+
+    <!-- Traffic -->
+    <string name="traffic_dump">导出 RX / TX 计数</string>
+
+    <!-- Toast -->
+    <string name="toast_supervisor_started">SupervisorStubService 已启动</string>
+    <string name="toast_fg_service_omitted">本示例未实现前台服务演示，完整实现请见上游 Matrix sample。</string>
+    <string name="toast_overlay_permission_required">请先授予悬浮窗权限，再点一次按钮。</string>
+</resources>

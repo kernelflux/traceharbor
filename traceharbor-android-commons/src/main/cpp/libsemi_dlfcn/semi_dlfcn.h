@@ -2,8 +2,8 @@
 // Created by YinSheng Tang on 2021/7/21.
 //
 
-#ifndef MATRIX_ANDROID_SEMI_DLFCN_H
-#define MATRIX_ANDROID_SEMI_DLFCN_H
+#ifndef TRACEHARBOR_ANDROID_SEMI_DLFCN_H
+#define TRACEHARBOR_ANDROID_SEMI_DLFCN_H
 
 
 #include <stddef.h>
@@ -29,4 +29,4 @@ void semi_dlclose(void* semi_hlib);
 #endif
 
 
-#endif //MATRIX_ANDROID_SEMI_DLFCN_H
+#endif //TRACEHARBOR_ANDROID_SEMI_DLFCN_H

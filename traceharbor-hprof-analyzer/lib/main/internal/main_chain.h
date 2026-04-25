@@ -5,7 +5,7 @@
 
 #include "heap.h"
 
-namespace matrix::hprof {
+namespace traceharbor::hprof {
 
     LeakChain::GcRoot::Type convert_gc_root_type(internal::heap::gc_root_type_t type);
 

@@ -16,7 +16,7 @@
 
 #include "traceharbor_hprof_analyzer.h"
 
-using namespace matrix::hprof;
+using namespace traceharbor::hprof;
 
 #define TAG "TraceHarbor.MemoryUtil"
 
@@ -135,11 +135,11 @@ static jmethodID task_result_constructor = nullptr;
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_resource_MemoryUtil_loadJniCache(JNIEnv *env, jobject) {
+Java_com_kernelflux_traceharbor_resource_MemoryUtil_loadJniCache(JNIEnv *env, jobject) {
     _info_log(TAG, "initialize: load JNI pointer cache");
     if (task_result_constructor == nullptr) {
         if (task_result_class == nullptr) {
-            jclass local = env->FindClass("io/traceharbor/resource/MemoryUtil$TaskResult");
+            jclass local = env->FindClass("com/kernelflux/traceharbor/resource/MemoryUtil$TaskResult");
             if (local == nullptr) {
                 log_and_throw_runtime_exception(env, "Failed to find class TaskResult");
                 return;
@@ -205,7 +205,7 @@ static void create_directory(JNIEnv *env, const char *path) {
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_resource_MemoryUtil_syncTaskDir(JNIEnv *env, jobject, jstring path) {
+Java_com_kernelflux_traceharbor_resource_MemoryUtil_syncTaskDir(JNIEnv *env, jobject, jstring path) {
     _info_log(TAG, "initialize: sync and create task info directories path");
     const char *value = env->GetStringUTFChars(path, nullptr);
     task_state_dir = ({
@@ -225,7 +225,7 @@ Java_com_tencent_traceharbor_resource_MemoryUtil_syncTaskDir(JNIEnv *env, jobjec
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_resource_MemoryUtil_initializeSymbol(JNIEnv *env, jobject) {
+Java_com_kernelflux_traceharbor_resource_MemoryUtil_initializeSymbol(JNIEnv *env, jobject) {
     _info_log(TAG, "initialize: initialize symbol");
     if (!initialize_symbols()) {
         log_and_throw_runtime_exception(env, "Failed to initialize symbol");
@@ -323,7 +323,7 @@ execute_analyze(const char *hprof_path, const char *reference_key) {
     return analyzer.Analyze([reference_key](const HprofHeap &heap) {
         const object_id_t leak_ref_class_id = unwrap_optional(
                 heap.FindClassByName(
-                        "io.traceharbor.resource.analyzer.model.DestroyedActivityInfo"),
+                        "com.kernelflux.traceharbor.resource.analyzer.model.DestroyedActivityInfo"),
                 return std::vector<object_id_t>());
         std::vector<object_id_t> leaks;
         for (const object_id_t leak_ref: heap.GetInstances(leak_ref_class_id)) {
@@ -432,7 +432,7 @@ static bool execute_serialize(const char *result_path, const std::vector<LeakCha
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_tencent_traceharbor_resource_MemoryUtil_forkDump(JNIEnv *env, jobject,
+Java_com_kernelflux_traceharbor_resource_MemoryUtil_forkDump(JNIEnv *env, jobject,
                                                      jstring java_hprof_path,
                                                      jlong timeout) {
     const std::string hprof_path = extract_string(env, java_hprof_path);
@@ -450,7 +450,7 @@ Java_com_tencent_traceharbor_resource_MemoryUtil_forkDump(JNIEnv *env, jobject,
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_tencent_traceharbor_resource_MemoryUtil_forkAnalyze(JNIEnv *env, jobject,
+Java_com_kernelflux_traceharbor_resource_MemoryUtil_forkAnalyze(JNIEnv *env, jobject,
                                                         jstring java_hprof_path,
                                                         jstring java_result_path,
                                                         jstring java_reference_key,
@@ -477,7 +477,7 @@ Java_com_tencent_traceharbor_resource_MemoryUtil_forkAnalyze(JNIEnv *env, jobjec
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_tencent_traceharbor_resource_MemoryUtil_forkDumpAndAnalyze(JNIEnv *env, jobject,
+Java_com_kernelflux_traceharbor_resource_MemoryUtil_forkDumpAndAnalyze(JNIEnv *env, jobject,
                                                                jstring java_hprof_path,
                                                                jstring java_result_path,
                                                                jstring java_reference_key,
@@ -512,7 +512,7 @@ Java_com_tencent_traceharbor_resource_MemoryUtil_forkDumpAndAnalyze(JNIEnv *env,
 // *************************************************************************************************
 
 extern "C" JNIEXPORT jobject JNICALL
-Java_com_tencent_traceharbor_resource_MemoryUtil_waitTask(JNIEnv *env, jobject, jint pid) {
+Java_com_kernelflux_traceharbor_resource_MemoryUtil_waitTask(JNIEnv *env, jobject, jint pid) {
     int status;
     if (waitpid(pid, &status, 0) == -1) {
         _error_log(TAG, "invoke waitpid failed with errno %d", errno);

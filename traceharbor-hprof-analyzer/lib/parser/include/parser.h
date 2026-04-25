@@ -9,7 +9,7 @@
 
 #include "macro.h"
 
-namespace matrix::hprof::internal::parser {
+namespace traceharbor::hprof::internal::parser {
 
     class FieldExcludeMatcher {
     public:

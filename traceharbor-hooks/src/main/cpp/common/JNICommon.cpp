@@ -74,7 +74,7 @@ static jmethodID GetStaticMethodID(JNIEnv* env, jclass clazz, const char* name, 
     return mid;
 }
 
-JNIEXPORT jboolean Java_com_tencent_traceharbor_hook_HookManager_doPreHookInitializeNative(JNIEnv *env, jobject, jboolean /* debug */) {
+JNIEXPORT jboolean Java_com_kernelflux_traceharbor_hook_HookManager_doPreHookInitializeNative(JNIEnv *env, jobject, jboolean /* debug */) {
     std::lock_guard prehookInitLock(s_prehook_init_mutex);
 
     if (s_prehook_initialized) {
@@ -82,12 +82,12 @@ JNIEXPORT jboolean Java_com_tencent_traceharbor_hook_HookManager_doPreHookInitia
         return true;
     }
 
-    m_class_HookManager = FindClass(env, "io/traceharbor/hook/HookManager", true);
+    m_class_HookManager = FindClass(env, "com/kernelflux/traceharbor/hook/HookManager", true);
     if (m_class_HookManager == nullptr) {
         return false;
     }
     m_class_HookManager = reinterpret_cast<jclass>(env->NewGlobalRef(m_class_HookManager));
-    auto jHookMgrCleaner = matrix::MakeScopedCleaner([env]() {
+    auto jHookMgrCleaner = traceharbor::MakeScopedCleaner([env]() {
         if (m_class_HookManager != nullptr) {
             env->DeleteGlobalRef(m_class_HookManager);
             m_class_HookManager = nullptr;
@@ -98,11 +98,11 @@ JNIEXPORT jboolean Java_com_tencent_traceharbor_hook_HookManager_doPreHookInitia
     if (m_method_getStack == nullptr) {
         return false;
     }
-    auto getStackMethodCleaner = matrix::MakeScopedCleaner([]() {
+    auto getStackMethodCleaner = traceharbor::MakeScopedCleaner([]() {
         m_method_getStack = nullptr;
     });
 
-    if (!matrix::InstallSoLoadMonitor()) {
+    if (!traceharbor::InstallSoLoadMonitor()) {
         return false;
     }
 
@@ -117,7 +117,7 @@ JNIEXPORT jboolean Java_com_tencent_traceharbor_hook_HookManager_doPreHookInitia
 }
 
 JNIEXPORT void JNICALL
-Java_com_tencent_traceharbor_hook_HookManager_doFinalInitializeNative(JNIEnv *env, jobject thiz, jboolean debug) {
+Java_com_kernelflux_traceharbor_hook_HookManager_doFinalInitializeNative(JNIEnv *env, jobject thiz, jboolean debug) {
     std::lock_guard finalInitLock(s_finalhook_init_mutex);
 
     if (s_finalook_initialized) {

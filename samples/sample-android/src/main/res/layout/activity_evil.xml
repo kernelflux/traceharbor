@@ -1,0 +1,34 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingTop="8dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp">
+
+    <Button
+        android:id="@+id/evil_call_chain_button"
+        style="@style/SubEntryButton"
+        android:text="@string/evil_call_chain" />
+
+    <Button
+        android:id="@+id/evil_300_button"
+        style="@style/SubEntryButton"
+        android:text="@string/evil_300" />
+
+    <Button
+        android:id="@+id/evil_800_button"
+        style="@style/SubEntryButton"
+        android:text="@string/evil_800" />
+
+    <Button
+        android:id="@+id/evil_2000_button"
+        style="@style/SubEntryButton"
+        android:text="@string/evil_2000" />
+
+    <Button
+        android:id="@+id/evil_compute_button"
+        style="@style/SubEntryButton"
+        android:text="@string/evil_compute" />
+</LinearLayout>

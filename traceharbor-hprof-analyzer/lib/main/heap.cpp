@@ -1,6 +1,6 @@
 #include "internal/main_heap.h"
 
-namespace matrix::hprof {
+namespace traceharbor::hprof {
 
     // public interface
 

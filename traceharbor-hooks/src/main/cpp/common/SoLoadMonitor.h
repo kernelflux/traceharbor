@@ -2,13 +2,13 @@
 // Created by YinSheng Tang on 2021/7/8.
 //
 
-#ifndef MATRIX_ANDROID_SOLOADMONITOR_H
-#define MATRIX_ANDROID_SOLOADMONITOR_H
+#ifndef TRACEHARBOR_ANDROID_SOLOADMONITOR_H
+#define TRACEHARBOR_ANDROID_SOLOADMONITOR_H
 
 
 #include "Macros.h"
 
-namespace matrix {
+namespace traceharbor {
     typedef void (*so_load_callback_t)(const char *__file_name);
 
     EXPORT bool InstallSoLoadMonitor();
@@ -18,4 +18,4 @@ namespace matrix {
 }
 
 
-#endif //MATRIX_ANDROID_SOLOADMONITOR_H
+#endif //TRACEHARBOR_ANDROID_SOLOADMONITOR_H

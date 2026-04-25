@@ -18,8 +18,8 @@
 // Created by Yves on 2020-03-16.
 //
 
-#ifndef LIBMATRIX_HOOK_JNICOMMON_H
-#define LIBMATRIX_HOOK_JNICOMMON_H
+#ifndef LIBTRACEHARBOR_HOOK_JNICOMMON_H
+#define LIBTRACEHARBOR_HOOK_JNICOMMON_H
 
 #include <jni.h>
 #include <bits/pthread_types.h>
@@ -37,4 +37,4 @@ extern jmethodID m_method_getStack;
 }
 #endif
 
-#endif //LIBMATRIX_HOOK_JNICOMMON_H
+#endif //LIBTRACEHARBOR_HOOK_JNICOMMON_H

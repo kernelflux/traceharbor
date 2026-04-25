@@ -8,9 +8,9 @@
 
 #include "errorha.h"
 
-using namespace matrix::hprof::internal::heap;
+using namespace traceharbor::hprof::internal::heap;
 
-namespace matrix::hprof {
+namespace traceharbor::hprof {
 
     TEST(main_analyzer, construct) {
         const uint8_t buffer[] = "magic";

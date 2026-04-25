@@ -7,7 +7,7 @@
 using namespace test::mock;
 using namespace testing;
 
-namespace matrix::hprof::internal::parser {
+namespace traceharbor::hprof::internal::parser {
     TEST(parser, parse) {
         HeapParser parser(new NiceMock<MockEngine>(sizeof(uint32_t)));
         auto *mock_engine = reinterpret_cast<NiceMock<MockEngine> *>(parser.engine_.get());

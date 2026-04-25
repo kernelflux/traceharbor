@@ -3,8 +3,8 @@
 
 #include "heap.h"
 
-using namespace matrix::hprof;
-using namespace matrix::hprof::internal::heap;
+using namespace traceharbor::hprof;
+using namespace traceharbor::hprof::internal::heap;
 
 TEST(main_chain, convert_gc_root_type) {
     EXPECT_EQ(LeakChain::GcRoot::Type::kRootJniGlobal,

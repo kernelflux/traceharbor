@@ -4,8 +4,8 @@ SQLiteLint is a SQLite best practices aids, it can detect potential, suspicious 
 Add dependencies by adding the following lines to your app/build.gradle.
 ```
 dependencies {
-    debugCompile "io.traceharbor:traceharbor-sqlite-lint-android-sdk:${MATRIX_VERSION}"
-    releaseCompile "io.traceharbor:traceharbor-sqlite-lint-android-sdk-no-op:${MATRIX_VERSION}"
+    debugCompile "com.kernelflux.traceharbor:traceharbor-sqlite-lint-android-sdk:${MATRIX_VERSION}"
+    releaseCompile "com.kernelflux.traceharbor:traceharbor-sqlite-lint-android-sdk-no-op:${MATRIX_VERSION}"
 }
 ```
 In your Application's onCreate, call the following function.

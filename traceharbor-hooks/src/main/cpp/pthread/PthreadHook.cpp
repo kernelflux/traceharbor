@@ -147,7 +147,7 @@ namespace pthread_hook {
             thread_trace::thread_trace_init();
         }
 
-        matrix::PauseLoadSo();
+        traceharbor::PauseLoadSo();
         xhook_block_refresh();
         {
             int ret = xhook_export_symtable_hook("libc.so", "pthread_create",
@@ -180,6 +180,6 @@ namespace pthread_hook {
             xhook_refresh(0);
         }
         xhook_unblock_refresh();
-        matrix::ResumeLoadSo();
+        traceharbor::ResumeLoadSo();
     }
 }

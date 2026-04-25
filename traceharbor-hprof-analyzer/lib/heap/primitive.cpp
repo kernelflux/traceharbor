@@ -1,7 +1,7 @@
 #include "errorha.h"
 #include "include/heap.h"
 
-namespace matrix::hprof::internal::heap {
+namespace traceharbor::hprof::internal::heap {
     HeapPrimitiveData::HeapPrimitiveData(value_type_t type, reader::Reader *source_reader) :
             type_(({
                 if (type == value_type_t::kObject) {

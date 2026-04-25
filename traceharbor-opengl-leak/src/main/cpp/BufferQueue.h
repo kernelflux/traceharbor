@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef LIBMATRIX_HOOK_MEMORY_BUFFER_QUEUE_H
-#define LIBMATRIX_HOOK_MEMORY_BUFFER_QUEUE_H
+#ifndef LIBTRACEHARBOR_HOOK_MEMORY_BUFFER_QUEUE_H
+#define LIBTRACEHARBOR_HOOK_MEMORY_BUFFER_QUEUE_H
 
 #include <unistd.h>
 #include <map>
@@ -23,7 +23,7 @@
 #include "../../../../traceharbor-hooks/src/main/cpp/common/Macros.h"
 #include "functional"
 
-namespace matrix {
+namespace traceharbor {
 
     __attribute__((noinline)) void _hook_check(bool assertion);
 
@@ -251,4 +251,4 @@ namespace matrix {
 
 }
 
-#endif //LIBMATRIX_HOOK_MEMORY_BUFFER_QUEUE_H
+#endif //LIBTRACEHARBOR_HOOK_MEMORY_BUFFER_QUEUE_H

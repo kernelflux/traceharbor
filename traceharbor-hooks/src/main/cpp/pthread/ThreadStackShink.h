@@ -18,8 +18,8 @@
 // Created by tomystang on 2021/2/3.
 //
 
-#ifndef LIBMATRIX_HOOK_THREADSTACKSHINK_H
-#define LIBMATRIX_HOOK_THREADSTACKSHINK_H
+#ifndef LIBTRACEHARBOR_HOOK_THREADSTACKSHINK_H
+#define LIBTRACEHARBOR_HOOK_THREADSTACKSHINK_H
 
 
 namespace thread_stack_shink {
@@ -28,4 +28,4 @@ namespace thread_stack_shink {
 }
 
 
-#endif //LIBMATRIX_HOOK_THREADSTACKSHINK_H
+#endif //LIBTRACEHARBOR_HOOK_THREADSTACKSHINK_H

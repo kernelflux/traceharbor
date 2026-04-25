@@ -1,9 +1,9 @@
 #include "main_heap.h"
 #include "gtest/gtest.h"
 
-using namespace matrix::hprof::internal::heap;
+using namespace traceharbor::hprof::internal::heap;
 
-namespace matrix::hprof {
+namespace traceharbor::hprof {
 
     TEST(main_heap, delegate) {
         {

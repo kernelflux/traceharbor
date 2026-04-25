@@ -8,7 +8,7 @@
 
 #include "macro.h"
 
-namespace matrix::hprof {
+namespace traceharbor::hprof {
 
     typedef uint64_t object_id_t;
 

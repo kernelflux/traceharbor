@@ -11,7 +11,7 @@
 #include "analyzer.h"
 #include "errorha.h"
 
-namespace matrix::hprof {
+namespace traceharbor::hprof {
 
     // public interface
 

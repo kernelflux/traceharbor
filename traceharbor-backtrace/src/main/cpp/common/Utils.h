@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef LIBMATRIX_JNI_UTILS_H
-#define LIBMATRIX_JNI_UTILS_H
+#ifndef LIBTRACEHARBOR_JNI_UTILS_H
+#define LIBTRACEHARBOR_JNI_UTILS_H
 
 #include <cstdint>
 #include <unwindstack/Unwinder.h>
@@ -47,4 +47,4 @@ inline uint64_t hash_frames(wechat_backtrace::Frame *frame, size_t size) {
 }
 
 
-#endif //LIBMATRIX_JNI_UTILS_H
+#endif //LIBTRACEHARBOR_JNI_UTILS_H

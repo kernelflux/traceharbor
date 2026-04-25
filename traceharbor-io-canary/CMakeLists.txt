@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.4.1)
 
 project(IOCanary)
 
+include(${CMAKE_CURRENT_LIST_DIR}/../cmake/TraceHarbor16KBPageSize.cmake)
+
 #aux_source_directory(../traceharbor-android-commons/src/main/cpp/elf_hook ELF_HOOK)
 #include_directories(../traceharbor-android-commons/src/main/cpp/elf_hook)
 

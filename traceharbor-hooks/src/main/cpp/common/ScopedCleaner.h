@@ -18,13 +18,14 @@
 // Created by YinSheng Tang on 2021/5/11.
 //
 
-#ifndef MATRIX_ANDROID_SCOPEDCLEANER_H
-#define MATRIX_ANDROID_SCOPEDCLEANER_H
+#ifndef TRACEHARBOR_ANDROID_SCOPEDCLEANER_H
+#define TRACEHARBOR_ANDROID_SCOPEDCLEANER_H
 
 
 #include <cstddef>
+#include <utility>
 
-namespace matrix {
+namespace traceharbor {
     template <class TDtor>
     class ScopedCleaner {
     public:
@@ -63,4 +64,4 @@ namespace matrix {
 }
 
 
-#endif //MATRIX_ANDROID_SCOPEDCLEANER_H
+#endif //TRACEHARBOR_ANDROID_SCOPEDCLEANER_H

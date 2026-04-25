@@ -51,7 +51,7 @@ static memory_meta_container m_memory_meta_container;
 std::atomic<size_t> buffer_source_memory::g_realloc_counter = 0;
 std::atomic<size_t> buffer_source_memory::g_realloc_memory_counter = 0;
 
-using namespace matrix;
+using namespace traceharbor;
 
 static bool is_stacktrace_enabled = false;
 
@@ -461,7 +461,7 @@ static inline void dump_stacks(FILE *log_file,
 
             if (caller_so_name.empty()) { // fallback
                 LOGD(TAG, "fallback getting so name -> caller = %p", stack_meta_it.second.caller);
-                if (so_name.find("libwechatbacktrace.so") != std::string::npos ||
+                if (so_name.find("libtraceharbor-backtrace.so") != std::string::npos ||
                         so_name.find("libtraceharbor-hooks.so") != std::string::npos) {
                     return;
                 }

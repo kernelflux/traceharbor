@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static io.traceharbor.resource.common.utils.Preconditions.checkNotNull;
+import static com.kernelflux.traceharbor.resource.common.utils.Preconditions.checkNotNull;
 import static java.util.Arrays.asList;
 
 public final class HahaHelper {

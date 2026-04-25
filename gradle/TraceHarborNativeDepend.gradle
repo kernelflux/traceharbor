@@ -1,0 +1,468 @@
+//////////////////////////////////////////////////////////////
+//  TraceHarborNativeDepend.gradle
+//
+//  Cross-module C/C++ header & prebuilt sharing for TraceHarbor's native modules.
+//  Renamed from gradle/WeChatNativeDepend.gradle in 2.1.0; the old WX_BUILD_*/wechatPublish
+//  build-info generation was unused inside this codebase and has been removed.
+//
+//  Usage:
+//  1. Place this script in <repoRoot>/gradle/.
+//
+//  2. Apply it from each native module:
+//     apply from: rootProject.file('gradle/TraceHarborNativeDepend.gradle')
+//
+//  3. In a producing module (com.android.library), declare exported headers:
+//     android {
+//       defaultConfig {
+//         externalNativeBuild {
+//           exportHeaders {
+//             from('path/to/headers') {
+//               include '**/*.h'
+//               exclude '**/internal.h'
+//             }
+//           }
+//         }
+//       }
+//     }
+//     buildTypes / productFlavors are also supported and merge with defaultConfig.
+//
+//  4. In consuming modules' Android.mk / CMakeLists.txt:
+//       Android.mk:
+//         LOCAL_C_INCLUDES := $(EXT_DEP)/include
+//         LOCAL_LDLIBS     := -L$(EXT_DEP)/lib/$(TARGET_ARCH_ABI)/ -lxxx
+//       CMakeLists.txt:
+//         TARGET_INCLUDE_DIRECTORIES(your-target PRIVATE ${EXT_DEP}/include)
+//         TARGET_LINK_LIBRARIES   (your-target PRIVATE ${EXT_DEP}/lib/${ANDROID_ABI}/libxxx.so)
+//////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////
+//  Constant Declarations
+//////////////////////////////////////////////////////////////
+
+project.ext.ANDROID_APP_PLUGIN_ID = 'com.android.application'
+project.ext.ANDROID_LIB_PLUGIN_ID = 'com.android.library'
+
+project.ext.NATIVE_DEPENDENCY_ROOT_NAME = 'native_deps'
+project.ext.EXPORTED_NATIVE_ARTIFACTS_DIR_NAME = 'exported_native_artifacts'
+project.ext.HEADERS_DIR_NAME = 'include'
+project.ext.PREBUILTS_DIR_NAME = 'lib'
+project.ext.EXTRACTED_NATIVE_DEPENDENCIES_DIR_NAME = 'extracted_native_dependencies'
+project.ext.AAR_JNI_DIRENTRY_NAME = 'jni'
+project.ext.AAR_HEADERS_DIRENTRY_NAME = 'jni/include'
+
+project.ext.ATTR_ARTIFACT_TYPE = Attribute.of('artifactType', String)
+
+
+//////////////////////////////////////////////////////////////
+//  DSL Definitions
+//////////////////////////////////////////////////////////////
+
+class ExportedHeadersExtension {
+    Set<HeaderFilter> headerFilters = []
+
+    def from(String path) {
+        headerFilters.add(new HeaderFilter(path))
+    }
+
+    def from(String path, Action<HeaderFilter> configAction) {
+        def headerFilter = new HeaderFilter(path)
+        configAction.execute(headerFilter)
+        headerFilters.add(headerFilter)
+    }
+
+    def from(File file) {
+        from(file.absolutePath)
+    }
+
+    def from(File file, Action<HeaderFilter> configAction) {
+        from(file.absolutePath, configAction)
+    }
+}
+
+class HeaderFilter {
+    String dirPath
+    Set<String> includePatterns = []
+    Set<String> excludePatterns = []
+    String moveToDirPath = ''
+
+    HeaderFilter(String dirPath) {
+        this.dirPath = dirPath
+    }
+
+    def include(String pattern) {
+        includePatterns.add(pattern)
+    }
+
+    def exclude(String pattern) {
+        excludePatterns.add(pattern)
+    }
+
+    def moveToDir(String path) {
+        moveToDirPath = Objects.requireNonNull(path)
+    }
+}
+
+
+//////////////////////////////////////////////////////////////
+//  Entry
+//////////////////////////////////////////////////////////////
+
+if (project.pluginManager.hasPlugin(ANDROID_APP_PLUGIN_ID)) {
+    handleAndroidApplication()
+} else if (project.pluginManager.hasPlugin(ANDROID_LIB_PLUGIN_ID)) {
+    handleAndroidLibrary()
+} else {
+    throw new GradleException("[-] Either ${ANDROID_APP_PLUGIN_ID} or ${ANDROID_LIB_PLUGIN_ID} "
+            + "should be applied when use this script.")
+}
+
+
+//////////////////////////////////////////////////////////////
+//  Helper Methods
+//////////////////////////////////////////////////////////////
+
+def cleanDirectory(File dir) {
+    if (dir.isDirectory()) {
+        dir.deleteDir()
+        dir.mkdirs()
+    }
+}
+
+def getGenerateOpsAnchorTask(variant) {
+    final List<String> startTaskNames = gradle.startParameter.taskNames
+    if (startTaskNames.isEmpty()) {
+        return null
+    }
+    final String firstTaskName = startTaskNames.get(0)
+    return firstTaskName.equals('clean') || firstTaskName.endsWith(':clean')
+            ? project.tasks.findByName(firstTaskName)
+            : project.tasks.findByName("externalNativeBuild${variant.name.capitalize()}")
+}
+
+def handleAndroidApplication() {
+    injectNativeDependenciesPath()
+
+    def generateAction = {
+        // intentionally empty: extraction runs once during afterEvaluate below.
+    }
+
+    project.afterEvaluate {
+        project.android.applicationVariants.each { variant ->
+            def anchorTask = getGenerateOpsAnchorTask(variant)
+            if (anchorTask != null) {
+                anchorTask.doFirst generateAction
+            } else {
+                project.afterEvaluate generateAction
+            }
+        }
+        extractNativeDependencies(project.android.applicationVariants)
+    }
+}
+
+def handleAndroidLibrary() {
+    mountExtension()
+    injectNativeDependenciesPath()
+
+    def libVariants = project.android.libraryVariants
+    project.afterEvaluate {
+        libVariants.each { variant ->
+            exposeNativeArtifacts(variant)
+        }
+    }
+
+    def generateBeforeAction = {
+        libVariants.each { variant ->
+            def externalNativeBuildTask = project.tasks.findByName("externalNativeBuild${variant.name.capitalize()}")
+            if (externalNativeBuildTask == null) {
+                copyExportedHeaders(variant)
+            }
+        }
+    }
+
+    project.afterEvaluate {
+        libVariants.each { variant ->
+            def anchorTask = getGenerateOpsAnchorTask(variant)
+            if (anchorTask != null) {
+                mountCopyNativePrebuiltsAction(variant)
+                anchorTask.doFirst generateBeforeAction
+                anchorTask.doLast {
+                    copyExportedHeaders(variant)
+                }
+            } else {
+                project.afterEvaluate generateBeforeAction
+            }
+        }
+        extractNativeDependencies(libVariants)
+    }
+}
+
+def mountExtension() {
+    def extensionCreator = new Action<ExtensionAware>() {
+        @Override
+        void execute(ExtensionAware extensionAware) {
+            extensionAware.extensions.create('exportHeaders', ExportedHeadersExtension)
+        }
+    }
+    extensionCreator.execute(project.android.defaultConfig.externalNativeBuildOptions)
+    project.android.buildTypes.all { buildType ->
+        extensionCreator.execute(buildType.externalNativeBuildOptions)
+    }
+    project.android.productFlavors.all { flavor ->
+        extensionCreator.execute(flavor.externalNativeBuildOptions)
+    }
+}
+
+def getUniformedPath(path) {
+    return (File.separator != '/') ? path.replace(File.separator, '/') : path
+}
+
+def getNativeDependencyRoot() {
+    return new File(project.buildDir, "intermediates/${NATIVE_DEPENDENCY_ROOT_NAME}")
+}
+
+def getExportedNativeArtifactsDir(targetVariant) {
+    return new File(getNativeDependencyRoot(), "${EXPORTED_NATIVE_ARTIFACTS_DIR_NAME}/${targetVariant.dirName}")
+}
+
+def getExtractedNativeDependenciesDir() {
+    return new File(getNativeDependencyRoot(), "${EXTRACTED_NATIVE_DEPENDENCIES_DIR_NAME}")
+}
+
+def copyExportedHeaders(targetVariant) {
+    def exportedArtifactsDir = getExportedNativeArtifactsDir(targetVariant)
+    def exportedHeadersDir = new File(exportedArtifactsDir, HEADERS_DIR_NAME)
+    if (!exportedHeadersDir.exists()) {
+        exportedHeadersDir.mkdirs()
+    } else {
+        cleanDirectory(exportedHeadersDir)
+    }
+    def headerFilters = getExportedHeaderFilters(targetVariant)
+    headerFilters.each { filter ->
+        copy {
+            exclude exportedHeadersDir.absolutePath
+            duplicatesStrategy DuplicatesStrategy.FAIL
+            includeEmptyDirs false
+            from(getUniformedPath(filter.dirPath)) {
+                filter.includePatterns.each { pattern -> include pattern }
+                filter.excludePatterns.each { pattern -> exclude pattern }
+            }
+            rename { name ->
+                return name.replace(filter.dirPath, '')
+            }
+            into new File(exportedHeadersDir, filter.moveToDirPath)
+        }
+    }
+}
+
+def getExportedHeaderFilters(targetVariant) {
+    Set<HeaderFilter> includeFilters = []
+    def exportedFilterFetcher = { ExtensionAware target ->
+        def exportedHeaderExt = target.extensions.findByName('exportHeaders')
+        if (exportedHeaderExt) {
+            return ((ExportedHeadersExtension) exportedHeaderExt).headerFilters
+        }
+    }
+    includeFilters.addAll(exportedFilterFetcher(project.android.defaultConfig.externalNativeBuildOptions))
+    includeFilters.addAll(exportedFilterFetcher(targetVariant.buildType.buildType.externalNativeBuildOptions))
+    targetVariant.productFlavors*.each { flavor ->
+        includeFilters.addAll(exportedFilterFetcher(flavor.productFlavor.externalNativeBuildOptions))
+    }
+    return includeFilters
+}
+
+def mountCopyNativePrebuiltsAction(targetVariant) {
+    def exportedArtifactsDir = getExportedNativeArtifactsDir(targetVariant)
+    def exportedHeadersDir = new File(exportedArtifactsDir, HEADERS_DIR_NAME)
+    def exportedPrebuiltsDir = new File(exportedArtifactsDir, PREBUILTS_DIR_NAME)
+    if (!exportedPrebuiltsDir.exists()) {
+        exportedPrebuiltsDir.mkdirs()
+    }
+    def bundleTask = targetVariant.getPackageLibrary() as Zip
+    targetVariant.getExternalNativeBuildTasks().each { nativeBuildTask ->
+        nativeBuildTask.doLast {
+            cleanDirectory(exportedPrebuiltsDir)
+            def nativeOutputsDir = nativeBuildTask.hasProperty('soFolder')
+                    ? nativeBuildTask.soFolder.get().asFile
+                    : nativeBuildTask.getObjFolder()
+            def fallbackNativeBuildDir = new File(project.projectDir, ".cxx/${targetVariant.name.capitalize()}")
+            copy {
+                duplicatesStrategy DuplicatesStrategy.EXCLUDE
+                includeEmptyDirs = false
+                from(nativeOutputsDir) {
+                    include '**/*.so'
+                    include '**/*.a'
+                }
+                from(fallbackNativeBuildDir) {
+                    include '**/*.so'
+                    include '**/*.a'
+                }
+                eachFile { details ->
+                    def matcher = (details.path =~ /(armeabi-v7a|arm64-v8a|x86_64|x86)/)
+                    if (matcher.find()) {
+                        details.path = "${matcher.group(1)}/${details.name}"
+                    } else {
+                        details.exclude()
+                    }
+                }
+                into exportedPrebuiltsDir
+            }
+        }
+    }
+    bundleTask.with {
+        from(exportedPrebuiltsDir) {
+            // 'so' files are automatically packaged into the AAR.
+            exclude '**/*.so'
+            into AAR_JNI_DIRENTRY_NAME
+        }
+        from(exportedHeadersDir) {
+            into AAR_HEADERS_DIRENTRY_NAME
+        }
+    }
+}
+
+def exposeNativeArtifacts(targetVariant) {
+    def apiElements = configurations.findByName("${targetVariant.name}ApiElements")
+    def exposedVariant = apiElements.outgoing.variants.create(EXPORTED_NATIVE_ARTIFACTS_DIR_NAME)
+    def exportedArtifactsDir = getExportedNativeArtifactsDir(targetVariant)
+    exposedVariant.artifact(exportedArtifactsDir) { artifact ->
+        artifact.setType(EXPORTED_NATIVE_ARTIFACTS_DIR_NAME)
+    }
+}
+
+def injectNativeDependenciesPath() {
+    def extractedNativeDepsDir = getExtractedNativeDependenciesDir()
+
+    def ndkBuildOpt = project.android.defaultConfig.externalNativeBuild.ndkBuild
+    ndkBuildOpt.getArguments().add('EXT_DEP=' + extractedNativeDepsDir.absolutePath)
+
+    def cmakeOpt = project.android.defaultConfig.externalNativeBuild.cmake
+    cmakeOpt.getArguments().add('-DEXT_DEP=' + extractedNativeDepsDir.absolutePath)
+}
+
+def extractNativeDependencies(targetVariants) {
+    def extractedNativeDepsDir = getExtractedNativeDependenciesDir()
+
+    targetVariants.each { targetVariant ->
+        def compileClasspath = configurations.findByName("${targetVariant.name}CompileClasspath")
+        def projectDependencies = compileClasspath.allDependencies.withType(ProjectDependency)
+
+        def projectNativeDepDirs = compileClasspath.incoming.artifactView { config ->
+            config.attributes.attribute(ATTR_ARTIFACT_TYPE, EXPORTED_NATIVE_ARTIFACTS_DIR_NAME)
+        }.artifacts.artifactFiles.files
+
+        def aarPaths = compileClasspath.incoming.artifactView { config ->
+            config.attributes.attribute(ATTR_ARTIFACT_TYPE, 'aar')
+        }.getArtifacts().artifactFiles.files
+
+        projectNativeDepDirs.each { projDir ->
+            copy {
+                duplicatesStrategy DuplicatesStrategy.FAIL
+                includeEmptyDirs false
+                from new File(projDir, HEADERS_DIR_NAME)
+                into new File(extractedNativeDepsDir, HEADERS_DIR_NAME)
+            }
+        }
+
+        aarPaths.each { aarPath ->
+            copy {
+                duplicatesStrategy DuplicatesStrategy.FAIL
+                includeEmptyDirs false
+                from zipTree(aarPath)
+                into new File(extractedNativeDepsDir, HEADERS_DIR_NAME)
+                eachFile { details ->
+                    if (details.path.endsWith('.h')) {
+                        details.path = details.path - AAR_HEADERS_DIRENTRY_NAME - '/'
+                    } else {
+                        details.exclude()
+                    }
+                }
+            }
+        }
+
+        def prepareNativeDepsTaskName = "prepare${targetVariant.name.capitalize()}NativeDependencies"
+        def prepareNativeDepsTask = project.tasks.register(prepareNativeDepsTaskName) {
+            projectDependencies.each { projectDependency ->
+                def depProject = projectDependency.dependencyProject
+                def variantTaskName = "externalNativeBuild${targetVariant.name.capitalize()}"
+                def buildTypeTaskName = "externalNativeBuild${targetVariant.buildType.name.capitalize()}"
+                // Variant-specific name may not exist when the upstream module has no
+                // flavors (e.g. consumer is fullDebug but producer only has Debug).
+                // Fall back to the build-type-only task name in that case so the
+                // upstream native artifacts are produced before we try to copy them.
+                def dependencyTask = depProject.tasks.findByName(variantTaskName)
+                if (dependencyTask == null) {
+                    dependencyTask = depProject.tasks.findByName(buildTypeTaskName)
+                }
+                if (dependencyTask != null) {
+                    dependsOn(dependencyTask)
+                }
+            }
+            doLast {
+                projectNativeDepDirs.each { projDir ->
+                    copy {
+                        duplicatesStrategy DuplicatesStrategy.FAIL
+                        includeEmptyDirs false
+                        from new File(projDir, HEADERS_DIR_NAME)
+                        into new File(extractedNativeDepsDir, HEADERS_DIR_NAME)
+                    }
+                }
+
+                aarPaths.each { aarPath ->
+                    copy {
+                        duplicatesStrategy DuplicatesStrategy.FAIL
+                        includeEmptyDirs false
+                        from zipTree(aarPath)
+                        into new File(extractedNativeDepsDir, HEADERS_DIR_NAME)
+                        eachFile { details ->
+                            if (details.path.endsWith('.h')) {
+                                details.path = details.path - AAR_HEADERS_DIRENTRY_NAME - '/'
+                            } else {
+                                details.exclude()
+                            }
+                        }
+                    }
+                }
+
+                projectNativeDepDirs.each { projDir ->
+                    copy {
+                        duplicatesStrategy DuplicatesStrategy.FAIL
+                        includeEmptyDirs false
+                        from(projDir) {
+                            include "${PREBUILTS_DIR_NAME}/**"
+                            include "**/${PREBUILTS_DIR_NAME}/**"
+                        }
+                        into extractedNativeDepsDir
+                    }
+                }
+
+                aarPaths.each { aarPath ->
+                    copy {
+                        duplicatesStrategy DuplicatesStrategy.FAIL
+                        includeEmptyDirs false
+                        from zipTree(aarPath)
+                        into new File(extractedNativeDepsDir, PREBUILTS_DIR_NAME)
+                        eachFile { details ->
+                            if (details.path.endsWith('.so') || details.path.endsWith('.a')) {
+                                details.path = (details.path - AAR_JNI_DIRENTRY_NAME - '/')
+                            } else {
+                                details.exclude()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        project.tasks.configureEach { task ->
+            def variantTaskSuffix = targetVariant.name.capitalize()
+            def buildTypeTaskSuffix = targetVariant.buildType.name.capitalize()
+            if (task.name == "externalNativeBuild${variantTaskSuffix}"
+                    || task.name.startsWith("buildCMake${variantTaskSuffix}")
+                    || task.name == "buildCMake${buildTypeTaskSuffix}"
+                    || task.name.startsWith("buildCMake${buildTypeTaskSuffix}[")) {
+                task.dependsOn(prepareNativeDepsTask)
+            }
+        }
+    }
+}

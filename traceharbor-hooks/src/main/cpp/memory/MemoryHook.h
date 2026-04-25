@@ -18,8 +18,8 @@
 // Created by Yves on 2020-04-28.
 //
 
-#ifndef LIBMATRIX_HOOK_MEMORYHOOK_H
-#define LIBMATRIX_HOOK_MEMORYHOOK_H
+#ifndef LIBTRACEHARBOR_HOOK_MEMORYHOOK_H
+#define LIBTRACEHARBOR_HOOK_MEMORYHOOK_H
 
 #define TAG "TraceHarbor.MemoryHook"
 
@@ -49,4 +49,4 @@ void set_tracing_alloc_size_range(size_t min, size_t max);
 
 void memory_hook_init();
 
-#endif //LIBMATRIX_HOOK_MEMORYHOOK_H
+#endif //LIBTRACEHARBOR_HOOK_MEMORYHOOK_H

@@ -254,7 +254,7 @@
 
     <view
         android:id="@+id/chart"
-        class="io.traceharbor.trace.view.FloatFrameView$LineChartView"
+        class="com.kernelflux.traceharbor.trace.view.FloatFrameView$LineChartView"
         android:layout_width="match_parent"
         android:layout_height="140dp" />
 
