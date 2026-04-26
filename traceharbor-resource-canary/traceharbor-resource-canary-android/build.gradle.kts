@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     id("com.android.library")
     id("kotlin-android")
@@ -42,26 +44,22 @@ android {
     }
 }
 
-val gradleExtra = (gradle as org.gradle.api.plugins.ExtensionAware).extensions.extraProperties
-val kotlinVersion: String = gradleExtra.get("KOTLIN_VERSION").toString()
-
 dependencies {
     implementation(fileTree("libs") { include("*.jar") })
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+    implementation(libs.kotlin.stdlib)
 
     implementation(project(":traceharbor-resource-canary:traceharbor-resource-canary-common"))
-    implementation("com.tencent.tinker:tinker-ziputils:1.9.2")
+    implementation(libs.tinker.ziputils)
     implementation(project(":traceharbor-android-lib"))
     implementation(project(":traceharbor-android-commons"))
     implementation(project(":traceharbor-backtrace"))
     implementation(project(":traceharbor-resource-canary:traceharbor-resource-canary-analyzer"))
 
-    testImplementation("junit:junit:4.12")
 }
 
 version = rootProject.extra["VERSION_NAME"].toString()
 group   = rootProject.extra["GROUP"].toString()
 
-extra["publishArtifactId"] = project.property("POM_ARTIFACT_ID").toString()
+extra["publishArtifactId"] = "traceharbor-resource-canary-android"
 extra["publishVersion"]    = version.toString()
 apply(from = rootProject.file("gradle/maven-publish.gradle.kts"))

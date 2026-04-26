@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.withGroovyBuilder
 
@@ -23,7 +25,7 @@ android {
     }
 
     defaultConfig {
-        minSdk = rootProject.extra["MIN_SDK_VERSION_FOR_HOOK"] as Int
+        minSdk = rootProject.extra["minSdkVersion"] as Int
         @Suppress("DEPRECATION")
         targetSdk = rootProject.extra["targetSdkVersion"] as Int
         // AGP 8 dropped versionCode/versionName from LibraryDefaultConfig (app-only).
@@ -79,6 +81,6 @@ apply(from = project.file("dependencies.gradle"))
 group   = rootProject.extra["GROUP"].toString()
 version = rootProject.extra["VERSION_NAME"].toString()
 
-extra["publishArtifactId"] = project.property("POM_ARTIFACT_ID").toString()
+extra["publishArtifactId"] = "traceharbor-hooks"
 extra["publishVersion"]    = version.toString()
 apply(from = rootProject.file("gradle/maven-publish.gradle.kts"))

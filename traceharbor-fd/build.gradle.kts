@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     id("com.android.library")
     // kotlin-android applied so this module can host Kotlin sources
@@ -43,10 +45,7 @@ android {
 dependencies {
     implementation(fileTree("libs") { include("*.jar") })
 
-    testImplementation("junit:junit:4.12")
-    implementation("androidx.annotation:annotation:1.0.0")
-    androidTestImplementation("androidx.test.ext:junit:1.1.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.1.0")
+    implementation(libs.androidx.annotation)
     // implementation "com.tencent.stubs:logger:${rootProject.LOGGER_VERSION}"
     implementation(project(":traceharbor-android-lib"))
     implementation(project(":traceharbor-android-commons"))
@@ -55,6 +54,6 @@ dependencies {
 group   = rootProject.extra["GROUP"].toString()
 version = rootProject.extra["VERSION_NAME"].toString()
 
-extra["publishArtifactId"] = project.property("POM_ARTIFACT_ID").toString()
+extra["publishArtifactId"] = "traceharbor-fd"
 extra["publishVersion"]    = version.toString()
 apply(from = rootProject.file("gradle/maven-publish.gradle.kts"))

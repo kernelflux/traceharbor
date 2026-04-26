@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.withGroovyBuilder
 
@@ -17,7 +19,7 @@ android {
     compileSdk = rootProject.extra["compileSdkVersion"] as Int
 
     defaultConfig {
-        minSdk = rootProject.extra["MIN_SDK_VERSION_FOR_HOOK"] as Int
+        minSdk = rootProject.extra["minSdkVersion"] as Int
         @Suppress("DEPRECATION")
         targetSdk = rootProject.extra["targetSdkVersion"] as Int
         // AGP 8 dropped versionCode/versionName from LibraryDefaultConfig (app-only).

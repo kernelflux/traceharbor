@@ -15,9 +15,10 @@ group   = rootProject.extra["GROUP"].toString()
 
 dependencies {
     implementation(fileTree("libs") { include("*.jar") })
-    implementation("com.google.code.gson:gson:2.8.9")
+    implementation(libs.gson)
+    implementation(libs.android.tools.common)
+
     implementation(project(":traceharbor-commons"))
-    implementation("com.android.tools:common:25.1.0")
 }
 
 // ---------------------------------------------------------------------------
@@ -53,6 +54,6 @@ tasks.register<Copy>("buildApkCheckJar") {
     into(project.file("tools_output"))
 }
 
-extra["publishArtifactId"] = project.property("POM_ARTIFACT_ID").toString()
+extra["publishArtifactId"] = "traceharbor-apk-canary"
 extra["publishVersion"]    = version.toString()
 apply(from = rootProject.file("gradle/maven-publish.gradle.kts"))

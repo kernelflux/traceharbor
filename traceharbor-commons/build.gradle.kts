@@ -19,11 +19,10 @@ tasks.withType<Javadoc>().configureEach { options.encoding = "UTF-8" }
 
 dependencies {
     implementation(fileTree("libs") { include("*.jar") })
-    implementation("commons-io:commons-io:2.6")
+    implementation(libs.commons.io)
 }
 
-extra["publishArtifactId"] = project.property("POM_ARTIFACT_ID").toString()
+extra["publishArtifactId"] = "traceharbor-commons"
 extra["publishVersion"]    = version.toString()
 
 apply(from = rootProject.file("gradle/maven-publish.gradle.kts"))
-apply(from = rootProject.file("gradle/maven-devlocal-publication.gradle.kts"))

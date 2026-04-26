@@ -16,7 +16,6 @@
 // 主要工作：apply `com.kernelflux.maven.publish` 并配置 `mavenCentralUpload`。
 // 对 flavor 模块（设置了 `ext.publishAdditionalPublications`）会先 apply
 // `maven-publish` 并在 `afterEvaluate` 内创建对应 publication，避免 kfx 默认
-// 查找 `components.release` 失败。本地无 GPG 时改用 maven-devlocal-publication.gradle.kts。
 // =============================================================================
 import org.gradle.api.Action
 import org.gradle.api.publish.PublishingExtension

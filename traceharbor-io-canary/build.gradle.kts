@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     id("com.android.library")
     id("kotlin-android")
@@ -49,14 +51,11 @@ dependencies {
 
     implementation(project(":traceharbor-android-lib"))
     implementation(project(":traceharbor-android-commons"))
-    testImplementation("junit:junit:4.12")
-    androidTestImplementation("androidx.annotation:annotation:1.0.0")
-    androidTestImplementation("androidx.test.ext:junit:1.1.1")
 }
 
 version = rootProject.extra["VERSION_NAME"].toString()
 group   = rootProject.extra["GROUP"].toString()
 
-extra["publishArtifactId"] = project.property("POM_ARTIFACT_ID").toString()
+extra["publishArtifactId"] = "traceharbor-io-canary"
 extra["publishVersion"]    = version.toString()
 apply(from = rootProject.file("gradle/maven-publish.gradle.kts"))

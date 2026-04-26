@@ -19,7 +19,7 @@
 
 - `traceharbor-gradle-plugin` trace pipeline migrated off the removed `Transform` API to the AGP 8 `AndroidComponents` / `ScopedArtifacts` API. See `TraceHarborTraceAgp8Registrar` + `TraceHarborTraceAgp8Task` + `TraceHarborAgp8TraceRunner`.
 - All Android modules declare `namespace`.
-- Publishing scripts cleaned up: `gradle/maven-publish.gradle` is now fluxrouter-aligned, with `gradle/maven-devlocal-publication.gradle` for unsigned local installs.
+- Publishing scripts cleaned up: `gradle/maven-publish.gradle` is now fluxrouter-aligned
 - Sample wired to apply the plugin via `mavenLocal()` coordinates: run `./gradlew traceharborPublishPluginForSample` once before building the sample.
 - Removed dead WeChat scripts (`WeChatDebugStub.gradle`, `WeChatDebugStub2.gradle`, `WeChatArmeabiCompat.gradle`).
 - Renamed `WeChatNativeDepend.gradle` → `TraceHarborNativeDepend.gradle` and removed unused `WX_BUILD_*` / `wechatPublish` build-info generation.

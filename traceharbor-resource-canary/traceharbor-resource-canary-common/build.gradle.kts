@@ -6,16 +6,16 @@ plugins {
     kotlin("jvm")
 }
 
-// Bumped from 1.7 → 1.8: Kotlin 1.8.x requires jvmTarget ≥ 1.8.
-// Same constraint forced the bump in traceharbor-memory-canary.
+val javaVersion = rootProject.extra["javaVersion"] as JavaVersion
+
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = javaVersion.toString()
     }
 }
 
@@ -26,7 +26,7 @@ dependencies {
     implementation(fileTree("libs") { include("*.jar") })
 }
 
-extra["publishArtifactId"] = project.property("POM_ARTIFACT_ID").toString()
+extra["publishArtifactId"] = "traceharbor-resource-canary-common"
 extra["publishVersion"]    = version.toString()
 
 apply(from = rootProject.file("gradle/maven-publish.gradle.kts"))

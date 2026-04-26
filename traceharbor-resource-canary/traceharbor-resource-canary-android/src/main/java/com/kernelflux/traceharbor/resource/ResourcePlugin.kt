@@ -1,5 +1,6 @@
 package com.kernelflux.traceharbor.resource
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.os.Build
@@ -21,8 +22,9 @@ class ResourcePlugin(
 
     fun getWatcher(): ActivityRefWatcher? = mWatcher
 
-    override fun init(app: Application, listener: PluginListener) {
-        super.init(app, listener)
+    @SuppressLint("ObsoleteSdkInt")
+    override fun init(application: Application, pluginListener: PluginListener) {
+        super.init(application, pluginListener)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             TraceHarborLog.e(
                 TAG,
@@ -31,7 +33,7 @@ class ResourcePlugin(
             unSupportPlugin()
             return
         }
-        mWatcher = ActivityRefWatcher(app, this)
+        mWatcher = ActivityRefWatcher(application, this)
     }
 
     override fun start() {

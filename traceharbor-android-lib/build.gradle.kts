@@ -40,19 +40,12 @@ android {
 
 dependencies {
     implementation(fileTree("libs") { include("*.jar") })
-    api("androidx.lifecycle:lifecycle-common:2.3.1")
-    testImplementation("junit:junit:4.12")
-
-    androidTestImplementation("androidx.annotation:annotation:1.0.0")
-    androidTestImplementation("androidx.test.ext:junit:1.1.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.1.0")
-    androidTestImplementation("org.mockito:mockito-core:2.8.9")
-    androidTestImplementation("org.mockito:mockito-android:2.8.9")
+    api(libs.androidx.lifecycle.common)
 }
 
 version = rootProject.extra["VERSION_NAME"].toString()
 group   = rootProject.extra["GROUP"].toString()
 
-extra["publishArtifactId"] = project.property("POM_ARTIFACT_ID").toString()
+extra["publishArtifactId"] = "traceharbor-android-lib"
 extra["publishVersion"]    = version.toString()
 apply(from = rootProject.file("gradle/maven-publish.gradle.kts"))

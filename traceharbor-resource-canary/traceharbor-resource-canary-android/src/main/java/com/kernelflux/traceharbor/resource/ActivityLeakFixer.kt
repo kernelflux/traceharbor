@@ -1,5 +1,6 @@
 package com.kernelflux.traceharbor.resource
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -53,7 +54,9 @@ object ActivityLeakFixer {
             if (destContext == null) {
                 break
             }
-            val imm = destContext.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager ?: break
+            val imm =
+                destContext.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                    ?: break
             val viewFieldNames = arrayOf("mCurRootView", "mServedView", "mNextServedView")
             for (viewFieldName in viewFieldNames) {
                 try {
@@ -75,12 +78,20 @@ object ActivityLeakFixer {
                         }
                     }
                 } catch (thr: Throwable) {
-                    TraceHarborLog.e(TAG, "failed to fix InputMethodManagerLeak, %s", thr.toString())
+                    TraceHarborLog.e(
+                        TAG,
+                        "failed to fix InputMethodManagerLeak, %s",
+                        thr.toString()
+                    )
                 }
             }
         } while (false)
 
-        TraceHarborLog.i(TAG, "fixInputMethodManagerLeak done, cost: %s ms.", System.currentTimeMillis() - startTick)
+        TraceHarborLog.i(
+            TAG,
+            "fixInputMethodManagerLeak done, cost: %s ms.",
+            System.currentTimeMillis() - startTick
+        )
     }
 
     @JvmField
@@ -105,7 +116,11 @@ object ActivityLeakFixer {
         } else {
             TraceHarborLog.i(TAG, "unbindDrawables, ui or ui's window is null, skip rest works.")
         }
-        TraceHarborLog.i(TAG, "unbindDrawables done, cost: %s ms.", System.currentTimeMillis() - startTick)
+        TraceHarborLog.i(
+            TAG,
+            "unbindDrawables done, cost: %s ms.",
+            System.currentTimeMillis() - startTick
+        )
     }
 
     private fun unbindDrawablesAndRecycle(view: View?) {
@@ -136,6 +151,7 @@ object ActivityLeakFixer {
         }
     }
 
+    @SuppressLint("DiscouragedPrivateApi")
     private fun cleanContextOfView(view: View) {
         try {
             val contextField = View::class.java.getDeclaredField("mContext")
@@ -230,6 +246,7 @@ object ActivityLeakFixer {
         }
     }
 
+    @SuppressLint("DiscouragedPrivateApi")
     @Suppress("UNCHECKED_CAST")
     private fun fixTextWatcherLeak(tv: TextView?) {
         if (tv == null) {
@@ -293,11 +310,14 @@ object ActivityLeakFixer {
             val fg = fl.foreground
             if (fg != null) {
                 fg.callback = null
-                fl.foreground = null
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    fl.foreground = null
+                }
             }
         }
     }
 
+    @SuppressLint("ObsoleteSdkInt", "DiscouragedPrivateApi")
     private fun recycleLinearLayout(ll: LinearLayout?) {
         if (ll == null) {
             return

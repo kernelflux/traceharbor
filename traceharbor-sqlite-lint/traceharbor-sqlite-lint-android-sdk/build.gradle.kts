@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     id("com.android.library")
     id("kotlin-android")
@@ -84,10 +86,6 @@ android {
 
 dependencies {
     implementation(fileTree("libs") { include("*.jar") })
-    testImplementation("junit:junit:4.12")
-    androidTestImplementation("androidx.annotation:annotation:1.0.0")
-    androidTestImplementation("androidx.test.ext:junit:1.1.1")
-
     implementation(project(":traceharbor-android-lib"))
     implementation(project(":traceharbor-android-commons"))
 }
@@ -95,12 +93,10 @@ dependencies {
 version = rootProject.extra["VERSION_NAME"].toString()
 group   = rootProject.extra["GROUP"].toString()
 
-val pomArtifactId: String = project.property("POM_ARTIFACT_ID").toString()
-
-extra["publishArtifactId"] = pomArtifactId
+extra["publishArtifactId"] = "traceharbor-sqlite-lint-android-sdk"
 extra["publishVersion"]    = version.toString()
 extra["publishAdditionalPublications"] = listOf(
-    mapOf("name" to "release", "component" to "fullRelease", "artifactId" to pomArtifactId),
-    mapOf("name" to "noOp",    "component" to "stubRelease", "artifactId" to "$pomArtifactId-no-op"),
+    mapOf("name" to "release", "component" to "fullRelease", "artifactId" to "traceharbor-sqlite-lint-android-sdk"),
+    mapOf("name" to "noOp",    "component" to "stubRelease", "artifactId" to "traceharbor-sqlite-lint-android-sdk-no-op"),
 )
 apply(from = rootProject.file("gradle/maven-publish.gradle.kts"))

@@ -1,19 +1,13 @@
 plugins {
     id("kotlin")
     id("java-gradle-plugin")
-    // com.gradle.plugin-publish version is pinned via the root buildscript classpath
-    // (see root build.gradle.kts → buildscript { dependencies { classpath ... } }),
-    // so we must apply it WITHOUT a version here, otherwise Gradle errors with
-    // "the plugin is already on the classpath with an unknown version".
+    // Version is provided by the root plugins block (apply false).
     id("com.gradle.plugin-publish")
 }
-
-val gradleExtra = (gradle as org.gradle.api.plugins.ExtensionAware).extensions.extraProperties
-val kotlinVersion: String = gradleExtra.get("KOTLIN_VERSION").toString()
-
+val javaVersion = rootProject.extra["javaVersion"] as JavaVersion
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
 }
 
 dependencies {
@@ -21,13 +15,13 @@ dependencies {
     implementation(gradleApi())
     implementation(project(":traceharbor-commons"))
     implementation(project(":traceharbor-arscutil"))
-    implementation("org.ow2.asm:asm:9.6")
-    implementation("org.ow2.asm:asm-commons:9.6")
-    implementation("org.ow2.asm:asm-util:9.6")
-    implementation("com.google.guava:guava:32.1.3-jre")
-    implementation("com.android.tools.build:gradle:8.2.2")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation(libs.asm)
+    implementation(libs.asm.commons)
+    implementation(libs.asm.util)
+    implementation(libs.guava)
+    implementation(libs.agpGradle)
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.gson)
 }
 
 group   = "com.kernelflux.traceharbor.plugin"

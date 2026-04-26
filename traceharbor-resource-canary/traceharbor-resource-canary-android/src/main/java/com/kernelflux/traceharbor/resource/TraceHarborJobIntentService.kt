@@ -1,6 +1,7 @@
 package com.kernelflux.traceharbor.resource
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Service
 import android.app.job.JobInfo
@@ -245,7 +246,9 @@ abstract class TraceHarborJobIntentService : Service() {
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     inner class CommandProcessor : AsyncTask<Void, Void, Void>() {
+        @Deprecated("Deprecated in Java")
         override fun doInBackground(vararg params: Void?): Void? {
             var work = dequeueWork()
             while (work != null) {
@@ -256,10 +259,12 @@ abstract class TraceHarborJobIntentService : Service() {
             return null
         }
 
+        @Deprecated("Deprecated in Java")
         override fun onCancelled(aVoid: Void?) {
             processorFinished()
         }
 
+        @Deprecated("Deprecated in Java")
         override fun onPostExecute(aVoid: Void?) {
             processorFinished()
         }
@@ -277,7 +282,7 @@ abstract class TraceHarborJobIntentService : Service() {
         }
     }
 
-    override fun onStartCommand(@Nullable intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand( intent: Intent?, flags: Int, startId: Int): Int {
         val compatQueue = mCompatQueue
         if (compatQueue != null) {
             mCompatWorkEnqueuer?.serviceStartReceived()
@@ -290,7 +295,7 @@ abstract class TraceHarborJobIntentService : Service() {
         return START_NOT_STICKY
     }
 
-    override fun onBind(@NonNull intent: Intent): IBinder? {
+    override fun onBind( intent: Intent): IBinder? {
         return mJobImpl?.compatGetBinder()
     }
 
@@ -305,7 +310,7 @@ abstract class TraceHarborJobIntentService : Service() {
         }
     }
 
-    protected abstract fun onHandleWork(@NonNull intent: Intent)
+    protected abstract fun onHandleWork( intent: Intent)
 
     fun setInterruptIfStopped(interruptIfStopped: Boolean) {
         mInterruptIfStopped = interruptIfStopped
@@ -321,7 +326,6 @@ abstract class TraceHarborJobIntentService : Service() {
         return onStopCurrentWork()
     }
 
-    @TargetApi(11)
     fun ensureProcessorRunningLocked(reportStarted: Boolean) {
         if (mCurProcessor == null) {
             mCurProcessor = CommandProcessor()
@@ -363,24 +367,21 @@ abstract class TraceHarborJobIntentService : Service() {
 
         @JvmStatic
         fun enqueueWork(
-            @NonNull context: Context,
-            @NonNull cls: Class<*>,
+            context: Context,
+            cls: Class<*>,
             jobId: Int,
-            @NonNull work: Intent,
+            work: Intent,
         ) {
             enqueueWork(context, ComponentName(context, cls), jobId, work)
         }
 
         @JvmStatic
         fun enqueueWork(
-            @NonNull context: Context,
-            @NonNull component: ComponentName,
+            context: Context,
+            component: ComponentName,
             jobId: Int,
-            @NonNull work: Intent,
+            work: Intent,
         ) {
-            if (work == null) {
-                throw IllegalArgumentException("work must not be null")
-            }
             synchronized(sLock) {
                 val we = getWorkEnqueuer(context, component, true, jobId)
                 we.ensureJobId(jobId)

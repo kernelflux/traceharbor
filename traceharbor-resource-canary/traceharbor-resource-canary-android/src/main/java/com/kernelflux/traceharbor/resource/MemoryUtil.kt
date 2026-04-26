@@ -132,6 +132,7 @@ object MemoryUtil {
                 error("Failed to fork task executing process.")
                 false
             }
+
             else -> run { // current process
                 info("Wait for task process [${pid}] complete executing.")
                 val result = waitTask(pid)
@@ -163,11 +164,10 @@ object MemoryUtil {
             else -> run { // current process
                 info("Wait for task process [${pid}] complete executing.")
                 val result = waitTask(pid)
-                if (result.exception != null) {
-                    info("Task process [${pid}] complete with error: ${result.exception!!.message}.")
-                    return@run ActivityLeakResult.failure(
-                        result.exception, currentTime - analyzeStart
-                    )
+                val exp = result.exception
+                if (exp != null) {
+                    info("Task process [${pid}] complete with error: ${exp.message}.")
+                    return@run ActivityLeakResult.failure(exp, currentTime - analyzeStart)
                 } else {
                     info("Task process [${pid}] complete without error.")
                 }

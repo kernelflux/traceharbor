@@ -82,5 +82,5 @@ dependencies {
     implementation(project(":traceharbor-sqlite-lint:traceharbor-sqlite-lint-android-sdk"))
     implementation(project(":traceharbor-traffic"))
 
-    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation(libs.androidx.recyclerview)
 }

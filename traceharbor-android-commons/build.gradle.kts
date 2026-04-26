@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.withGroovyBuilder
 
@@ -78,15 +80,11 @@ exportHeadersExt.withGroovyBuilder {
 dependencies {
     implementation(fileTree("libs") { include("*.jar") })
     implementation(project(":traceharbor-android-lib"))
-    testImplementation("junit:junit:4.12")
-
-    androidTestImplementation("androidx.annotation:annotation:1.0.0")
-    androidTestImplementation("androidx.test.ext:junit:1.1.1")
 }
 
 version = rootProject.extra["VERSION_NAME"].toString()
 group   = rootProject.extra["GROUP"].toString()
 
-extra["publishArtifactId"] = project.property("POM_ARTIFACT_ID").toString()
+extra["publishArtifactId"] = "traceharbor-android-commons"
 extra["publishVersion"]    = version.toString()
 apply(from = rootProject.file("gradle/maven-publish.gradle.kts"))
