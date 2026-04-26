@@ -36,15 +36,15 @@ class LooperTaskMonitorFeature : AbsTaskMonitorFeature() {
 
     override fun getTag(): String = TAG
 
-    fun getListener(): LooperTaskListener = mCore
+    fun getListener(): LooperTaskListener = core
 
     override fun onTurnOn() {
         super.onTurnOn()
         mLooperTaskListener = object : ILooperListener {
-            override fun isValid(): Boolean = mCore.isTurnOn()
+            override fun isValid(): Boolean = core.isTurnOn()
 
             override fun onDispatchBegin(log: String) {
-                if (mCore.getConfig().isAggressiveMode) {
+                if (core.getConfig().isAggressiveMode) {
                     TraceHarborLog.i(TAG, "[" + Thread.currentThread().name + "]" + log)
                 }
                 val taskName = computeTaskName(log)
@@ -57,7 +57,7 @@ class LooperTaskMonitorFeature : AbsTaskMonitorFeature() {
             }
 
             override fun onDispatchEnd(log: String, beginNs: Long, endNs: Long) {
-                if (mCore.getConfig().isAggressiveMode) {
+                if (core.getConfig().isAggressiveMode) {
                     TraceHarborLog.i(TAG, "[" + Thread.currentThread().name + "]" + log)
                 }
                 val taskName = computeTaskName(log)
@@ -110,10 +110,10 @@ class LooperTaskMonitorFeature : AbsTaskMonitorFeature() {
     override fun onForeground(isForeground: Boolean) {
         super.onForeground(isForeground)
         if (isForeground) {
-            mDelayWatchingTask?.let { mCore.getHandler().removeCallbacks(it) }
+            mDelayWatchingTask?.let { core.getHandler().removeCallbacks(it) }
         } else {
             mDelayWatchingTask = Runnable { startWatching() }
-            mCore.getHandler().postDelayed(mDelayWatchingTask!!, mCore.getConfig().greyTime)
+            core.getHandler().postDelayed(mDelayWatchingTask!!, core.getConfig().greyTime)
         }
     }
 
@@ -130,7 +130,7 @@ class LooperTaskMonitorFeature : AbsTaskMonitorFeature() {
                 return
             }
             TraceHarborLog.i(TAG, "#startWatching")
-            if (mCore.getConfig().looperWatchList.contains("all")) {
+            if (core.getConfig().looperWatchList.contains("all")) {
                 val allThreads = getAllThreads()
                 for (thread in allThreads) {
                     if (thread is HandlerThread) {
@@ -146,7 +146,7 @@ class LooperTaskMonitorFeature : AbsTaskMonitorFeature() {
                 }
             } else {
                 var allThreads: Collection<Thread> = Collections.emptyList()
-                for (threadToWatch in mCore.getConfig().looperWatchList) {
+                for (threadToWatch in core.getConfig().looperWatchList) {
                     if (TextUtils.isEmpty(threadToWatch)) {
                         continue
                     }

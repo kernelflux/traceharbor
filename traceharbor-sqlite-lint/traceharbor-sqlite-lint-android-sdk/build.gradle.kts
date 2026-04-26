@@ -1,8 +1,11 @@
 plugins {
     id("com.android.library")
+    id("kotlin-android")
 }
 
 apply(from = rootProject.file("gradle/TraceHarborNativeDepend.gradle"))
+
+val javaVersion = rootProject.extra["javaVersion"] as JavaVersion
 
 android {
     namespace = (rootProject.extra["androidNamespaces"] as Map<*, *>)[project.path] as String
@@ -36,6 +39,15 @@ android {
         cmake {
             path("../CMakeLists.txt")
         }
+    }
+
+    compileOptions {
+        sourceCompatibility = javaVersion
+        targetCompatibility = javaVersion
+    }
+
+    kotlinOptions {
+        jvmTarget = javaVersion.toString()
     }
 
     // KTS quirk: per-flavor sourceSets only exist after productFlavors are

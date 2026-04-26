@@ -260,7 +260,7 @@ open class CompositeMonitors {
         if (snapshotClass == JiffiesSnapshot::class.java) {
             @Suppress("UNCHECKED_CAST")
             val jiffiesDelta = delta as Delta<JiffiesSnapshot>
-            val minute = appStats.minute
+            val minute = appStats.getMinute()
             val avgJiffies = jiffiesDelta.dlt.totalJiffies.get() / minute
             return minute >= 5 && avgJiffies >= 1000
         }
@@ -392,7 +392,7 @@ open class CompositeMonitors {
         val monitor = mMonitor ?: return
         if (SCOPE_CANARY == getScope()) {
             val appStats = getAppStats()
-            if (appStats != null && !appStats.isForeground) {
+            if (appStats != null && !appStats.isForeground()) {
                 getDelta(JiffiesSnapshot::class.java, Consumer { delta ->
                     val minute = kotlin.math.max(1L, delta.during / BatteryCanaryUtil.ONE_MIN)
                     if (minute < 5) {

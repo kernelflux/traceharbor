@@ -183,7 +183,7 @@ abstract class AbsTaskMonitorFeature : AbsMonitorFeature() {
     }
 
     protected open fun onTaskConcurrentInc(key: String, hashcode: Int) {
-        mCore.getHandler().post {
+        core.getHandler().post {
             val workingTasks: Pair<MutableList<Int>, Long>
             synchronized(mTaskConcurrentTrace) {
                 var current = mTaskConcurrentTrace[key]
@@ -208,7 +208,7 @@ abstract class AbsTaskMonitorFeature : AbsMonitorFeature() {
     }
 
     protected open fun onTaskConcurrentDec(hashcode: Int) {
-        mCore.getHandler().post {
+        core.getHandler().post {
             synchronized(mTaskConcurrentTrace) {
                 var found = false
                 val entryIterator = mTaskConcurrentTrace.entries.iterator()
@@ -336,8 +336,8 @@ abstract class AbsTaskMonitorFeature : AbsMonitorFeature() {
     }
 
     protected open fun checkOverHeat() {
-        mCore.getHandler().removeCallbacks(coolingTask)
-        mCore.getHandler().postDelayed(coolingTask, 1000L)
+        core.getHandler().removeCallbacks(coolingTask)
+        core.getHandler().postDelayed(coolingTask, 1000L)
     }
 
     protected open fun onCoolingDown() {
@@ -375,17 +375,17 @@ abstract class AbsTaskMonitorFeature : AbsMonitorFeature() {
         snapshot.tid = tid
         snapshot.name = name
 
-        snapshot.appStat = BatteryCanaryUtil.getAppStat(mCore.getContext(), mCore.isForeground())
-        snapshot.devStat = BatteryCanaryUtil.getDeviceStat(mCore.getContext())
+        snapshot.appStat = BatteryCanaryUtil.getAppStat(core.getContext(), core.isForeground())
+        snapshot.devStat = BatteryCanaryUtil.getDeviceStat(core.getContext())
 
         try {
-            val supplier: Callable<String>? = mCore.getConfig().onSceneSupplier
+            val supplier: Callable<String>? = core.getConfig().onSceneSupplier
             snapshot.scene = supplier?.call() ?: ""
         } catch (ignored: Exception) {
             snapshot.scene = ""
         }
 
-        if (mCore.getConfig().isUseThreadClock) {
+        if (core.getConfig().isUseThreadClock) {
             snapshot.jiffies = DigitEntry.of(SystemClock.currentThreadTimeMillis() / BatteryCanaryUtil.JIFFY_MILLIS)
         } else {
             val pid = Process.myPid()

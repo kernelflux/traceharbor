@@ -2,7 +2,7 @@ import org.gradle.kotlin.dsl.withGroovyBuilder
 
 plugins {
     id("com.android.application")
-    id("com.kernelflux.traceharbor.plugin")
+    //id("com.kernelflux.traceharbor.plugin")
 }
 
 val javaVersion = rootProject.extra["javaVersion"] as JavaVersion
@@ -53,24 +53,24 @@ android {
 // dep on the plugin's own jar. (`withGroovyBuilder` import sits at the top
 // of this file, since KTS rejects mid-file imports.)
 // ---------------------------------------------------------------------------
-extensions.findByName("traceHarbor")?.withGroovyBuilder {
-    "trace" {
-        "enable"(true)
-        setProperty(
-            "ignorePackages",
-            listOf(
-                "com.kernelflux.traceharborsample.subpkg",
-            ),
-        )
-        setProperty(
-            "ignoreClasses",
-            listOf(
-                "com.kernelflux.traceharborsample.LeakActivity",
-                "com.kernelflux.traceharborsample.LeakStore",
-            ),
-        )
-    }
-}
+//extensions.findByName("traceHarbor")?.withGroovyBuilder {
+//    "trace" {
+//        "enable"(true)
+//        setProperty(
+//            "ignorePackages",
+//            listOf(
+//                "com.kernelflux.traceharborsample.subpkg",
+//            ),
+//        )
+//        setProperty(
+//            "ignoreClasses",
+//            listOf(
+//                "com.kernelflux.traceharborsample.LeakActivity",
+//                "com.kernelflux.traceharborsample.LeakStore",
+//            ),
+//        )
+//    }
+//}
 
 dependencies {
     implementation(project(":traceharbor-android-lib"))

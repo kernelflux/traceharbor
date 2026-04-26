@@ -32,7 +32,7 @@ open class HealthStatsFeature : AbsMonitorFeature() {
 
     override fun weight(): Int = 0
 
-    open fun currHealthStats(): HealthStats? = HealthStatsHelper.getCurrStats(mCore.getContext())
+    open fun currHealthStats(): HealthStats? = HealthStatsHelper.getCurrStats(core.getContext())
 
     @SuppressLint("VisibleForTests")
     open fun currHealthStatsSnapshot(): HealthStatsSnapshot {
@@ -45,7 +45,7 @@ open class HealthStatsFeature : AbsMonitorFeature() {
             snapshot.healthStats = healthStats
 
             // Power
-            val cpuStatFeat = mCore.getMonitorFeature(CpuStatFeature::class.java)
+            val cpuStatFeat = core.getMonitorFeature(CpuStatFeature::class.java)
             if (cpuStatFeat != null) {
                 val powerProfile = cpuStatFeat.powerProfile
                 if (powerProfile != null && powerProfile.isSupported) {
@@ -71,7 +71,7 @@ open class HealthStatsFeature : AbsMonitorFeature() {
                         DigitEntry.of(HealthStatsHelper.calcGpsPower(powerProfile, healthStats))
                     snapshot.sensorsPower = DigitEntry.of(
                         HealthStatsHelper.calcSensorsPower(
-                            mCore.getContext(),
+                            core.getContext(),
                             healthStats
                         )
                     )
@@ -364,7 +364,7 @@ open class HealthStatsFeature : AbsMonitorFeature() {
             )
             if (healthStats.hasTimers(UidHealthStats.TIMERS_SENSORS)) {
                 val sm =
-                    mCore.getContext().getSystemService(Context.SENSOR_SERVICE) as? SensorManager
+                    core.getContext().getSystemService(Context.SENSOR_SERVICE) as? SensorManager
                 if (sm != null) {
                     val sensorList = sm.getSensorList(Sensor.TYPE_ALL)
                     val sensorMap: MutableMap<String, Sensor> = HashMap()

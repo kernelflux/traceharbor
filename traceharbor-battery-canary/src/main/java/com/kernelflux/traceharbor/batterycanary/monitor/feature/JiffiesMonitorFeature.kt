@@ -38,7 +38,7 @@ class JiffiesMonitorFeature : AbsMonitorFeature() {
 
     override fun onTurnOn() {
         super.onTurnOn()
-        sSkipNewAdded = mCore.getConfig().isSkipNewAddedPidTid
+        sSkipNewAdded = core.getConfig().isSkipNewAddedPidTid
     }
 
     override fun weight(): Int = Int.MAX_VALUE
@@ -64,29 +64,29 @@ class JiffiesMonitorFeature : AbsMonitorFeature() {
 
     @WorkerThread
     fun currentJiffiesSnapshot(): JiffiesSnapshot {
-        return JiffiesSnapshot.currentJiffiesSnapshot(ProcessInfo.getProcessInfo(), mCore.getConfig().isStatPidProc)
+        return JiffiesSnapshot.currentJiffiesSnapshot(ProcessInfo.getProcessInfo(), core.getConfig().isStatPidProc)
     }
 
     @WorkerThread
     fun currentJiffiesSnapshot(pid: Int): JiffiesSnapshot {
-        return JiffiesSnapshot.currentJiffiesSnapshot(ProcessInfo.getProcessInfo(pid), mCore.getConfig().isStatPidProc)
+        return JiffiesSnapshot.currentJiffiesSnapshot(ProcessInfo.getProcessInfo(pid), core.getConfig().isStatPidProc)
     }
 
     @WorkerThread
     fun currentUidJiffiesSnapshot(): UidJiffiesSnapshot {
-        return UidJiffiesSnapshot.of(mCore.getContext(), mCore.getConfig())
+        return UidJiffiesSnapshot.of(core.getContext(), core.getConfig())
     }
 
     @AnyThread
     fun currentJiffiesSnapshot(callback: Callback<JiffiesSnapshot>) {
-        mCore.getHandler().post {
+        core.getHandler().post {
             callback.onGetJiffies(currentJiffiesSnapshot())
         }
     }
 
     @AnyThread
     fun currentJiffiesSnapshot(pid: Int, callback: Callback<JiffiesSnapshot>) {
-        mCore.getHandler().post {
+        core.getHandler().post {
             callback.onGetJiffies(currentJiffiesSnapshot(pid))
         }
     }
@@ -403,7 +403,7 @@ class JiffiesMonitorFeature : AbsMonitorFeature() {
             }
             if (threadJiffiesList.isNotEmpty()) {
                 val threadJiffiesListEntry = ListEntry.of(threadJiffiesList)
-                mCore.getConfig().callback.onWatchingThreads(threadJiffiesListEntry)
+                core.getConfig().callback.onWatchingThreads(threadJiffiesListEntry)
             }
 
             synchronized(mWatchingThreads) {

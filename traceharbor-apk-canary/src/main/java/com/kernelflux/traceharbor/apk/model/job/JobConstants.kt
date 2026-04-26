@@ -1,0 +1,47 @@
+package com.kernelflux.traceharbor.apk.model.job
+
+object JobConstants {
+    const val PARAM_CONFIG = "--config"
+    const val PARAM_INPUT = "--input"
+    const val PARAM_APK = "--apk"
+    const val PARAM_UNZIP = "--unzip"
+    const val PARAM_OUTPUT = "--output"
+    const val PARAM_FORMAT = "--format"
+    const val PARAM_FORMAT_JAR = "--formatJar"
+    const val PARAM_FORMAT_CONFIG = "--formatConfig"
+    const val PARAM_TOOL_NM = "--toolnm"
+    const val PARAM_MIN_SIZE_IN_KB = "--min"
+    const val PARAM_ORDER = "--order"
+    const val PARAM_GROUP = "--group"
+    const val PARAM_SUFFIX = "--suffix"
+    const val PARAM_R_TXT = "--rTxt"
+    const val PARAM_IGNORE_RESOURCES_LIST = "--ignoreResources"
+    const val PARAM_MAPPING_TXT = "--mappingTxt"
+    const val PARAM_RES_MAPPING_TXT = "--resMappingTxt"
+    const val PARAM_IGNORE_ASSETS_LIST = "--ignoreAssets"
+    const val PARAM_LOG_LEVEL = "--log"
+
+    const val OPTION_MANIFEST = "-manifest"
+    const val OPTION_FILE_SIZE = "-fileSize"
+    const val OPTION_COUNT_METHOD = "-countMethod"
+    const val OPTION_CHECK_RES_PROGUARD = "-checkResProguard"
+    const val OPTION_FIND_NON_ALPHA_PNG = "-findNonAlphaPng"
+    const val OPTION_CHECK_MULTILIB = "-checkMultiLibrary"
+    const val OPTION_UNCOMPRESSED_FILE = "-uncompressedFile"
+    const val OPTION_COUNT_R_CLASS = "-countR"
+    const val OPTION_DUPLICATE_RESOURCES = "-duplicatedFile"
+    const val OPTION_CHECK_MULTISTL = "-checkMultiSTL"
+    const val OPTION_UNUSED_RESOURCES = "-unusedResources"
+    const val OPTION_UNUSED_ASSETS = "-unusedAssets"
+    const val OPTION_UNSTRIPPED_SO = "-unstrippedSo"
+    const val OPTION_COUNT_CLASS = "-countClass"
+
+    const val ORDER_ASC = "asc"
+    const val ORDER_DESC = "desc"
+    const val GROUP_PACKAGE = "package"
+    const val GROUP_CLASS = "class"
+
+    const val TASK_RESULT_REGISTRY = "TaskResult-Registry"
+    const val TASK_RESULT_REGISTERY_CLASS = "TaskResult-Registry-Class"
+}
+

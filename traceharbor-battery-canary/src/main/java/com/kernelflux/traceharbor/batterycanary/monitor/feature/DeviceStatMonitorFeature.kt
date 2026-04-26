@@ -35,7 +35,7 @@ class DeviceStatMonitorFeature : AbsMonitorFeature() {
 
     @JvmField
     val coolingTask: Runnable = Runnable {
-        if (mStampList.size >= mCore.getConfig().overHeatCount) {
+        if (mStampList.size >= core.getConfig().overHeatCount) {
             synchronized(TAG) {
                 TimeBreaker.gcList(mStampList)
             }
@@ -52,7 +52,7 @@ class DeviceStatMonitorFeature : AbsMonitorFeature() {
     @SuppressLint("VisibleForTests")
     override fun onTurnOn() {
         super.onTurnOn()
-        val deviceStat = BatteryCanaryUtil.getDeviceStat(mCore.getContext())
+        val deviceStat = BatteryCanaryUtil.getDeviceStat(core.getContext())
         val firstStamp = TimeBreaker.Stamp(deviceStat.toString())
         synchronized(TAG) {
             mStampList = ArrayList()
@@ -62,7 +62,7 @@ class DeviceStatMonitorFeature : AbsMonitorFeature() {
         mDevStatListener.setListener(Consumer { integer -> onStatDevStat(integer) })
 
         if (!mDevStatListener.isListening()) {
-            mDevStatListener.startListen(mCore.getContext())
+            mDevStatListener.startListen(core.getContext())
         }
     }
 
@@ -87,8 +87,8 @@ class DeviceStatMonitorFeature : AbsMonitorFeature() {
     }
 
     private fun checkOverHeat() {
-        mCore.getHandler().removeCallbacks(coolingTask)
-        mCore.getHandler().postDelayed(coolingTask, 1000L)
+        core.getHandler().removeCallbacks(coolingTask)
+        core.getHandler().postDelayed(coolingTask, 1000L)
     }
 
     override fun weight(): Int = Int.MAX_VALUE
@@ -111,7 +111,7 @@ class DeviceStatMonitorFeature : AbsMonitorFeature() {
 
     fun currentBatteryTemperature(context: Context): BatteryTmpSnapshot {
         val snapshot = BatteryTmpSnapshot()
-        snapshot.temp = DigitEntry.of(mCore.getCurrentBatteryTemperature(context))
+        snapshot.temp = DigitEntry.of(core.getCurrentBatteryTemperature(context))
         return snapshot
     }
 
@@ -124,7 +124,7 @@ class DeviceStatMonitorFeature : AbsMonitorFeature() {
                 windowMillis,
                 10L
             ) {
-                val devStat = BatteryCanaryUtil.getDeviceStat(mCore.getContext())
+                val devStat = BatteryCanaryUtil.getDeviceStat(core.getContext())
                 TimeBreaker.Stamp(devStat.toString())
             }
             val snapshot = DevStatSnapshot()

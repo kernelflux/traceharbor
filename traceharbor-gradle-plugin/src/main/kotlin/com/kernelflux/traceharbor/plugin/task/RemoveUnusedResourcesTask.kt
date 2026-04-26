@@ -25,9 +25,9 @@ import com.kernelflux.traceharbor.plugin.compat.AgpCompat
 import com.kernelflux.traceharbor.plugin.compat.CreationConfig
 import com.kernelflux.traceharbor.plugin.extension.TraceHarborRemoveUnusedResExtension
 import com.kernelflux.traceharbor.shrinker.RemoveUnusedResourceHelper
-import com.kernelflux.arscutil.ArscUtil
-import com.kernelflux.arscutil.io.ArscReader
-import com.kernelflux.arscutil.io.ArscWriter
+import com.kernelflux.traceharbor.arscutil.ArscUtil
+import com.kernelflux.traceharbor.arscutil.io.ArscReader
+import com.kernelflux.traceharbor.arscutil.io.ArscWriter
 import org.gradle.api.Action
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException

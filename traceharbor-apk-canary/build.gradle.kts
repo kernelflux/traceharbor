@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    kotlin("jvm")
 }
 
 val javaVersion = rootProject.extra["javaVersion"] as JavaVersion

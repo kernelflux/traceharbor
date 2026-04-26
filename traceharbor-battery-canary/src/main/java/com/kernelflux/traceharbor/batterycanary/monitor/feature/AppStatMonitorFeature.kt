@@ -7,10 +7,10 @@ import android.os.Looper
 import android.text.TextUtils
 import androidx.annotation.WorkerThread
 import com.kernelflux.traceharbor.batterycanary.BatteryEventDelegate
-import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.APP_STAT_BACKGROUND
-import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.APP_STAT_FLOAT_WINDOW
-import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.APP_STAT_FOREGROUND
-import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.APP_STAT_FOREGROUND_SERVICE
+import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.Companion.APP_STAT_BACKGROUND
+import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.Companion.APP_STAT_FLOAT_WINDOW
+import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.Companion.APP_STAT_FOREGROUND
+import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.Companion.APP_STAT_FOREGROUND_SERVICE
 import com.kernelflux.traceharbor.batterycanary.monitor.BatteryMonitorCore
 import com.kernelflux.traceharbor.batterycanary.monitor.feature.MonitorFeature.Snapshot
 import com.kernelflux.traceharbor.batterycanary.monitor.feature.MonitorFeature.Snapshot.Delta
@@ -67,12 +67,12 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
 
     @JvmField
     val coolingTask: Runnable = Runnable {
-        if (mStampList.size >= mCore.getConfig().overHeatCount) {
+        if (mStampList.size >= core.getConfig().overHeatCount) {
             synchronized(TAG) {
                 TimeBreaker.gcList(mStampList)
             }
         }
-        if (mSceneStampList.size >= mCore.getConfig().overHeatCount) {
+        if (mSceneStampList.size >= core.getConfig().overHeatCount) {
             synchronized(TAG) {
                 TimeBreaker.gcList(mSceneStampList)
             }
@@ -82,8 +82,8 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
     private val mFgSrvObserver: IStateObserver = object : IStateObserver {
         override fun on() {
             TraceHarborLog.i(TAG, "fgSrv >> on")
-            val foreground = mCore.isForeground()
-            val appStat = BatteryCanaryUtil.getAppStatImmediately(mCore.getContext(), foreground)
+            val foreground = core.isForeground()
+            val appStat = BatteryCanaryUtil.getAppStatImmediately(core.getContext(), foreground)
             if (appStat != APP_STAT_FOREGROUND) {
                 TraceHarborLog.i(TAG, "statAppStat: $APP_STAT_FOREGROUND_SERVICE")
                 onStatAppStat(APP_STAT_FOREGROUND_SERVICE)
@@ -94,8 +94,8 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
 
         override fun off() {
             TraceHarborLog.i(TAG, "fgSrv >> off")
-            val foreground = mCore.isForeground()
-            val appStat = BatteryCanaryUtil.getAppStatImmediately(mCore.getContext(), foreground)
+            val foreground = core.isForeground()
+            val appStat = BatteryCanaryUtil.getAppStatImmediately(core.getContext(), foreground)
             if (appStat != APP_STAT_FOREGROUND &&
                 appStat != APP_STAT_FOREGROUND_SERVICE &&
                 appStat != APP_STAT_FLOAT_WINDOW
@@ -111,8 +111,8 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
     private val mFloatViewObserver: IStateObserver = object : IStateObserver {
         override fun on() {
             TraceHarborLog.i(TAG, "floatView >> on")
-            val foreground = mCore.isForeground()
-            val appStat = BatteryCanaryUtil.getAppStatImmediately(mCore.getContext(), foreground)
+            val foreground = core.isForeground()
+            val appStat = BatteryCanaryUtil.getAppStatImmediately(core.getContext(), foreground)
             if (appStat != APP_STAT_FOREGROUND && appStat != APP_STAT_FOREGROUND_SERVICE) {
                 TraceHarborLog.i(TAG, "statAppStat: $APP_STAT_FLOAT_WINDOW")
                 onStatAppStat(APP_STAT_FLOAT_WINDOW)
@@ -123,8 +123,8 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
 
         override fun off() {
             TraceHarborLog.i(TAG, "floatView >> off")
-            val foreground = mCore.isForeground()
-            val appStat = BatteryCanaryUtil.getAppStatImmediately(mCore.getContext(), foreground)
+            val foreground = core.isForeground()
+            val appStat = BatteryCanaryUtil.getAppStatImmediately(core.getContext(), foreground)
             if (appStat != APP_STAT_FOREGROUND &&
                 appStat != APP_STAT_FOREGROUND_SERVICE &&
                 appStat != APP_STAT_FLOAT_WINDOW
@@ -150,7 +150,7 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
     override fun onTurnOn() {
         super.onTurnOn()
         val firstStamp = TimeBreaker.Stamp(APP_STAT_FOREGROUND.toString())
-        val firstSceneStamp = TimeBreaker.Stamp(mCore.getScene())
+        val firstSceneStamp = TimeBreaker.Stamp(core.getScene())
         synchronized(TAG) {
             mStampList = ArrayList()
             mStampList.add(0, firstStamp)
@@ -174,7 +174,7 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
 
     override fun onForeground(isForeground: Boolean) {
         super.onForeground(isForeground)
-        val appStat = BatteryCanaryUtil.getAppStatImmediately(mCore.getContext(), isForeground)
+        val appStat = BatteryCanaryUtil.getAppStatImmediately(core.getContext(), isForeground)
         BatteryCanaryUtil.getProxy().updateAppStat(appStat)
         onStatAppStat(appStat)
 
@@ -188,7 +188,7 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
         TraceHarborLog.i(TAG, "#onBackgroundCheck, during = $duringMillis")
 
         if (mGlobalAppImportance > mForegroundServiceImportanceLimit || mAppImportance > mForegroundServiceImportanceLimit) {
-            val context = mCore.getContext()
+            val context = core.getContext()
             val am = context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager ?: return
             val runningServices = am.getRunningServices(Int.MAX_VALUE) ?: return
 
@@ -202,7 +202,7 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
                                 "foreground service detected with low global importance: " +
                                     "$mAppImportance, $mGlobalAppImportance, ${item.service}"
                             )
-                            mCore.onForegroundServiceLeak(
+                            core.onForegroundServiceLeak(
                                 false,
                                 mAppImportance,
                                 mGlobalAppImportance,
@@ -218,7 +218,7 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
                                     "foreground service detected with low app importance: " +
                                         "$mAppImportance, $mGlobalAppImportance, ${item.service}"
                                 )
-                                mCore.onForegroundServiceLeak(
+                                core.onForegroundServiceLeak(
                                     true,
                                     mAppImportance,
                                     mGlobalAppImportance,
@@ -245,7 +245,7 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
 
     @Suppress("unused")
     fun onStatScene(scene: String) {
-        val statsFeature = mCore.getMonitorFeature(BatteryStatsFeature::class.java)
+        val statsFeature = core.getMonitorFeature(BatteryStatsFeature::class.java)
         if (statsFeature != null) {
             val statRecord = BatteryRecord.SceneStatRecord()
             statRecord.scene = scene
@@ -264,8 +264,8 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
     }
 
     private fun checkOverHeat() {
-        mCore.getHandler().removeCallbacks(coolingTask)
-        mCore.getHandler().postDelayed(coolingTask, 1000L)
+        core.getHandler().removeCallbacks(coolingTask)
+        core.getHandler().postDelayed(coolingTask, 1000L)
     }
 
     private fun updateAppImportance() {
@@ -276,7 +276,7 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
         }
 
         val runnable = Runnable {
-            val context = mCore.getContext()
+            val context = core.getContext()
             var mainProc = context.packageName
             if (mainProc.contains(":")) {
                 mainProc = mainProc.substring(0, mainProc.indexOf(":"))
@@ -310,7 +310,7 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
         }
 
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            mCore.getHandler().post(runnable)
+            core.getHandler().post(runnable)
         } else {
             runnable.run()
         }
@@ -319,7 +319,7 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
     @Suppress("unused")
     private fun checkBackgroundAppState(duringMillis: Long) {
         val runnable = Runnable {
-            val context = mCore.getContext()
+            val context = core.getContext()
             var mainProc = context.packageName
             if (mainProc.contains(":")) {
                 mainProc = mainProc.substring(0, mainProc.indexOf(":"))
@@ -336,7 +336,7 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
                             TAG,
                             " + ${item.processName}, proc = ${item.importance}, reason = ${item.importanceReasonComponent}"
                         )
-                        mCore.onAppSateLeak(
+                        core.onAppSateLeak(
                             item.processName == context.packageName,
                             item.importance,
                             item.importanceReasonComponent,
@@ -353,7 +353,7 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
         }
 
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            mCore.getHandler().post(runnable)
+            core.getHandler().post(runnable)
         } else {
             runnable.run()
         }
@@ -370,7 +370,7 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
                 windowMillis,
                 10L
             ) {
-                val appStat = BatteryCanaryUtil.getAppStat(mCore.getContext(), mCore.isForeground())
+                val appStat = BatteryCanaryUtil.getAppStat(core.getContext(), core.isForeground())
                 TimeBreaker.Stamp(appStat.toString())
             }
             val snapshot = AppStatSnapshot()
@@ -398,7 +398,7 @@ class AppStatMonitorFeature : AbsMonitorFeature() {
                 windowMillis,
                 10L
             ) {
-                TimeBreaker.Stamp(mCore.getScene())
+                TimeBreaker.Stamp(core.getScene())
             }
         } catch (e: Throwable) {
             TraceHarborLog.w(TAG, "currentSceneSnapshot fail: " + e.message)

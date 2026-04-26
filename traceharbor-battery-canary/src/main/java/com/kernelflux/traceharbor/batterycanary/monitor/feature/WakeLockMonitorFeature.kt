@@ -38,7 +38,7 @@ class WakeLockMonitorFeature : AbsMonitorFeature() {
     @JvmField
     var mListener: PowerManagerServiceHooker.IListener? = null
 
-    private fun getListener(): WakeLockListener = mCore
+    private fun getListener(): WakeLockListener = core
 
     protected override fun getTag(): String = TAG
 
@@ -49,7 +49,7 @@ class WakeLockMonitorFeature : AbsMonitorFeature() {
 
     override fun onTurnOn() {
         super.onTurnOn()
-        if (mCore.getConfig().isAmsHookEnabled) {
+        if (core.getConfig().isAmsHookEnabled) {
             mListener = object : PowerManagerServiceHooker.IListener {
                 override fun onAcquireWakeLock(
                     token: IBinder,
@@ -59,7 +59,7 @@ class WakeLockMonitorFeature : AbsMonitorFeature() {
                     workSource: WorkSource?,
                     historyTag: String?,
                 ) {
-                    val stack = if (shouldTracing(tag)) mCore.getConfig().callStackCollector.collectCurr() else ""
+                    val stack = if (shouldTracing(tag)) core.getConfig().callStackCollector.collectCurr() else ""
                     TraceHarborLog.i(
                         TAG,
                         "[onAcquireWakeLock] token=%s flags=%s tag=%s historyTag=%s packageName=%s workSource=%s stack=%s",
@@ -75,7 +75,7 @@ class WakeLockMonitorFeature : AbsMonitorFeature() {
                     // remove duplicated old trace
                     val existingTrace = mWorkingWakeLocks[token]
                     if (existingTrace != null) {
-                        existingTrace.finish(mCore.getHandler())
+                        existingTrace.finish(core.getHandler())
                     }
 
                     val wakeLockTrace = WakeLockTrace(token, tag, flags, packageName, stack)
@@ -87,7 +87,7 @@ class WakeLockMonitorFeature : AbsMonitorFeature() {
                             ) {
                                 getListener().onWakeLockTimeout(warningCount, record)
                                 if (wakeLockTrace.isExpired()) {
-                                    wakeLockTrace.finish(mCore.getHandler())
+                                    wakeLockTrace.finish(core.getHandler())
                                     val iterator = mWorkingWakeLocks.entries.iterator()
                                     while (iterator.hasNext()) {
                                         val next = iterator.next()
@@ -100,7 +100,7 @@ class WakeLockMonitorFeature : AbsMonitorFeature() {
                             }
                         },
                     )
-                    wakeLockTrace.start(mCore.getHandler(), mOverTimeMillis)
+                    wakeLockTrace.start(core.getHandler(), mOverTimeMillis)
                     mWorkingWakeLocks[token] = wakeLockTrace
 
                     // dump tracing info
@@ -121,10 +121,10 @@ class WakeLockMonitorFeature : AbsMonitorFeature() {
                     }
 
                     if (wakeLockTrace != null) {
-                        wakeLockTrace.finish(mCore.getHandler())
+                        wakeLockTrace.finish(core.getHandler())
                         mWakeLockTracing.add(wakeLockTrace.record)
                         val tag = wakeLockTrace.record.tag
-                        val stack = if (shouldTracing(tag)) mCore.getConfig().callStackCollector.collectCurr() else ""
+                        val stack = if (shouldTracing(tag)) core.getConfig().callStackCollector.collectCurr() else ""
                         TraceHarborLog.i(TAG, "[onReleaseWakeLock] tag = $tag, stack = $stack")
 
                         // dump tracing info
@@ -141,7 +141,7 @@ class WakeLockMonitorFeature : AbsMonitorFeature() {
     override fun onTurnOff() {
         super.onTurnOff()
         PowerManagerServiceHooker.removeListener(mListener)
-        mCore.getHandler().removeCallbacksAndMessages(null)
+        core.getHandler().removeCallbacksAndMessages(null)
         mWorkingWakeLocks.clear()
         mWakeLockTracing.onClear()
     }
@@ -180,11 +180,11 @@ class WakeLockMonitorFeature : AbsMonitorFeature() {
     }
 
     private fun shouldTracing(tag: String?): Boolean {
-        return shouldTracing() || !mCore.getConfig().tagWhiteList.contains(tag) || mCore.getConfig().tagBlackList.contains(tag)
+        return shouldTracing() || !core.getConfig().tagWhiteList.contains(tag) || core.getConfig().tagBlackList.contains(tag)
     }
 
     private fun dumpTracingForTag(tag: String?) {
-        if (mCore.getConfig().tagBlackList.contains(tag)) {
+        if (core.getConfig().tagBlackList.contains(tag)) {
             // dump trace of wakelocks within blacklist
             TraceHarborLog.w(TAG, "dump wakelocks tracing for tag '$tag':")
             for (item in mWorkingWakeLocks.values) {

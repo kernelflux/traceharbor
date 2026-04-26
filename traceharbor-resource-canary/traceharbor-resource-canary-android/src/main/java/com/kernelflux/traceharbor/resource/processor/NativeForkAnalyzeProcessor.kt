@@ -128,7 +128,7 @@ class NativeForkAnalyzeProcessor(watcher: ActivityRefWatcher) : BaseLeakProcesso
         return@lazy object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 // run in detector thread to prevent parallel analyzing
-                watcher.detectHandler.post {
+                watcher.getDetectHandler().post {
                     // fixme : should separate native analyse and java analyse into smaller parts.
                     //  It is possible to unlock screen and turn foreground when analyzing
                     retryRepo?.process { hprof, keyFile, activity, key, failure ->
@@ -189,7 +189,7 @@ class NativeForkAnalyzeProcessor(watcher: ActivityRefWatcher) : BaseLeakProcesso
                         // IPlugin.application is now declared nullable in Kotlin (it always
                         // could be null at runtime — Plugin#init hasn't fired yet). Skip
                         // registration if so, mirroring the original try/catch behaviour.
-                        watcher.resourcePlugin.application?.registerReceiver(receiver, it)
+                        watcher.getResourcePlugin().application?.registerReceiver(receiver, it)
                     }
                 }
             } catch (throwable: Throwable) {

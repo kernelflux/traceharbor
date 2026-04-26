@@ -43,7 +43,7 @@ open class CpuStatFeature : AbsTaskMonitorFeature() {
     override fun onForeground(isForeground: Boolean) {
         super.onForeground(isForeground)
         if (!isForeground && mPowerProfile == null) {
-            mCore.getHandler().post { tryInitPowerProfile() }
+            core.getHandler().post { tryInitPowerProfile() }
         }
     }
 
@@ -57,7 +57,7 @@ open class CpuStatFeature : AbsTaskMonitorFeature() {
                 return
             }
             try {
-                val powerProfile = PowerProfile.init(mCore.getContext())
+                val powerProfile = PowerProfile.init(core.getContext())
                 for (i in 0 until powerProfile.cpuCoreNum) {
                     val numSpeedSteps = powerProfile.getNumSpeedStepsInCpuCluster(
                         powerProfile.getClusterByCpuNum(i)
@@ -132,7 +132,7 @@ open class CpuStatFeature : AbsTaskMonitorFeature() {
     fun currentUidCpuStateSnapshot(): UidCpuStateSnapshot {
         val curr = UidCpuStateSnapshot()
         try {
-            val procList: List<Pair<Int, String>> = TopThreadFeature.getProcList(mCore.getContext())
+            val procList: List<Pair<Int, String>> = TopThreadFeature.getProcList(core.getContext())
             val pidCurrCupSateList: MutableList<CpuStateSnapshot> = ArrayList(procList.size)
             curr.pidCurrCupSateList = pidCurrCupSateList
 
@@ -148,7 +148,7 @@ open class CpuStatFeature : AbsTaskMonitorFeature() {
                         snapshot = currentCpuStateSnapshot(pid)
                     }
                     if (snapshot != null && !snapshot.isValid()) {
-                        val ipcCpuStatCollector = mCore.getConfig().ipcCpuStatCollector
+                        val ipcCpuStatCollector = core.getConfig().ipcCpuStatCollector
                         if (ipcCpuStatCollector != null) {
                             val remote = ipcCpuStatCollector.apply(item)
                             if (remote != null) {

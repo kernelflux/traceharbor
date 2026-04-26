@@ -32,18 +32,18 @@ import androidx.annotation.RestrictTo
 import com.kernelflux.traceharbor.TraceHarbor
 import com.kernelflux.traceharbor.batterycanary.BatteryMonitorPlugin
 import com.kernelflux.traceharbor.batterycanary.monitor.AppStats
-import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.APP_STAT_BACKGROUND
-import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.APP_STAT_FLOAT_WINDOW
-import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.APP_STAT_FOREGROUND
-import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.APP_STAT_FOREGROUND_SERVICE
-import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.DEV_STAT_CHARGING
-import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.DEV_STAT_DOZE_MODE_OFF
-import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.DEV_STAT_DOZE_MODE_ON
-import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.DEV_STAT_SAVE_POWER_MODE_OFF
-import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.DEV_STAT_SAVE_POWER_MODE_ON
-import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.DEV_STAT_SCREEN_OFF
-import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.DEV_STAT_SCREEN_ON
-import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.DEV_STAT_UN_CHARGING
+import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.Companion.APP_STAT_BACKGROUND
+import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.Companion.APP_STAT_FLOAT_WINDOW
+import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.Companion.APP_STAT_FOREGROUND
+import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.Companion.APP_STAT_FOREGROUND_SERVICE
+import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.Companion.DEV_STAT_CHARGING
+import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.Companion.DEV_STAT_DOZE_MODE_OFF
+import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.Companion.DEV_STAT_DOZE_MODE_ON
+import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.Companion.DEV_STAT_SAVE_POWER_MODE_OFF
+import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.Companion.DEV_STAT_SAVE_POWER_MODE_ON
+import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.Companion.DEV_STAT_SCREEN_OFF
+import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.Companion.DEV_STAT_SCREEN_ON
+import com.kernelflux.traceharbor.batterycanary.monitor.AppStats.Companion.DEV_STAT_UN_CHARGING
 import com.kernelflux.traceharbor.lifecycle.owners.OverlayWindowLifecycleOwner
 import com.kernelflux.traceharbor.util.TraceHarborLog
 import java.io.File
@@ -118,7 +118,7 @@ object BatteryCanaryUtil {
             }
             val plugin = TraceHarbor.with().getPluginByClass(BatteryMonitorPlugin::class.java)
                 ?: throw IllegalStateException("BatteryMonitorPlugin is not yet installed!")
-            mProcessName = plugin.processName
+            mProcessName = plugin.getProcessName()
             return mProcessName!!
         }
 
@@ -128,7 +128,7 @@ object BatteryCanaryUtil {
             }
             val plugin = TraceHarbor.with().getPluginByClass(BatteryMonitorPlugin::class.java)
                 ?: throw IllegalStateException("BatteryMonitorPlugin is not yet installed!")
-            mPackageName = plugin.packageName
+            mPackageName = plugin.getPackageName()
             return mPackageName!!
         }
 
