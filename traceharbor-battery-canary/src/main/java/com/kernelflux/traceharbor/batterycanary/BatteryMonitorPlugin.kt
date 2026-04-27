@@ -20,8 +20,8 @@ class BatteryMonitorPlugin(config: BatteryMonitorConfig) : Plugin() {
 
     fun core(): BatteryMonitorCore = mDelegate
 
-    override fun init(app: Application, listener: PluginListener) {
-        super.init(app, listener)
+    override fun init(application: Application, pluginListener: PluginListener) {
+        super.init(application, pluginListener)
         if (!mDelegate.getConfig().isBuiltinForegroundNotifyEnabled) {
             ProcessUILifecycleOwner.removeListener(this)
         }
@@ -46,40 +46,32 @@ class BatteryMonitorPlugin(config: BatteryMonitorConfig) : Plugin() {
 
     override fun isForeground(): Boolean = mDelegate.isForeground()
 
+
+    private fun getApp(): Application {
+        var app = application
+        if (app == null) {
+            if (!TraceHarbor.isInstalled()) {
+                throw IllegalStateException("$tag is not yet init!")
+            }
+            app = TraceHarbor.with().application
+        }
+        return app
+    }
+
     fun getProcessName(): String {
-        if (processName == null) {
-            synchronized(this) {
-                if (processName == null) {
-                    var app = application
-                    if (app == null) {
-                        if (!TraceHarbor.isInstalled()) {
-                            throw IllegalStateException(tag + " is not yet init!")
-                        }
-                        app = TraceHarbor.with().application
-                    }
-                    processName = TraceHarborUtil.getProcessName(app)
-                }
+        return processName ?: synchronized(this) {
+            processName ?: TraceHarborUtil.getProcessName(getApp()).also {
+                processName = it
             }
         }
-        return processName!!
     }
 
     fun getPackageName(): String {
-        if (packageNameCache == null) {
-            synchronized(this) {
-                if (packageNameCache == null) {
-                    var app = application
-                    if (app == null) {
-                        if (!TraceHarbor.isInstalled()) {
-                            throw IllegalStateException(tag + " is not yet init!")
-                        }
-                        app = TraceHarbor.with().application
-                    }
-                    packageNameCache = app.packageName
-                }
+        return packageNameCache ?: synchronized(this) {
+            packageNameCache ?: getApp().packageName.also {
+                packageNameCache = it
             }
         }
-        return packageNameCache!!
     }
 
     private companion object {

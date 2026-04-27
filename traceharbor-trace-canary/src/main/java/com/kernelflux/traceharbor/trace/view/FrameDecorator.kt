@@ -27,6 +27,7 @@ import com.kernelflux.traceharbor.trace.listeners.ISceneFrameListener
 import com.kernelflux.traceharbor.trace.tracer.FrameTracer
 import com.kernelflux.traceharbor.util.TraceHarborLog
 import java.util.Arrays
+import kotlin.math.abs
 
 /**
  * Process-singleton overlay decorator that draws a draggable HUD ([view])
@@ -58,11 +59,11 @@ class FrameDecorator @SuppressLint("ClickableViewAccessibility") private constru
     private val displayMetrics: DisplayMetrics = DisplayMetrics()
     private var isEnableInternal: Boolean = true
 
-    private val bestColor: Int
-    private val normalColor: Int
-    private val middleColor: Int
-    private val highColor: Int
-    private val frozenColor: Int
+    private val bestColor: Int = context.resources.getColor(R.color.level_best_color)
+    private val normalColor: Int = context.resources.getColor(R.color.level_normal_color)
+    private val middleColor: Int = context.resources.getColor(R.color.level_middle_color)
+    private val highColor: Int = context.resources.getColor(R.color.level_high_color)
+    private val frozenColor: Int = context.resources.getColor(R.color.level_frozen_color)
     private var belongColor: Int
 
     private val mProcessForegroundListener: IStateObserver = object : IStateObserver {
@@ -76,11 +77,6 @@ class FrameDecorator @SuppressLint("ClickableViewAccessibility") private constru
     }
 
     init {
-        bestColor = context.resources.getColor(R.color.level_best_color)
-        normalColor = context.resources.getColor(R.color.level_normal_color)
-        middleColor = context.resources.getColor(R.color.level_middle_color)
-        highColor = context.resources.getColor(R.color.level_high_color)
-        frozenColor = context.resources.getColor(R.color.level_frozen_color)
         belongColor = bestColor
 
         ProcessUIResumedStateOwner.observeForever(mProcessForegroundListener)
@@ -116,6 +112,7 @@ class FrameDecorator @SuppressLint("ClickableViewAccessibility") private constru
             var downOffsetX: Int = 0
             var downOffsetY: Int = 0
 
+            @SuppressLint("ClickableViewAccessibility")
             override fun onTouch(v: View?, event: MotionEvent): Boolean {
                 val lp = layoutParam ?: return true
                 when (event.action) {
@@ -125,6 +122,7 @@ class FrameDecorator @SuppressLint("ClickableViewAccessibility") private constru
                         downOffsetX = lp.x
                         downOffsetY = lp.y
                     }
+
                     MotionEvent.ACTION_MOVE -> {
                         val moveX = event.x
                         val moveY = event.y
@@ -134,6 +132,7 @@ class FrameDecorator @SuppressLint("ClickableViewAccessibility") private constru
                             windowManager?.updateViewLayout(v, lp)
                         }
                     }
+
                     MotionEvent.ACTION_UP -> {
                         val targetX = if (lp.x > displayMetrics.widthPixels / 2) {
                             displayMetrics.widthPixels - view.width
@@ -154,8 +153,8 @@ class FrameDecorator @SuppressLint("ClickableViewAccessibility") private constru
 
                         val upOffsetX = lp.x
                         val upOffsetY = lp.y
-                        if (Math.abs(upOffsetX - downOffsetX) <= 20 &&
-                            Math.abs(upOffsetY - downOffsetY) <= 20
+                        if (abs(upOffsetX - downOffsetX) <= 20 &&
+                            abs(upOffsetY - downOffsetY) <= 20
                         ) {
                             clickListener?.onClick(v)
                         }
@@ -180,7 +179,8 @@ class FrameDecorator @SuppressLint("ClickableViewAccessibility") private constru
     fun getView(): FloatFrameView? = view
 
     private fun initLayoutParams(context: Context) {
-        windowManager = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
+        windowManager =
+            context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
         try {
             val metrics = DisplayMetrics()
             val wm = windowManager
@@ -198,9 +198,9 @@ class FrameDecorator @SuppressLint("ClickableViewAccessibility") private constru
                 WindowManager.LayoutParams.TYPE_PHONE
             }
             lp.flags = (
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                    or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-            )
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                            or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                    )
             lp.gravity = Gravity.START or Gravity.TOP
             val viewLp = view.layoutParams
             if (viewLp != null) {
@@ -270,7 +270,7 @@ class FrameDecorator @SuppressLint("ClickableViewAccessibility") private constru
 
     override fun getThreshold(): Int = 0
 
-    @SuppressLint("DefaultLocale")
+    @SuppressLint("DefaultLocale", "SetTextI18n")
     override fun onFrameMetricsAvailable(
         sceneName: String,
         avgDurations: LongArray,
@@ -329,8 +329,8 @@ class FrameDecorator @SuppressLint("ClickableViewAccessibility") private constru
             else -> bestColor
         }
 
-        val level = Arrays.copyOf(dropLevel, dropLevel.size)
-        val sum = Arrays.copyOf(dropSum, dropSum.size)
+        val level = dropLevel.copyOf(dropLevel.size)
+        val sum = dropSum.copyOf(dropSum.size)
 
         mainHandler.post {
             view.chartView?.addFps(fps.toInt(), belongColor)
@@ -356,10 +356,13 @@ class FrameDecorator @SuppressLint("ClickableViewAccessibility") private constru
             view.sumMiddleView?.text = sum[FrameTracer.DropStatus.DROPPED_MIDDLE.ordinal].toString()
             view.sumHighView?.text = sum[FrameTracer.DropStatus.DROPPED_HIGH.ordinal].toString()
             view.sumFrozenView?.text = sum[FrameTracer.DropStatus.DROPPED_FROZEN.ordinal].toString()
-            view.levelNormalView?.text = level[FrameTracer.DropStatus.DROPPED_NORMAL.ordinal].toString()
-            view.levelMiddleView?.text = level[FrameTracer.DropStatus.DROPPED_MIDDLE.ordinal].toString()
+            view.levelNormalView?.text =
+                level[FrameTracer.DropStatus.DROPPED_NORMAL.ordinal].toString()
+            view.levelMiddleView?.text =
+                level[FrameTracer.DropStatus.DROPPED_MIDDLE.ordinal].toString()
             view.levelHighView?.text = level[FrameTracer.DropStatus.DROPPED_HIGH.ordinal].toString()
-            view.levelFrozenView?.text = level[FrameTracer.DropStatus.DROPPED_FROZEN.ordinal].toString()
+            view.levelFrozenView?.text =
+                level[FrameTracer.DropStatus.DROPPED_FROZEN.ordinal].toString()
         }
     }
 
@@ -390,11 +393,11 @@ class FrameDecorator @SuppressLint("ClickableViewAccessibility") private constru
                                 instance = FrameDecorator(context, FloatFrameView(context))
                                 synchronized(lock) {
                                     @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
-                                    (lock as java.lang.Object).notifyAll()
+                                    lock.notifyAll()
                                 }
                             }
                             @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
-                            (lock as java.lang.Object).wait()
+                            lock.wait()
                         }
                     } catch (e: InterruptedException) {
                         e.printStackTrace()

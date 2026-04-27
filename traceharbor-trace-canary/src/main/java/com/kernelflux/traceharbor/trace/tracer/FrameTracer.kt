@@ -32,6 +32,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.util.Arrays
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.math.roundToInt
 
 /**
  * Frames-per-second / dropped-frames tracer. On API ≥ N hooks
@@ -121,7 +122,7 @@ class FrameTracer(private val config: TraceConfig) :
                 }
 
                 droppedSum += dropFrame
-                durationSum += Math.max(jitter, frameIntervalNs)
+                durationSum += jitter.coerceAtLeast(frameIntervalNs)
 
                 synchronized(oldListeners) {
                     for (listener in oldListeners) {
@@ -284,7 +285,7 @@ class FrameTracer(private val config: TraceConfig) :
     @SuppressLint("NewApi")
     fun forceEnable() {
         TraceHarborLog.i(TAG, "forceEnable")
-        if (sdkInt >= Build.VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             TraceHarbor.with().application.registerActivityLifecycleCallbacks(this)
             val collector = SceneFrameCollector()
             sceneFrameCollector = collector
@@ -298,7 +299,7 @@ class FrameTracer(private val config: TraceConfig) :
     fun forceDisable() {
         TraceHarborLog.i(TAG, "forceDisable")
         removeDropFrameListener()
-        if (sdkInt >= Build.VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             TraceHarbor.with().application.unregisterActivityLifecycleCallbacks(this)
             listeners.clear()
             frameListenerMap.clear()
@@ -431,7 +432,7 @@ class FrameTracer(private val config: TraceConfig) :
             }
             val scene = listener.getName()
             val collectItem = SceneFrameCollectItem(listener)
-            if (scene == null || scene.isEmpty()) {
+            if (scene.isNullOrEmpty()) {
                 unspecifiedSceneMap[listener] = collectItem
             } else {
                 specifiedSceneMap[scene] = collectItem
@@ -457,7 +458,7 @@ class FrameTracer(private val config: TraceConfig) :
         @Synchronized
         fun reset(listener: ISceneFrameListener, isCallbackRestBeforeReset: Boolean) {
             val scene = listener.getName()
-            val target: SceneFrameCollectItem? = if (scene == null || scene.isEmpty()) {
+            val target: SceneFrameCollectItem? = if (scene.isNullOrEmpty()) {
                 unspecifiedSceneMap[listener]
             } else {
                 specifiedSceneMap[scene]
@@ -537,19 +538,17 @@ class FrameTracer(private val config: TraceConfig) :
             for (i in FrameDuration.UNKNOWN_DELAY_DURATION.ordinal..FrameDuration.TOTAL_DURATION.ordinal) {
                 durations[i] += frameMetrics.getMetric(FrameDuration.indices[i])
             }
-            if (sdkInt >= Build.VERSION_CODES.S) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 durations[FrameDuration.GPU_DURATION.ordinal] +=
                     frameMetrics.getMetric(FrameMetrics.GPU_DURATION)
             }
 
             dropCount += droppedFrames
-            collect(Math.round(droppedFrames))
+            collect(droppedFrames.roundToInt())
             this.refreshRate += refreshRate
             val frameIntervalNanos = Constants.TIME_SECOND_TO_NANO / refreshRate
-            totalDuration += Math.max(
-                frameMetrics.getMetric(FrameMetrics.TOTAL_DURATION).toFloat(),
-                frameIntervalNanos,
-            )
+            totalDuration += frameMetrics.getMetric(FrameMetrics.TOTAL_DURATION).toFloat()
+                .coerceAtLeast(frameIntervalNanos)
             ++count
 
             lastScene = scene
@@ -594,7 +593,7 @@ class FrameTracer(private val config: TraceConfig) :
                 dropSum[DropStatus.DROPPED_NORMAL.ordinal] += droppedFrames
             } else {
                 dropLevel[DropStatus.DROPPED_BEST.ordinal]++
-                dropSum[DropStatus.DROPPED_BEST.ordinal] += Math.max(droppedFrames, 0)
+                dropSum[DropStatus.DROPPED_BEST.ordinal] += droppedFrames.coerceAtLeast(0)
             }
         }
 
@@ -646,7 +645,7 @@ class FrameTracer(private val config: TraceConfig) :
     override fun onActivityStarted(activity: Activity) {}
 
     private fun getRefreshRate(window: Window): Float {
-        if (sdkInt >= Build.VERSION_CODES.R) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             return window.context.display!!.refreshRate
         }
         @Suppress("DEPRECATION")
@@ -697,7 +696,7 @@ class FrameTracer(private val config: TraceConfig) :
                     // here that would skew the running average.
                     for (i in FrameDuration.UNKNOWN_DELAY_DURATION.ordinal..FrameDuration.TOTAL_DURATION.ordinal) {
                         val v = frameMetrics.getMetric(FrameDuration.indices[i])
-                        if (v < 0 || v >= HALF_MAX) {
+                        if (v !in 0 until HALF_MAX) {
                             return
                         }
                     }
@@ -707,10 +706,8 @@ class FrameTracer(private val config: TraceConfig) :
 
                     val totalDuration = frameMetricsCopy.getMetric(FrameMetrics.TOTAL_DURATION)
                     val frameIntervalNanos = Constants.TIME_SECOND_TO_NANO / cachedRefreshRate
-                    val droppedFrames = Math.max(
-                        0f,
-                        (totalDuration - frameIntervalNanos) / frameIntervalNanos,
-                    )
+                    val droppedFrames =
+                        0f.coerceAtLeast((totalDuration - frameIntervalNanos) / frameIntervalNanos)
 
                     droppedSum += droppedFrames
 
@@ -795,11 +792,8 @@ class FrameTracer(private val config: TraceConfig) :
         ) {
             TraceHarborLog.i(LISTENER_TAG, "[report] FPS:%s %s", avgFps, toString())
             try {
-                val plugin: TracePlugin? =
-                    TraceHarbor.with().getPluginByClass(TracePlugin::class.java)
-                if (null == plugin) {
-                    return
-                }
+                val plugin: TracePlugin =
+                    TraceHarbor.with().getPluginByClass(TracePlugin::class.java) ?: return
                 val dropLevelObject = JSONObject()
                 val dropSumObject = JSONObject()
                 for (dropStatus in DropStatus.values()) {
@@ -825,13 +819,13 @@ class FrameTracer(private val config: TraceConfig) :
                         break
                     }
                 }
-                if (sdkInt >= Build.VERSION_CODES.S) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     resultObject.put(
                         "GPU_DURATION",
                         avgDurations[FrameDuration.GPU_DURATION.ordinal],
                     )
                 }
-                resultObject.put("DROP_COUNT", Math.round(avgDroppedFrame))
+                resultObject.put("DROP_COUNT", avgDroppedFrame.roundToInt())
                 resultObject.put("REFRESH_RATE", avgRefreshRate.toInt())
 
                 val issue = Issue()
@@ -852,8 +846,6 @@ class FrameTracer(private val config: TraceConfig) :
         private const val TAG = "TraceHarbor.FrameTracer"
 
         private const val HALF_MAX: Long = Long.MAX_VALUE ushr 1
-
-        @JvmField val sdkInt: Int = Build.VERSION.SDK_INT
 
         @JvmField var defaultRefreshRate: Float = 60f
 
@@ -882,7 +874,7 @@ class FrameTracer(private val config: TraceConfig) :
                 .append(frameMetrics.getMetric(FrameMetrics.TOTAL_DURATION))
             sb.append("; first_draw_frame=")
                 .append(frameMetrics.getMetric(FrameMetrics.FIRST_DRAW_FRAME))
-            if (sdkInt >= Build.VERSION_CODES.S) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 sb.append("; gpu_duration=")
                     .append(frameMetrics.getMetric(FrameMetrics.GPU_DURATION))
             }

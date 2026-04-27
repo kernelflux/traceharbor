@@ -31,5 +31,3 @@ extra["publishArtifactId"] = "traceharbor-resource-canary-analyzer"
 extra["publishVersion"]    = version.toString()
 
 apply(from = rootProject.file("gradle/maven-publish.gradle.kts"))
-
-// apply(from = rootProject.file("gradle/check.gradle.kts"))

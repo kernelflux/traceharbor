@@ -1,8 +1,5 @@
 plugins {
     java
-    // kotlin-gradle-plugin is pinned via root buildscript classpath, so apply
-    // without a version (same lesson as Stage 6 batch D + the resource-canary
-    // -common port from J2K round 1).
     kotlin("jvm")
 }
 

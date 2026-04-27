@@ -17,7 +17,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 }
 
 version = rootProject.extra["VERSION_NAME"].toString()
-group   = rootProject.extra["GROUP"].toString()
+group = rootProject.extra["GROUP"].toString()
 
 dependencies {
     implementation(libs.org.json)
@@ -27,12 +27,6 @@ dependencies {
     implementation(project(":traceharbor-resource-canary:traceharbor-resource-canary-common"))
 }
 
-// ---------------------------------------------------------------------------
-// Fat-jar with Main-Class. Same modernization as traceharbor-apk-canary —
-// drop the reflective `canBeResolved` hack on the `implementation`
-// configuration and bundle `runtimeClasspath` instead, which is resolvable
-// by design.
-// ---------------------------------------------------------------------------
 tasks.named<Jar>("jar") {
     dependsOn(
         ":traceharbor-resource-canary:traceharbor-resource-canary-analyzer:jar",
@@ -40,7 +34,7 @@ tasks.named<Jar>("jar") {
     )
     manifest {
         attributes(
-            "Main-Class"       to "com.kernelflux.traceharbor.resource.analyzer.CLIMain",
+            "Main-Class" to "com.kernelflux.traceharbor.resource.analyzer.CLIMain",
             "Manifest-Version" to archiveVersion.get(),
         )
     }
@@ -62,3 +56,10 @@ tasks.register<Copy>("buildResourceCheckJar") {
     }
     into(project.file("tools_output"))
 }
+
+
+
+extra["publishArtifactId"] = "traceharbor-resource-canary-analyzer-cli"
+extra["publishVersion"] = version.toString()
+
+apply(from = rootProject.file("gradle/maven-publish.gradle.kts"))

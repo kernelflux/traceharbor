@@ -324,7 +324,7 @@ class MemGuard private constructor() {
                     return true
                 }
 
-                if (MemoryHook.INSTANCE.getStatus() == AbsHook.Status.COMMIT_SUCCESS) {
+                if (MemoryHook.getStatus() == AbsHook.Status.COMMIT_SUCCESS) {
                     TraceHarborLog.w(TAG, "MemoryHook has been committed, skip MemGuard install logic.")
                     return false
                 }
@@ -349,7 +349,7 @@ class MemGuard private constructor() {
                 }
                 if (success) {
                     TraceHarborLog.i(TAG, "Install MemGuard successfully with $opts")
-                    MemoryHook.INSTANCE.notifyMemGuardInstalled()
+                    MemoryHook.notifyMemGuardInstalled()
                 } else {
                     TraceHarborLog.e(TAG, "Install MemGuard failed with $opts")
                 }

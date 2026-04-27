@@ -44,9 +44,10 @@ import kotlin.collections.iterator
  * Only `Scope.PROJECT` bytecode is rewritten; dependency classes are supplied on the
  * classpath for collection only (Matrix-style broad analysis without rewriting AAR contents).
  */
-object TraceHarborAgp8TraceRunner {
+object TraceHarborTraceRunner {
     private const val TAG = "TraceHarbor.Agp8Trace"
 
+    @Suppress("DefaultLocale")
     @Throws(ExecutionException::class, InterruptedException::class, IOException::class)
     @JvmStatic
     fun run(

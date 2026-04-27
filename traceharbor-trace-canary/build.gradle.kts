@@ -13,10 +13,6 @@ android {
 
     defaultConfig {
         minSdk = rootProject.extra["minSdkVersion"] as Int
-        @Suppress("DEPRECATION")
-        targetSdk = rootProject.extra["targetSdkVersion"] as Int
-        // AGP 8 dropped versionCode/versionName from LibraryDefaultConfig (app-only).
-
         externalNativeBuild {
             cmake {
                 cppFlags += "-std=gnu++11 -frtti -fexceptions"
@@ -53,6 +49,7 @@ dependencies {
     implementation(project(":traceharbor-android-lib"))
     implementation(project(":traceharbor-android-commons"))
     implementation(project(":traceharbor-backtrace"))
+    implementation(libs.androidx.annotation)
 }
 
 version = rootProject.extra["VERSION_NAME"].toString()

@@ -286,6 +286,10 @@ def mountCopyNativePrebuiltsAction(targetVariant) {
                     ? nativeBuildTask.soFolder.get().asFile
                     : nativeBuildTask.getObjFolder()
             def fallbackNativeBuildDir = new File(project.projectDir, ".cxx/${targetVariant.name.capitalize()}")
+            def cmakeBuildTypeDir = targetVariant.buildType.name == 'release'
+                    ? 'RelWithDebInfo'
+                    : targetVariant.buildType.name.capitalize()
+            def agpIntermediatesObjDir = new File(project.buildDir, "intermediates/cxx/${cmakeBuildTypeDir}")
             copy {
                 duplicatesStrategy DuplicatesStrategy.EXCLUDE
                 includeEmptyDirs = false
@@ -294,6 +298,12 @@ def mountCopyNativePrebuiltsAction(targetVariant) {
                     include '**/*.a'
                 }
                 from(fallbackNativeBuildDir) {
+                    include '**/*.so'
+                    include '**/*.a'
+                }
+                // AGP 8 places static archives under build/intermediates/cxx/<buildType>/...
+                // while soFolder may only contain republished .so outputs.
+                from(agpIntermediatesObjDir) {
                     include '**/*.so'
                     include '**/*.a'
                 }
@@ -457,10 +467,18 @@ def extractNativeDependencies(targetVariants) {
         project.tasks.configureEach { task ->
             def variantTaskSuffix = targetVariant.name.capitalize()
             def buildTypeTaskSuffix = targetVariant.buildType.name.capitalize()
-            if (task.name == "externalNativeBuild${variantTaskSuffix}"
-                    || task.name.startsWith("buildCMake${variantTaskSuffix}")
-                    || task.name == "buildCMake${buildTypeTaskSuffix}"
-                    || task.name.startsWith("buildCMake${buildTypeTaskSuffix}[")) {
+            def taskName = task.name
+            // AGP may use RelWithDebInfo for release-native builds. Ensure native deps
+            // are prepared for both legacy and new task naming conventions.
+            def isTargetNativeBuildTask =
+                    taskName == "externalNativeBuild${variantTaskSuffix}" ||
+                            taskName == "externalNativeBuild${buildTypeTaskSuffix}" ||
+                            taskName.startsWith("buildCMake${variantTaskSuffix}") ||
+                            taskName == "buildCMake${buildTypeTaskSuffix}" ||
+                            taskName.startsWith("buildCMake${buildTypeTaskSuffix}[") ||
+                            (targetVariant.buildType.name == "release" && taskName.startsWith("buildCMakeRelWithDebInfo"))
+
+            if (isTargetNativeBuildTask) {
                 task.dependsOn(prepareNativeDepsTask)
             }
         }

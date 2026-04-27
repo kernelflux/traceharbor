@@ -1,4 +1,5 @@
 import org.gradle.kotlin.dsl.withGroovyBuilder
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -6,6 +7,36 @@ plugins {
 }
 
 val javaVersion = rootProject.extra["javaVersion"] as JavaVersion
+
+
+val realMathpilotProjectDir = rootProject.file("../../ws_appstore/mathpilot")
+val fallbackKeystorePropsFile = realMathpilotProjectDir.resolve("keystore.properties")
+val keystorePropsFile = when {
+    fallbackKeystorePropsFile.exists() -> fallbackKeystorePropsFile
+    rootProject.file("keystore.properties").exists() -> rootProject.file("keystore.properties")
+    else -> rootProject.file("keystore.properties")
+}
+val keystoreProps = Properties()
+if (keystorePropsFile.exists()) {
+    keystoreProps.load(keystorePropsFile.inputStream())
+}
+// helper to read env if property missing
+fun propOrEnv(key: String): String? =
+    (keystoreProps.getProperty(key) ?: System.getenv(key))?.takeIf { it.isNotBlank() }
+
+fun signingFileFromProp(key: String): File? {
+    val value = propOrEnv(key) ?: return null
+    val propFile = File(value)
+    if (propFile.isAbsolute) return propFile
+
+    val direct = keystorePropsFile.parentFile.resolve(value)
+    if (direct.exists()) return direct
+
+    val appSubDir = keystorePropsFile.parentFile.resolve("app").resolve(value)
+    if (appSubDir.exists()) return appSubDir
+
+    return direct
+}
 
 android {
     namespace = "com.kernelflux.traceharborsample"
@@ -24,23 +55,56 @@ android {
         missingDimensionStrategy("mode", "full")
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = signingFileFromProp("storeFile")?.also {
+                println("storeFile=====================>${it.absolutePath}")
+            }
+            storePassword = propOrEnv("storePassword")?.also {
+                println("storePassword=====================>${it}")
+            }
+            keyAlias = propOrEnv("keyAlias")?.also {
+                println("keyAlias=====================>${it}")
+            }
+            keyPassword = propOrEnv("keyPassword")?.also {
+                println("keyPassword=====================>${it}")
+            }
+        }
+    }
+
+
     buildTypes {
         debug {
             isDebuggable = true
+            signingConfig = signingConfigs.getByName("release")
         }
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
+
 
     compileOptions {
         sourceCompatibility = javaVersion
         targetCompatibility = javaVersion
     }
 
+    packagingOptions {
+
+    }
+
     packaging {
         jniLibs {
             useLegacyPackaging = true
+            pickFirsts.add("lib/armeabi-v7a/libc++_shared.so")
+            pickFirsts.add("lib/arm64-v8a/libc++_shared.so")
+            pickFirsts.add("lib/armeabi-v7a/libtraceharbor-backtrace.so")
+            pickFirsts.add("lib/arm64-v8a/libtraceharbor-backtrace.so")
         }
     }
 }
@@ -73,14 +137,36 @@ android {
 //}
 
 dependencies {
-    implementation(project(":traceharbor-android-lib"))
-    implementation(project(":traceharbor-trace-canary"))
-    implementation(project(":traceharbor-io-canary"))
-    implementation(project(":traceharbor-resource-canary:traceharbor-resource-canary-android"))
-    implementation(project(":traceharbor-hooks"))
-    implementation(project(":traceharbor-battery-canary"))
-    implementation(project(":traceharbor-sqlite-lint:traceharbor-sqlite-lint-android-sdk"))
-    implementation(project(":traceharbor-traffic"))
-
+    val matrixModules = arrayOf(
+        "traceharbor-android-commons",
+        "traceharbor-android-lib",
+        "traceharbor-apk-canary",
+        "traceharbor-arscutil",
+        "traceharbor-backtrace",
+        "traceharbor-battery-canary",
+        "traceharbor-commons",
+        "traceharbor-fd",
+        "traceharbor-hooks",
+        "traceharbor-io-canary",
+        "traceharbor-mallctl",
+        "traceharbor-memguard",
+        "traceharbor-memory-canary",
+        "traceharbor-opengl-leak",
+        "traceharbor-resource-canary-android",
+        "traceharbor-resource-canary-common",
+        "traceharbor-sqlite-lint-android-sdk",
+        "traceharbor-trace-canary",
+        "traceharbor-traffic",
+    )
+    matrixModules.forEach {
+        if (it.startsWith("traceharbor-resource")) {
+            debugImplementation(project(":traceharbor-resource-canary:$it"))
+        } else if (it.startsWith("traceharbor-sqlite")) {
+            debugImplementation(project(":traceharbor-sqlite-lint:$it"))
+        } else {
+            debugImplementation(project(":$it"))
+        }
+        releaseImplementation(group = "com.kernelflux.mobile", name = it, version = "0.0.1")
+    }
     implementation(libs.androidx.recyclerview)
 }

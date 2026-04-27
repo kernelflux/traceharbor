@@ -21,12 +21,12 @@ import java.util.Locale
  *
  * **Scope note:** The wired artifact is [ScopedArtifacts.Scope.PROJECT] (only the app module's own
  * classes are rewritten). The variant's **runtime classpath** is attached to the task as
- * [TraceHarborTraceAgp8Task.dependencyClasspath] so [com.kernelflux.traceharbor.trace.MethodCollector] can still
+ * [TraceHarborTraceTask.dependencyClasspath] so [com.kernelflux.traceharbor.trace.MethodCollector] can still
  * see dependency bytecode for inheritance / id assignment (read-only), matching legacy Matrix
  * "full project" collection behavior as closely as the modern API allows. Dependency/AAR classes
  * are not copied into the transform output jar.
  */
-object TraceHarborTraceAgp8Registrar {
+object TraceHarborTraceRegistrar {
     const val TAG = "TraceHarbor.Agp8Registrar"
 
     fun registerIfEnabled(project: Project, traceExtension: TraceHarborTraceExtension) {
@@ -50,7 +50,7 @@ object TraceHarborTraceAgp8Registrar {
             val taskName = "transform${cap}ClassesWithTraceHarbor"
             val taskProvider = project.tasks.register(
                 taskName,
-                TraceHarborTraceAgp8Task::class.java
+                TraceHarborTraceTask::class.java
             )
             val runtimeClasspathName = "${vName}RuntimeClasspath"
             val runtimeClasspath = project.configurations.findByName(runtimeClasspathName)
@@ -107,9 +107,9 @@ object TraceHarborTraceAgp8Registrar {
                 .use(taskProvider)
                 .toTransform(
                     ScopedArtifact.CLASSES,
-                    TraceHarborTraceAgp8Task::allJars,
-                    TraceHarborTraceAgp8Task::allDirectories,
-                    TraceHarborTraceAgp8Task::output
+                    TraceHarborTraceTask::allJars,
+                    TraceHarborTraceTask::allDirectories,
+                    TraceHarborTraceTask::output
                 )
         }
     }

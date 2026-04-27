@@ -17,9 +17,12 @@
 package com.kernelflux.traceharbor.plugin
 
 import com.kernelflux.traceharbor.javalib.util.Log
+import com.kernelflux.traceharbor.plugin.compat.AGPVersion
+import com.kernelflux.traceharbor.plugin.compat.VersionsCompat
 import com.kernelflux.traceharbor.plugin.extension.TraceHarborExtension
 import com.kernelflux.traceharbor.plugin.extension.TraceHarborRemoveUnusedResExtension
-import com.kernelflux.traceharbor.plugin.task.TraceHarborTasksManager
+import com.kernelflux.traceharbor.plugin.task.TraceHarborRemoveUnusedRegistrar
+import com.kernelflux.traceharbor.plugin.trace.TraceHarborTraceRegistrar
 import com.kernelflux.traceharbor.trace.extension.TraceHarborTraceExtension
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
@@ -33,16 +36,32 @@ class TraceHarborPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
         val traceHarbor = project.extensions.create("traceHarbor", TraceHarborExtension::class.java)
-        val traceExtension = (traceHarbor as ExtensionAware).extensions.create("trace", TraceHarborTraceExtension::class.java)
-        val removeUnusedResourcesExtension = traceHarbor.extensions.create("removeUnusedResources", TraceHarborRemoveUnusedResExtension::class.java)
+        val traceExtension = (traceHarbor as ExtensionAware).extensions.create(
+            "trace",
+            TraceHarborTraceExtension::class.java
+        )
+        val removeUnusedResourcesExtension = traceHarbor.extensions.create(
+            "removeUnusedResources",
+            TraceHarborRemoveUnusedResExtension::class.java
+        )
 
         if (!project.plugins.hasPlugin("com.android.application")) {
             throw GradleException("TraceHarbor Plugin, Android Application plugin required.")
         }
 
+        if (VersionsCompat.lessThan(AGPVersion.AGP_8_0_0)) {
+            throw GradleException(
+                "TraceHarbor requires AGP 8.0+ (current: ${VersionsCompat.androidGradlePluginVersion}). " +
+                        "Pre-AGP-8 Transform path was removed in 2.1.0."
+            )
+        }
+
         val androidExtension = project.extensions.findByName("android")
             ?: run {
-                Log.w(TAG, "TraceHarbor plugin could not obtain the Android extension. TraceHarbor tasks are limited.")
+                Log.w(
+                    TAG,
+                    "TraceHarbor plugin could not obtain the Android extension. TraceHarbor tasks are limited."
+                )
                 return
             }
 
@@ -50,11 +69,24 @@ class TraceHarborPlugin : Plugin<Project> {
             Log.setLogLevel(traceHarbor.logLevel)
         }
 
-        TraceHarborTasksManager().createTraceHarborTasks(
-            androidExtension,
-            project,
-            traceExtension,
-            removeUnusedResourcesExtension
-        )
+
+        // onVariants must be registered while AndroidComponentsExtension is being configured (synchronously
+        // from apply()), not from afterEvaluate, or AGP fails with "It is too late to add actions".
+        TraceHarborTraceRegistrar.registerIfEnabled(project, traceExtension)
+
+        if (removeUnusedResourcesExtension.enable) {
+            // removeUnusedResources still uses the legacy applicationVariants/BaseVariant path. It is
+            // opt-in (default disabled) and pending its own AGP 8 migration. Loading the registrar
+            // class is gated by this branch so BaseVariant is not pulled in for default builds.
+            Log.w(
+                TAG,
+                "removeUnusedResources is enabled and uses the legacy variant API on AGP 8. This is a known follow-up; functionality may be limited."
+            )
+            TraceHarborRemoveUnusedRegistrar.register(
+                androidExtension,
+                project,
+                removeUnusedResourcesExtension
+            )
+        }
     }
 }

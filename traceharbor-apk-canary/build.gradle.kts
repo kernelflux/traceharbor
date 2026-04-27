@@ -21,13 +21,6 @@ dependencies {
     implementation(project(":traceharbor-commons"))
 }
 
-// ---------------------------------------------------------------------------
-// Fat-jar with Main-Class. Original Groovy script reflectively flipped
-// `canBeResolved` on `configurations.implementation` to allow resolving it
-// at jar-time, then bundled `configurations.runtime` (which doesn't exist in
-// modern Gradle anyway). Replaced with the modern, supported approach: bundle
-// `runtimeClasspath`, which is resolvable by design.
-// ---------------------------------------------------------------------------
 tasks.named<Jar>("jar") {
     manifest {
         attributes(
@@ -35,6 +28,19 @@ tasks.named<Jar>("jar") {
             "Manifest-Version" to project.version.toString(),
         )
     }
+}
+
+val fatJar = tasks.register<Jar>("fatJar") {
+    group = "build"
+    description = "Builds a self-contained jar for ApkChecker CLI use."
+    archiveClassifier.set("all")
+    manifest {
+        attributes(
+            "Main-Class"       to "com.kernelflux.traceharbor.apk.ApkChecker",
+            "Manifest-Version" to project.version.toString(),
+        )
+    }
+    from(sourceSets.main.get().output)
     val runtimeJars = configurations.named("runtimeClasspath")
     from({
         runtimeJars.get().filter { it.exists() }.map { if (it.isDirectory) it else zipTree(it) }
@@ -45,9 +51,9 @@ tasks.named<Jar>("jar") {
 
 tasks.register<Copy>("buildApkCheckJar") {
     group = "traceharbor"
-    dependsOn("build", "jar")
+    dependsOn("build", fatJar)
     from("build/libs") {
-        include("*.jar")
+        include("*-all.jar")
         exclude("*-javadoc.jar")
         exclude("*-sources.jar")
     }

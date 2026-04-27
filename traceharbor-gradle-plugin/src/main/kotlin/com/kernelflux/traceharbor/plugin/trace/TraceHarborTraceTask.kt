@@ -32,7 +32,7 @@ import java.nio.file.Path
  * AGP 8 [com.android.build.api.artifact.ScopedArtifacts] transform: project [allJars]/[allDirectories]
  * in, single classes jar out. [dependencyClasspath] is read-only for MethodCollector / classloader.
  */
-abstract class TraceHarborTraceAgp8Task : DefaultTask() {
+abstract class TraceHarborTraceTask : DefaultTask() {
 
     /** When false (default), rewrites the transform output to match inputs without tracing. */
     @get:Input
@@ -110,7 +110,7 @@ abstract class TraceHarborTraceAgp8Task : DefaultTask() {
         val projJars = allJars.get().map { it.asFile }
         val depClasspath = dependencyClasspath.files
         val out = output.get().asFile
-        TraceHarborAgp8TraceRunner.run(
+        TraceHarborTraceRunner.run(
             project,
             config,
             out,

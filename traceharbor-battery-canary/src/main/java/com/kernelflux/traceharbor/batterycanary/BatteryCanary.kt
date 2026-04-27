@@ -1,7 +1,5 @@
 package com.kernelflux.traceharbor.batterycanary
 
-import androidx.annotation.NonNull
-import androidx.annotation.Nullable
 import com.kernelflux.traceharbor.TraceHarbor
 import com.kernelflux.traceharbor.batterycanary.monitor.BatteryMonitorCore.Callback
 import com.kernelflux.traceharbor.batterycanary.monitor.feature.JiffiesMonitorFeature
@@ -16,7 +14,7 @@ import com.kernelflux.traceharbor.batterycanary.utils.Consumer
  * @since 2021/1/27
  */
 object BatteryCanary {
-    @Nullable
+
     @JvmStatic
     fun <T : MonitorFeature> getMonitorFeature(clazz: Class<T>): T? {
         if (TraceHarbor.isInstalled()) {
@@ -42,14 +40,12 @@ object BatteryCanary {
     }
 
     @JvmStatic
-    fun currentJiffies(@NonNull callback: Callback<JiffiesSnapshot>) {
+    fun currentJiffies(callback: Callback<JiffiesSnapshot>) {
         if (TraceHarbor.isInstalled()) {
             val plugin = TraceHarbor.with().getPluginByClass(BatteryMonitorPlugin::class.java)
             if (plugin != null) {
                 val jiffiesFeat = plugin.core().getMonitorFeature(JiffiesMonitorFeature::class.java)
-                if (jiffiesFeat != null) {
-                    jiffiesFeat.currentJiffiesSnapshot(callback)
-                }
+                jiffiesFeat?.currentJiffiesSnapshot(callback)
             }
         }
     }

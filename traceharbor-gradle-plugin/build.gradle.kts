@@ -1,7 +1,6 @@
 plugins {
     id("kotlin")
     id("java-gradle-plugin")
-    // Version is provided by the root plugins block (apply false).
     id("com.gradle.plugin-publish")
 }
 val javaVersion = rootProject.extra["javaVersion"] as JavaVersion

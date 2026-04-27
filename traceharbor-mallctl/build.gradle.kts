@@ -18,11 +18,6 @@ android {
 
     defaultConfig {
         minSdk = rootProject.extra["minSdkVersion"] as Int
-        @Suppress("DEPRECATION")
-        targetSdk = rootProject.extra["targetSdkVersion"] as Int
-        // AGP 8 dropped versionCode/versionName from LibraryDefaultConfig (app-only).
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
             //noinspection ChromeOsAbiSupport
@@ -56,7 +51,7 @@ android {
 dependencies {
     implementation(fileTree("libs") { include("*.jar") })
     implementation(libs.androidx.annotation)
-    // implementation "com.tencent.stubs:logger:${rootProject.LOGGER_VERSION}"
+
     implementation(project(":traceharbor-android-lib"))
     implementation(project(":traceharbor-android-commons"))
 }

@@ -18,9 +18,6 @@ android {
 
     defaultConfig {
         minSdk = rootProject.extra["minSdkVersion"] as Int
-        @Suppress("DEPRECATION")
-        targetSdk = rootProject.extra["targetSdkVersion"] as Int
-        // AGP 8 dropped versionCode/versionName from LibraryDefaultConfig (app-only).
 
         ndk {
             abiFilters += setOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
@@ -40,7 +37,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            consumerProguardFiles("proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
 

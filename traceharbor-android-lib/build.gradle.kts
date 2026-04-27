@@ -15,10 +15,6 @@ android {
 
     defaultConfig {
         minSdk = rootProject.extra["minSdkVersion"] as Int
-        @Suppress("DEPRECATION")
-        targetSdk = rootProject.extra["targetSdkVersion"] as Int
-        // AGP 8 dropped versionCode/versionName from LibraryDefaultConfig (app-only).
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {

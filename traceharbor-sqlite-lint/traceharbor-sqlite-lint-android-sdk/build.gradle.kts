@@ -15,9 +15,6 @@ android {
 
     defaultConfig {
         minSdk = rootProject.extra["minSdkVersion"] as Int
-        @Suppress("DEPRECATION")
-        targetSdk = rootProject.extra["targetSdkVersion"] as Int
-        // AGP 8 dropped versionCode/versionName from LibraryDefaultConfig (app-only).
 
         externalNativeBuild {
             cmake {
@@ -52,9 +49,6 @@ android {
         jvmTarget = javaVersion.toString()
     }
 
-    // KTS quirk: per-flavor sourceSets only exist after productFlavors are
-    // declared. Original Groovy script relied on dynamic creation; KTS needs
-    // explicit ordering.
     flavorDimensions += "mode"
     productFlavors {
         create("full") {

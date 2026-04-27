@@ -56,7 +56,6 @@ class BatteryEventDelegate private constructor(context: Context?) {
     @JvmField
     var mLastBatteryTemp: Long
 
-    @Nullable
     @JvmField
     var mCore: BatteryMonitorCore? = null
 
@@ -86,6 +85,7 @@ class BatteryEventDelegate private constructor(context: Context?) {
         }
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     fun startListening() {
         val filter = IntentFilter()
@@ -134,24 +134,30 @@ class BatteryEventDelegate private constructor(context: Context?) {
                                     if (currPct in 0..1000) {
                                         if (abs(currPct - mLastBatteryPowerPct) >= BATTERY_POWER_GRADUATION) {
                                             mLastBatteryPowerPct = currPct.toLong()
-                                            val feat = mCore?.getMonitorFeature(BatteryStatsFeature::class.java)
+                                            val feat =
+                                                mCore?.getMonitorFeature(BatteryStatsFeature::class.java)
                                             feat?.statsBatteryEvent(currPct)
                                             onBatteryPowerChanged(currPct)
                                         }
                                     }
 
                                     try {
-                                        val currTemp = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1)
+                                        val currTemp =
+                                            intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1)
                                         if (currTemp >= 0 && currPct <= 1000) {
                                             if (abs(currTemp - mLastBatteryTemp) >= BATTERY_TEMPERATURE_GRADUATION) {
                                                 mLastBatteryTemp = currTemp.toLong()
-                                                val feat = mCore?.getMonitorFeature(BatteryStatsFeature::class.java)
+                                                val feat =
+                                                    mCore?.getMonitorFeature(BatteryStatsFeature::class.java)
                                                 feat?.statsBatteryTempEvent(currTemp)
                                                 onBatteryTemperatureChanged(currTemp)
                                             }
                                         }
                                     } catch (e: Exception) {
-                                        TraceHarborLog.w(TAG, "get EXTRA_TEMPERATURE failed: " + e.message)
+                                        TraceHarborLog.w(
+                                            TAG,
+                                            "get EXTRA_TEMPERATURE failed: " + e.message
+                                        )
                                     }
                                 }
                             }
@@ -165,18 +171,22 @@ class BatteryEventDelegate private constructor(context: Context?) {
                                 devStat = AppStats.DEV_STAT_SCREEN_ON
                                 notifyStateChanged = true
                             }
+
                             Intent.ACTION_SCREEN_OFF -> {
                                 devStat = AppStats.DEV_STAT_SCREEN_OFF
                                 notifyStateChanged = true
                             }
+
                             Intent.ACTION_POWER_CONNECTED -> {
                                 devStat = AppStats.DEV_STAT_CHARGING
                                 notifyStateChanged = true
                             }
+
                             Intent.ACTION_POWER_DISCONNECTED -> {
                                 devStat = AppStats.DEV_STAT_UN_CHARGING
                                 notifyStateChanged = true
                             }
+
                             PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED -> {
                                 devStat = if (BatteryCanaryUtil.isDeviceOnIdleMode(context)) {
                                     AppStats.DEV_STAT_DOZE_MODE_ON
@@ -185,6 +195,7 @@ class BatteryEventDelegate private constructor(context: Context?) {
                                 }
                                 notifyStateChanged = true
                             }
+
                             PowerManager.ACTION_POWER_SAVE_MODE_CHANGED -> {
                                 devStat = if (BatteryCanaryUtil.isDeviceOnPowerSave(context)) {
                                     AppStats.DEV_STAT_SAVE_POWER_MODE_ON
@@ -193,6 +204,7 @@ class BatteryEventDelegate private constructor(context: Context?) {
                                 }
                                 notifyStateChanged = true
                             }
+
                             Intent.ACTION_BATTERY_OKAY,
                             Intent.ACTION_BATTERY_LOW -> {
                                 notifyStateChanged = true
@@ -223,7 +235,7 @@ class BatteryEventDelegate private constructor(context: Context?) {
         return BatteryState(mContext).attach(mCore)
     }
 
-    fun addListener(@NonNull listener: Listener) {
+    fun addListener(listener: Listener) {
         synchronized(mListenerList) {
             if (!mListenerList.contains(listener)) {
                 mListenerList.add(listener)
@@ -231,7 +243,7 @@ class BatteryEventDelegate private constructor(context: Context?) {
         }
     }
 
-    fun removeListener(@NonNull listener: Listener) {
+    fun removeListener(listener: Listener) {
         synchronized(mListenerList) {
             val iterator = mListenerList.listIterator()
             while (iterator.hasNext()) {
@@ -332,7 +344,11 @@ class BatteryEventDelegate private constructor(context: Context?) {
                 val batteryState = currentState()
                 for (item in mListenerList) {
                     if (item is Listener.ExListener) {
-                        if (item.onBatteryStateChanged(batteryState, Intent.ACTION_BATTERY_LOW == action)) {
+                        if (item.onBatteryStateChanged(
+                                batteryState,
+                                Intent.ACTION_BATTERY_LOW == action
+                            )
+                        ) {
                             removeListener(item)
                         }
                     }
@@ -420,7 +436,6 @@ class BatteryEventDelegate private constructor(context: Context?) {
     }
 
     class BatteryState(context: Context) {
-        @Nullable
         @JvmField
         var mCore: BatteryMonitorCore? = null
 
@@ -477,13 +492,13 @@ class BatteryEventDelegate private constructor(context: Context?) {
 
         override fun toString(): String {
             return "BatteryState{" +
-                "fg=" + isForeground() +
-                ", charge=" + isCharging() +
-                ", screen=" + isScreenOn() +
-                ", sysDoze=" + isSysDozeMode() +
-                ", appStandby=" + isAppStandbyMode() +
-                ", bgMillis=" + getBackgroundTimeMillis() +
-                '}'
+                    "fg=" + isForeground() +
+                    ", charge=" + isCharging() +
+                    ", screen=" + isScreenOn() +
+                    ", sysDoze=" + isSysDozeMode() +
+                    ", appStandby=" + isAppStandbyMode() +
+                    ", bgMillis=" + getBackgroundTimeMillis() +
+                    '}'
         }
     }
 
@@ -569,7 +584,10 @@ class BatteryEventDelegate private constructor(context: Context?) {
                 throw RuntimeException("Use #onStateChanged(BatteryState, String) instead")
             }
 
-            override fun onAppLowEnergy(batteryState: BatteryState, backgroundMillis: Long): Boolean {
+            override fun onAppLowEnergy(
+                batteryState: BatteryState,
+                backgroundMillis: Long
+            ): Boolean {
                 return !mKeepAlive
             }
 
@@ -577,7 +595,10 @@ class BatteryEventDelegate private constructor(context: Context?) {
                 return !mKeepAlive
             }
 
-            override fun onBatteryTemperatureChanged(batteryState: BatteryState, temperature: Int): Boolean {
+            override fun onBatteryTemperatureChanged(
+                batteryState: BatteryState,
+                temperature: Int
+            ): Boolean {
                 return !mKeepAlive
             }
 
@@ -589,7 +610,10 @@ class BatteryEventDelegate private constructor(context: Context?) {
                 return !mKeepAlive
             }
 
-            override fun onBatteryStateChanged(batteryState: BatteryState, isLowBattery: Boolean): Boolean {
+            override fun onBatteryStateChanged(
+                batteryState: BatteryState,
+                isLowBattery: Boolean
+            ): Boolean {
                 return !mKeepAlive
             }
         }

@@ -48,8 +48,11 @@ class TracePlugin(private val traceConfig: TraceConfig) : Plugin() {
     private var touchEventLagTracer: TouchEventLagTracer? = null
     private val sdkInt: Int = Build.VERSION.SDK_INT
 
-    override fun init(app: Application, listener: PluginListener) {
-        super.init(app, listener)
+    override fun init(
+        application: Application,
+        pluginListener: PluginListener
+    ) {
+        super.init(application, pluginListener)
         TraceHarborLog.i(TAG, "trace plugin init, trace config: %s", traceConfig.toString())
         if (sdkInt < Build.VERSION_CODES.JELLY_BEAN) {
             TraceHarborLog.e(
@@ -185,8 +188,8 @@ class TracePlugin(private val traceConfig: TraceConfig) : Plugin() {
 
     private fun willUiThreadMonitorRunning(traceConfig: TraceConfig): Boolean =
         traceConfig.isEvilMethodTraceEnable() ||
-            traceConfig.isAnrTraceEnable() ||
-            traceConfig.isFPSEnable()
+                traceConfig.isAnrTraceEnable() ||
+                traceConfig.isFPSEnable()
 
     override fun destroy() {
         super.destroy()

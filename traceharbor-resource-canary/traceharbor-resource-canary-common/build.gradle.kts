@@ -1,8 +1,5 @@
 plugins {
     java
-    // kotlin-gradle-plugin is pinned via root buildscript classpath
-    // (see root build.gradle.kts → buildscript { dependencies { classpath ... } }),
-    // so we apply it WITHOUT a version here.
     kotlin("jvm")
 }
 

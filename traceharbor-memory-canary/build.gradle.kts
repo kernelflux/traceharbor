@@ -11,11 +11,6 @@ android {
 
     defaultConfig {
         minSdk = rootProject.extra["minSdkVersion"] as Int
-        @Suppress("DEPRECATION")
-        targetSdk = rootProject.extra["targetSdkVersion"] as Int
-        // AGP 8 dropped versionCode/versionName from LibraryDefaultConfig (app-only).
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -27,7 +22,6 @@ android {
     }
 
     compileOptions {
-        // Keep Java/Kotlin toolchains aligned from the shared root setting.
         sourceCompatibility = rootProject.extra["javaVersion"] as JavaVersion
         targetCompatibility = rootProject.extra["javaVersion"] as JavaVersion
     }
