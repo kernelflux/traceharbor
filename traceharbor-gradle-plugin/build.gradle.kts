@@ -28,15 +28,15 @@ version = rootProject.extra["VERSION_NAME"].toString()
 
 gradlePlugin {
     website.set("https://github.com/kernelflux/traceharbor")
-    vcsUrl.set("https://github.com/kernelflux/traceharbor")
+    vcsUrl.set("https://github.com/kernelflux/traceharbor.git")
+
     plugins {
         create("traceharborPlugin") {
-            id                  = "com.kernelflux.traceharbor.plugin"
+            id = "com.kernelflux.traceharbor.plugin"
             implementationClass = "com.kernelflux.traceharbor.plugin.TraceHarborPlugin"
-            displayName         = "TraceHarbor Gradle Plugin"
-            description         = "Bytecode trace instrumentation + perf canary build wiring for Android (AGP 8+)."
-            // tags is a SetProperty in plugin-publish 1.x — use .set(...) instead of `=`.
-            tags.set(listOf("android", "agp", "instrumentation", "asm", "tracing", "performance", "monitoring", "apm"))
+            displayName = "TraceHarbor Gradle Plugin"
+            description = "An Android Gradle Plugin for bytecode trace instrumentation and performance canary build integration on AGP 8+."
+            tags.set(listOf("android", "agp", "gradle-plugin", "bytecode", "instrumentation", "asm", "tracing", "performance", "monitoring", "apm"))
         }
     }
 }

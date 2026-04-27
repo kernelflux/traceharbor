@@ -1,108 +1,181 @@
 # TraceHarbor
 
-TraceHarbor is an Android performance and diagnostics framework derived from Tencent Matrix and modernized for continued community development.
+TraceHarbor is an Android performance and diagnostics toolkit derived from
+Tencent Matrix and modernized for AGP 8+ projects. It provides runtime canary
+modules for common mobile performance problems and a Gradle plugin for
+build-time bytecode trace instrumentation.
 
-## Current Baseline
+The Gradle plugin published as `com.kernelflux.traceharbor.plugin` is intended
+for Android application projects that want method tracing, startup/jank analysis
+support, and optional APK resource analysis wiring without maintaining a custom
+Transform-based build integration.
 
-The repository now runs on a unified modern Android build baseline:
+## Features
 
-- AGP `8.2.2`
+- AGP 8+ bytecode instrumentation through the Android Components API.
+- Startup, frame, jank, touch-lag, thread, and ANR trace support through
+  `traceharbor-trace-canary`.
+- Inline Gradle DSL for excluding packages or exact classes from trace
+  instrumentation.
+- Optional APK unused-resource task wiring for projects that still depend on the
+  Matrix-style resource shrink workflow.
+- Android runtime modules for memory, IO, battery, SQLite, traffic, native hooks,
+  backtrace, and related diagnostics.
+
+## Compatibility
+
+TraceHarbor currently uses the following baseline:
+
+- Android Gradle Plugin `8.2.2`
 - Gradle `8.2.1`
 - JDK `17`
 - Kotlin `1.8.22`
 - `minSdk = 21`, `targetSdk = 34`, `compileSdk = 34`
 
-Core build conventions have also been centralized:
+The Gradle plugin requires `com.android.application` and AGP `8.0.0` or newer.
+Library-only Android modules are not valid plugin targets.
 
-- plugin versions and dependency coordinates in `gradle/libs.versions.toml`
-- root shared properties in `gradle/root-extra-properties.gradle.kts`
-- Kotlin/JVM target alignment in `gradle/kotlin-jvm-target-alignment.gradle.kts`
+## Installation
 
-## Modernization Progress
+Add the TraceHarbor Gradle plugin to an Android application module:
 
-Recent repository-wide improvements include:
+```kotlin
+plugins {
+    id("com.android.application")
+    id("com.kernelflux.traceharbor.plugin") version "0.0.1"
+}
+```
 
-- migration to AGP 8 + Gradle 8 compatible build scripts
-- root `plugins { alias(libs.plugins...) }` setup (Kotlin DSL + version catalog)
-- unified Java compatibility baseline (`javaVersion = 17`) across modules
-- unified Android minimum SDK baseline (`minSdkVersion = 21`)
-- module publish metadata normalized with `publishArtifactId` in module `build.gradle.kts`
-- continued Java-to-Kotlin migration across core library modules
+If your settings file declares plugin repositories explicitly, make sure the
+Gradle Plugin Portal is present:
 
-Migration tracking notes:
+```kotlin
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+```
+
+Runtime canary artifacts are published separately. Add only the modules your app
+uses:
+
+```kotlin
+dependencies {
+    implementation("com.kernelflux.mobile:traceharbor-android-lib:0.0.1")
+    implementation("com.kernelflux.mobile:traceharbor-trace-canary:0.0.1")
+}
+```
+
+## Basic Configuration
+
+The plugin contributes a `traceHarbor` extension. Trace instrumentation is
+disabled by default, so enable it explicitly in the app module:
+
+```kotlin
+traceHarbor {
+    logLevel = "I"
+
+    trace {
+        isEnable = true
+        ignorePackages = mutableListOf(
+            "com.example.generated",
+            "com.example.thirdparty.**",
+        )
+        ignoreClasses = mutableListOf(
+            "com.example.app.DebugOnlyActivity",
+        )
+    }
+}
+```
+
+For Groovy DSL builds:
+
+```groovy
+traceHarbor {
+    logLevel = "I"
+
+    trace {
+        enable true
+        ignorePackage "com.example.generated"
+        ignoreClass "com.example.app.DebugOnlyActivity"
+    }
+}
+```
+
+`ignorePackages` accepts package prefixes. A trailing `.`, `.*`, or `.**` is
+accepted for readability and normalized internally. `ignoreClasses` expects exact
+fully qualified class names.
+
+## Optional Resource Task
+
+The `removeUnusedResources` block is available for projects that need the legacy
+resource analysis workflow. It is disabled by default:
+
+```kotlin
+traceHarbor {
+    removeUnusedResources {
+        enable = false
+        variant = "release"
+        shrinkArsc = false
+        ignoreResources = setOf("R.string.keep_me")
+    }
+}
+```
+
+This path still uses legacy variant APIs and may be limited on AGP 8. Keep it
+disabled unless your project has validated the workflow.
+
+## Build From Source
+
+Use the checked-in Gradle wrapper with JDK 17:
+
+```bash
+./gradlew help
+./gradlew :traceharbor-gradle-plugin:build
+./gradlew :samples:sample-android:assembleDebug
+```
+
+The sample module can be skipped with `TRACEHARBOR_SKIP_SAMPLE=1` or
+`-PtraceharborSkipSample=true`. Publish-like tasks skip sample inclusion
+automatically in `settings.gradle.kts`.
+
+## Main Modules
+
+- `traceharbor-gradle-plugin`: Gradle plugin and bytecode instrumentation wiring.
+- `traceharbor-android-lib`: core Android runtime library and plugin lifecycle APIs.
+- `traceharbor-trace-canary`: startup, frame/jank, touch-lag, thread, and ANR monitoring.
+- `traceharbor-resource-canary`: runtime heap/resource leak support plus analyzer modules.
+- `traceharbor-battery-canary`: battery and background activity monitoring.
+- `traceharbor-io-canary`: file IO and closeable leak monitoring.
+- `traceharbor-sqlite-lint`: SQLite lint SDK with full and no-op publications.
+- `traceharbor-hooks`, `traceharbor-backtrace`, `traceharbor-memguard`,
+  `traceharbor-mallctl`, and `traceharbor-fd`: native hook and memory tooling.
+- `traceharbor-traffic`: traffic and network diagnostics extension.
+- `traceharbor-apk-canary`: APK inspection utilities.
+
+## Repository Status
+
+This repository is being modernized from the original Matrix codebase. Recent
+work includes AGP 8 and Gradle 8 migration, version catalog adoption, centralized
+publish metadata, Java 17 alignment, and ongoing Kotlin migration.
+
+Tracking notes:
 
 - `docs/plans/2026-04-23-agp8-upgrade-tracking.md`
 - `docs/plans/2026-04-23-brand-and-modernize-plan.md`
 
-## Main Modules
+Publishing details for Maven artifacts are documented in `docs/maven-publish.md`.
 
-- `traceharbor-android-lib`: core Android runtime library and plugin lifecycle APIs
-- `traceharbor-gradle-plugin`: build-time bytecode/plugin integration
-- `traceharbor-trace-canary`: startup, frame/jank, and ANR monitoring
-- `traceharbor-resource-canary`:
-  - `traceharbor-resource-canary-android`: Android runtime integration
-  - `traceharbor-resource-canary-common`: shared analyzer model/helpers
-  - `traceharbor-resource-canary-analyzer`: heap analysis engine
-  - `traceharbor-resource-canary-analyzer-cli`: CLI analyzer tooling
-- `traceharbor-battery-canary`: battery and background activity monitoring
-- `traceharbor-io-canary`: file IO and closeable leak monitoring
-- `traceharbor-sqlite-lint`: SQLite lint SDK (`full` + `no-op` publications)
-- `traceharbor-hooks`, `traceharbor-backtrace`, `traceharbor-memguard`, `traceharbor-mallctl`, `traceharbor-fd`: native hook and memory toolchain components
-- `traceharbor-traffic`: traffic/network diagnostics extension
+## License and Attribution
 
-## Quick Start
+TraceHarbor is a derivative work based on Tencent Matrix.
 
-### Environment
+- Upstream license and third-party notices are preserved in `LICENSE`.
+- Derivative work and attribution notes are documented in `NOTICE`.
+- Ownership summary is tracked in `COPYRIGHT`.
 
-- Install JDK 17 and ensure `java -version` reports 17
-- Use the checked-in Gradle wrapper (`./gradlew`)
-
-### Validate the Build
-
-```bash
-./gradlew help
-```
-
-### Build Sample App
-
-```bash
-./gradlew :samples:sample-android:assembleDebug
-./gradlew :samples:sample-android:installDebug
-```
-
-Notes:
-
-- the sample module can be skipped by build inputs (`TRACEHARBOR_SKIP_SAMPLE=1` or `-PtraceharborSkipSample=true`)
-- on publish-like tasks, sample inclusion is auto-skipped in `settings.gradle.kts`
-
-### Build Key Library Modules
-
-```bash
-./gradlew :traceharbor-android-lib:assemble
-./gradlew :traceharbor-resource-canary:traceharbor-resource-canary-analyzer-cli:build
-```
-
-## Publishing
-
-Publishing is centralized via module metadata + shared script wiring:
-
-- modules set `publishArtifactId` (and optional additional publications)
-- shared publish logic is applied from `gradle/maven-publish.gradle.kts`
-
-For full publishing notes and credential keys, see:
-
-- `docs/maven-publish.md`
-
-## Licensing and Attribution
-
-TraceHarbor remains a derivative work based on Tencent Matrix.
-
-- upstream license and third-party notices are preserved in `LICENSE`
-- derivative work and attribution notes are documented in `NOTICE`
-- ownership summary is tracked in `COPYRIGHT`
-
-This project is not affiliated with, endorsed by, or maintained by Tencent or the original Matrix maintainers.
-
-## Related Docs
-
-- `traceharbor-hprof-analyzer/README.md`: native HPROF analyzer relationship to Resource Canary
+This project is not affiliated with, endorsed by, or maintained by Tencent or the
+original Matrix maintainers.
