@@ -19,7 +19,6 @@ android {
     namespace = (rootProject.extra["androidNamespaces"] as Map<*, *>)[project.path] as String
     compileSdk = rootProject.extra["compileSdkVersion"] as Int
 
-    // AGP 8 stopped generating BuildConfig by default; HookManager references it.
     buildFeatures {
         buildConfig = true
     }

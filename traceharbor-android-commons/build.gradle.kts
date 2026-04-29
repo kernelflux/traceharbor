@@ -28,9 +28,6 @@ android {
                 targets += setOf("xhook", "semi_dlfcn", "enhance_dlsym")
                 arguments += "-DEnableLOG=${if (enableLog) "ON" else "OFF"}"
             }
-            // exportHeaders { } is added dynamically by TraceHarborNativeDepend.gradle
-            // onto defaultConfig.externalNativeBuildOptions. Configured below the
-            // android { } block via the extensions API + withGroovyBuilder.
         }
     }
 
@@ -52,11 +49,6 @@ android {
     }
 }
 
-// ---------------------------------------------------------------------------
-// Dynamic `exportHeaders { }` extension installed by TraceHarborNativeDepend.gradle.
-// Not visible to KTS as a typed accessor on `externalNativeBuildOptions`, so we
-// reach it via ExtensionAware.extensions and drive it with Groovy MOP.
-// ---------------------------------------------------------------------------
 val exportHeadersExt = (android.defaultConfig.externalNativeBuild as ExtensionAware)
     .extensions
     .findByName("exportHeaders")

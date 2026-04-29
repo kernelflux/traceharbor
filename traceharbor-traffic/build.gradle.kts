@@ -11,7 +11,6 @@ android {
     namespace = (rootProject.extra["androidNamespaces"] as Map<*, *>)[project.path] as String
     compileSdk = rootProject.extra["compileSdkVersion"] as Int
 
-    // publishNonDefault true
     defaultConfig {
         minSdk = rootProject.extra["minSdkVersion"] as Int
 

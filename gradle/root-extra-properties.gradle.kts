@@ -1,7 +1,6 @@
 import org.gradle.api.JavaVersion
 
 extra["minSdkVersion"] = 21
-extra["targetSdkVersion"] = 34
 extra["compileSdkVersion"] = 34
 extra["buildToolsVersion"] = "34.0.0"
 extra["androidNamespaces"] = mapOf(

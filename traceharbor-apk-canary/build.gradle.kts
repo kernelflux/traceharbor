@@ -17,7 +17,6 @@ dependencies {
     implementation(fileTree("libs") { include("*.jar") })
     implementation(libs.gson)
     implementation(libs.android.tools.common)
-
     implementation(project(":traceharbor-commons"))
 }
 

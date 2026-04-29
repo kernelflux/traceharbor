@@ -1,29 +1,9 @@
-// =============================================================================
-// Settings — Kotlin DSL.
-//
-// Ported from settings.gradle as part of Stage 5 of
-// docs/plans/2026-04-23-brand-and-modernize-plan.md.
-// =============================================================================
-// ---------------------------------------------------------------------------
-// pluginManagement: where Gradle resolves `plugins { id "..." }` blocks.
-// Order matters — mavenLocal first so the freshly-published TraceHarbor plugin
-// marker (`com.kernelflux.traceharbor.plugin.gradle.plugin`) wins.
-//
-// The TraceHarbor plugin version is loaded from gradle.properties so downstream
-// modules can simply write `plugins { id("com.kernelflux.traceharbor.plugin") }`
-// without repeating the version string.
-//
-// Note: pluginManagement {} runs in an isolated context (no settings.rootDir,
-// no Settings.file() helpers), so we resolve gradle.properties via java.io.File
-// built relative to settingsDir (which IS visible inside pluginManagement {}).
-// ---------------------------------------------------------------------------
 pluginManagement {
     val thProps = java.util.Properties().apply {
-        val gp = java.io.File(settingsDir, "gradle.properties")
+        val gp = File(settingsDir, "gradle.properties")
         if (gp.exists()) java.io.FileInputStream(gp).use { load(it) }
     }
-    val thVersion = "${thProps.getProperty("VERSION_NAME_PREFIX")}${thProps.getProperty("VERSION_NAME_SUFFIX", "")}"
-
+    val thVersion = "${thProps.getProperty("VERSION_NAME_BASE", "0.0.1")}"
     repositories {
         mavenLocal()
         gradlePluginPortal()
@@ -33,9 +13,10 @@ pluginManagement {
 
     plugins {
         id("com.kernelflux.traceharbor.plugin") version thVersion
-        id("com.android.application")           version "8.2.2"
-        id("com.android.library")               version "8.2.2"
-        id("org.jetbrains.kotlin.android")      version "1.8.22"
+        id("com.android.application") version "8.2.2"
+        id("com.android.library") version "8.2.2"
+        //noinspection NewerVersionAvailable
+        id("org.jetbrains.kotlin.android") version "1.8.22"
     }
 }
 
@@ -80,19 +61,19 @@ include(":traceharbor-memory-canary")
 fun isPublishLikeTask(taskName: String): Boolean {
     val lower = taskName.lowercase()
     return lower.contains("deploytomavencentral") ||
-        lower.contains("mavencentralupload") ||
-        lower.contains("publishtomavencentral") ||
-        lower.contains("publishplugins") ||
-        lower.contains("uploadarchives") ||
-        lower == "publish" || lower.endsWith(":publish") ||
-        lower.startsWith("publish") ||
-        lower.contains(":publish")
+            lower.contains("mavencentralupload") ||
+            lower.contains("publishtomavencentral") ||
+            lower.contains("publishplugins") ||
+            lower.contains("uploadarchives") ||
+            lower == "publish" || lower.endsWith(":publish") ||
+            lower.startsWith("publish") ||
+            lower.contains(":publish")
 }
 
 val autoSkipForPublish = gradle.startParameter.taskNames.any { isPublishLikeTask(it) }
 val skipSampleByEnv = "1" == (System.getenv("TRACEHARBOR_SKIP_SAMPLE") ?: "")
 val skipSampleByProp = "true".equals(
-    gradle.startParameter.projectProperties["traceharborSkipSample"]?.toString().orEmpty(),
+    gradle.startParameter.projectProperties["traceharborSkipSample"].orEmpty(),
     ignoreCase = true,
 )
 val skipSample = skipSampleByEnv || skipSampleByProp || autoSkipForPublish
